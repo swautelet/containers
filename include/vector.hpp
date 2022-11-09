@@ -2,13 +2,16 @@
 # define VECTOR_HPP
 
 #include <memory>
-#include <vector>
+// #include <vector>
+#include <algorithm>
+#include "utilities.hpp"
 #include "Vect_utils.hpp"
 
 namespace ft
 {
 	template<class T, class Allocator = std::allocator<T> > class Vector
 	{
+		
 		public:
 		typedef T											value_type;
 		typedef Allocator									allocator_type;
@@ -78,27 +81,27 @@ namespace ft
 					_alloc.deallocate(_first, _capacity);
 			};
 			Vector&  operator=(const Vector& other){
-				if (_capacity >= other.size()){
-					for(size_t i = 0; i < other.size(); i++){
-						if (i < _size)
-							_first[i] = other[i];
-						else{
-							_alloc.construct(_first + i, other[i]);
-						}
-					}
-					if (_size > other.size()){
-						for (size_t i = other.size(); i < _size; i++){
-							_alloc.destroy(_first + i);
-						}
-					}
-					this->_size = other.size();
-				}
-				else{
+				// if (_capacity >= other.size()){
+				// 	for(size_t i = 0; i < other.size(); i++){
+				// 		if (i < _size)
+				// 			_first[i] = other[i];
+				// 		else{
+				// 			_alloc.construct(_first + i, other[i]);
+				// 		}
+				// 	}
+				// 	if (_size > other.size()){
+				// 		for (size_t i = other.size(); i < _size; i++){
+				// 			_alloc.destroy(_first + i);
+				// 		}
+				// 	}
+				// 	this->_size = other.size();
+				// }
+				// else{
 					reallocate(other.size());
 					for (size_t i = 0; i < _size; i++){
 						_alloc.construct(_first + i, other[i]);
 					}
-				}
+				// }
 				return *this;
 			};
 			template <class InputIterator>  void assign (InputIterator first, InputIterator last
@@ -244,7 +247,7 @@ namespace ft
 				}
 				_size = 0;
 			};
-			iterator insert( const_iterator pos, const T& value ){
+			iterator insert( iterator pos, const T& value ){
 				if (pos < _first || pos > _first + _size)
 					throw out_of_range_exception();
 				if (_capacity == _size)
@@ -253,8 +256,10 @@ namespace ft
 					i = i - 1;
 				}
 				*pos = value;
+				_size++;
+				return pos;
 			};
-			iterator insert( const_iterator pos, size_type count, const T& value ){
+			iterator insert( iterator pos, size_type count, const T& value ){
 				if (pos < _first || pos > _first + _size)
 					throw out_of_range_exception();
 				if (_capacity <= _size + count && count < _size)
@@ -267,7 +272,8 @@ namespace ft
 				for (size_type i = 0; i < count; i++){
 					*(pos + i) = value;
 				}
-				return (_first + pos - _first);
+				_size += count;
+				return (pos);
 			};
 			// constexpr iterator insert( const_iterator pos, size_type count, const T& value ){
 			// 	if (pos < _first || pos > _first + _size)
@@ -284,7 +290,9 @@ namespace ft
 			// 	}
 			// 	return (pos);
 			// };
-			template< class InputIt > iterator insert( const_iterator pos, InputIt first, InputIt last ){
+			template< class InputIt > iterator insert( iterator pos, InputIt first, InputIt last ){
+				if (!_first)
+					throw out_of_range_exception();
 				size_t count = last - first;
 				if (pos < _first || pos > _first + _size)
 					throw out_of_range_exception();
@@ -296,8 +304,9 @@ namespace ft
 					i = i - count;
 				}
 				for (size_type i = 0; i < count; i++){
-					*(pos + i) = first + i;
+					*(pos + i) = *(first + i);
 				}
+				_size += last - first;
 				return (pos);
 			};
 			iterator erase( iterator pos ){
@@ -342,16 +351,18 @@ namespace ft
 				}
 				else if (count > _size){
 					if (count > _capacity)
-						reserve(count);
+						reserve_at_least(count);
 					for (size_t i = _size; i < count; i++){
 						_alloc.construct(_first + i, value);
 					}
+					_size = count;
 				}
 			};
 			void swap( Vector& other ){
-				Vector& temp = other;
-				other = *this;
-				*this = temp;
+				swap(this->_first, other._first);
+				swap(this->_alloc, other._alloc);
+				swap(this->_size, other._size);
+				swap(this->_capacity, other._capacity);
 			};
 
 		// exceptions 
@@ -369,6 +380,7 @@ namespace ft
 			};
 
 		//friends
+			friend void swap (Vector& a, Vector& b){ a.swap(b);};
 			friend bool operator==( const Vector<T>& lhs, const Vector<T>& rhs );
 			friend bool operator!=( const Vector<T>& lhs, const Vector<T>& rhs );
 			friend bool operator>=( const Vector<T>& lhs, const Vector<T>& rhs );
@@ -376,6 +388,19 @@ namespace ft
 			friend bool operator>( const Vector<T>& lhs, const Vector<T>& rhs );
 			friend bool operator<( const Vector<T>& lhs, const Vector<T>& rhs );
 		private:
+			template< typename F >
+			void swap( F& a, F& b ){
+				F temp = a;
+				a = b;
+				b = temp;
+			};
+			void	reserve_at_least(size_t count){
+				size_t ratio = 1;
+				while (_capacity * ratio < count){
+					ratio = ratio * 2;
+				}
+				reserve(_capacity * ratio);
+			};
 			void	reallocate(size_t n){
 				if (_first)
 				{
@@ -388,6 +413,8 @@ namespace ft
 				_size = n;
 				_capacity = _size;
 			};
+
+		// private attribute
 			Allocator	_alloc;
 			pointer		_first;
 			size_t		_size;
@@ -396,59 +423,59 @@ namespace ft
 		protected:
 	};
 };
-	template< class T, class Allocator > bool operator==( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
-		if (lhs.size() != rhs.size())
-			return false;
-		for (size_t i = 0; i < lhs.size(); i++){
-			if (lhs[i] != rhs[i])
-				return false;
-		}
-		return true;
-	};
-	template< class T, class Allocator > bool operator!=( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
-		if (lhs.size() != rhs.size())
-			return true;
-		for (size_t i = 0; i < lhs.size(); i++){
-			if (lhs[i] != rhs[i])
-				return true;
-		}
-		return false;
-	};
-	template< class T, class Allocator > bool operator<( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
-		for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
-			if (lhs[i] < rhs[i])
-				return true;
-		}
-		if (lhs.size() > rhs.size())
-			return true;
-		return false;
-	};
-	template< class T, class Allocator > bool operator<=( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
-		for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
-			if (lhs[i] <= rhs[i])
-				return true;
-		}
-		if (lhs.size() >= rhs.size())
-			return true;
-		return false;
-	};
-	template< class T, class Allocator > bool operator>( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
-		for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
-			if (lhs[i] > rhs[i])
-				return true;
-		}
-		if (lhs.size() < rhs.size())
-			return true;
-		return false;
-	};
-	template< class T, class Allocator > bool operator>=( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
-		for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
-			if (lhs[i] >= rhs[i])
-				return true;
-		}
-		if (lhs.size() <= rhs.size())
-			return true;
-		return false;
-	};
+	// template< class T, class Allocator > bool operator==( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
+	// 	if (lhs.size() != rhs.size())
+	// 		return false;
+	// 	for (size_t i = 0; i < lhs.size(); i++){
+	// 		if (lhs[i] != rhs[i])
+	// 			return false;
+	// 	}
+	// 	return true;
+	// };
+	// template< class T, class Allocator > bool operator!=( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
+	// 	if (lhs.size() != rhs.size())
+	// 		return true;
+	// 	for (size_t i = 0; i < lhs.size(); i++){
+	// 		if (lhs[i] != rhs[i])
+	// 			return true;
+	// 	}
+	// 	return false;
+	// };
+	// template< class T, class Allocator > bool operator<( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
+	// 	for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
+	// 		if (lhs[i] < rhs[i])
+	// 			return true;
+	// 	}
+	// 	if (lhs.size() > rhs.size())
+	// 		return true;
+	// 	return false;
+	// };
+	// template< class T, class Allocator > bool operator<=( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
+	// 	for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
+	// 		if (lhs[i] <= rhs[i])
+	// 			return true;
+	// 	}
+	// 	if (lhs.size() >= rhs.size())
+	// 		return true;
+	// 	return false;
+	// };
+	// template< class T, class Allocator > bool operator>( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
+	// 	for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
+	// 		if (lhs[i] > rhs[i])
+	// 			return true;
+	// 	}
+	// 	if (lhs.size() < rhs.size())
+	// 		return true;
+	// 	return false;
+	// };
+	// template< class T, class Allocator > bool operator>=( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
+	// 	for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
+	// 		if (lhs[i] >= rhs[i])
+	// 			return true;
+	// 	}
+	// 	if (lhs.size() <= rhs.size())
+	// 		return true;
+	// 	return false;
+	// };
 
 #endif

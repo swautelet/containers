@@ -57,6 +57,16 @@ template<class T, bool B> class vect_iterator
 			it._value -= nb;
 			return (it);
 		};
+		vect_iterator operator+(size_t nb) const{
+			vect_iterator it(*this);
+			it._value += nb;
+			return (it);
+		}
+		vect_iterator operator-(size_t nb) const{
+			vect_iterator it(*this);
+			it._value -= nb;
+			return (it);
+		};
 		size_t operator-(vect_iterator& nb) const{
 			size_t res = 0;
 			vect_iterator temp(nb);
