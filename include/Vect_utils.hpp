@@ -25,6 +25,10 @@ template<class T, bool B> class vect_iterator
 
 		reference operator*() const         { return (*_value); };
 		pointer operator->() const          { return (_value); };
+		vect_iterator& operator=(const vect_iterator& other){
+			this->_value = other.getElemPtr();
+			return (*this);
+		};
 		operator unsigned long(){return ((unsigned long)_value);};
 
 		vect_iterator& operator++()       { ++_value; return (*this); };
@@ -70,12 +74,26 @@ template<class T, bool B> class vect_iterator
 		size_t operator-(vect_iterator& nb) const{
 			size_t res = 0;
 			vect_iterator temp(nb);
-			while (temp != *this){
-				temp++;
-				res++;
+			if (temp == *this)
+				return res;
+			else if (temp < *this){
+				while (temp < *this){
+					temp++;
+					res++;
+				}
+					// std::cout << " i did res ++ 2 " << res << std::endl;
 			}
+			else {
+				while (temp > *this){
+					temp --;
+					res ++;
+				}
+					// std::cout << " i did res ++" << res << std::endl;
+			}
+			// std::cout << " i found dist : " << res << std::endl;
 			return (res);
 		};
+		reference	operator[](size_t decal){return *(_value + decal);};
 		bool	operator==(const vect_iterator& it) const    { return (it._value == _value); };
 		bool	operator!=(const vect_iterator& it) const    { return (it._value != _value); };
 		bool	operator<(const vect_iterator& it) const     { return (it._value > _value); };
@@ -138,11 +156,24 @@ template<class T, bool B> class reverse_vect_iterator
 			it._value -= nb;
 			return (it);
 		};
-		// size_t operator-(reverse_vect_iterator nb) const{
-		// 	reverse_vect_iterator it(*this);
-		// 	it._value -= nb.getElemPtr();
-		// 	return (it._value);
-		// };
+		size_t operator-(reverse_vect_iterator& nb) const{
+			size_t res = 0;
+			reverse_vect_iterator temp(nb);
+			if (temp < *this){
+				while (temp != *this){
+					temp++;
+					res++;
+				}
+			}
+			else {
+				while (temp != *this){
+					temp --;
+					res --;
+				}
+			}
+			return (res);
+		};
+		reference	operator[](size_t decal){return *(_value + decal);};
 		bool	operator==(const reverse_vect_iterator& it) const    { return (it._value == _value); };
 		bool	operator!=(const reverse_vect_iterator& it) const    { return (it._value != _value); };
 		bool	operator<(const reverse_vect_iterator& it) const     { return (it._value > _value); };

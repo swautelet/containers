@@ -28,19 +28,15 @@ namespace ft
 
 		//member functions
 			Vector():_alloc(Allocator()), _first(NULL), _size(0), _capacity(0){
-				// std::cout << "emtpy construct done " << std::endl;
 				};
 			explicit Vector( const Allocator& alloc ):_alloc(alloc), _first(NULL), _size(0), _capacity(0){
-				// std::cout << " second emtpy construct done " << std::endl;
 				};
 			explicit Vector( size_type count, const T& value = T(), const Allocator& alloc = Allocator()):_alloc(alloc), _first(_alloc.allocate(count)), _size(count), _capacity(count){
-				// std::cout << "- 1 in size_typpe is " << (size_t)-1 << " and max size is " << _alloc.max_size() << " count is " << count << std::endl;
 				if (count >= _alloc.max_size())
 					throw(too_big_exception());
 				for (size_t i = 0; i < _size; i++){
 					_alloc.construct(_first + i, value);
 				}
-				// std::cout << "int construct done " << std::endl;
 			};
 			// template< class InputIt > Vector( InputIt* first, InputIt* last, const Allocator& alloc = Allocator())
 			// // :_alloc(alloc), _first(_alloc.allocate(last - first)), _size(last - first), _capacity(last - first)
@@ -49,11 +45,9 @@ namespace ft
 			// 	_size = last - first;
 			// 	_capacity = _size;
 			// 	_first = _alloc.allocate(_size);
-			// 	std::cout << "here ?" << std::endl;
 			// 	for (int i = 0; first + i != last; i++){
 			// 		_alloc.construct(_first + i, *(first + i));
 			// 	}
-				// std::cout << "iterator construct done " << std::endl;
 			// };
 			template <class InputIterator>
             Vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
@@ -74,7 +68,6 @@ namespace ft
 				for (size_t i = 0; i < other.size(); i++){
 					_alloc.construct(_first + i, other[i]);
 				}
-				// std::cout << "copy construct done " << std::endl;
 			};
 			~Vector(){
 				if (_first)
@@ -166,8 +159,8 @@ namespace ft
 				return (*(_first + pos));
 			};
 			const reference operator[]( size_type pos ) const{
-				if (pos >= _size)
-					throw out_of_range_exception();
+				// if (pos >= _size)
+				// 	throw out_of_range_exception();
 				return (*(_first + pos));
 			};
 			reference front(){
@@ -262,16 +255,24 @@ namespace ft
 			iterator insert( iterator pos, size_type count, const T& value ){
 				if (pos < _first || pos > _first + _size)
 					throw out_of_range_exception();
+				size_t index = pos.getElemPtr() - begin().getElemPtr();
 				if (_capacity <= _size + count && count < _size)
 					reserve(_size * 2);
 				else if (_capacity <= _size + count)
 					reserve(_size + count);
-				for (iterator i = end(); i > pos + count; i--){
-					i = i - count;
+				for (iterator i = end() + count; i >= begin() + index; i--){
+					if (i >= end() && i - count >= begin())
+						_alloc.construct(i.getElemPtr(), *(i - count));
+					else if (i >= end())
+						_alloc.construct(i.getElemPtr(), value);
+					else if (i >= begin() && i < end() && i - count >= begin())
+						*i = *(i - count);
+					else
+						*i = value;
 				}
-				for (size_type i = 0; i < count; i++){
-					*(pos + i) = value;
-				}
+				// for (size_type i = 0; i < count; i++){
+				// 		_first[i + index] = value;
+				// }
 				_size += count;
 				return (pos);
 			};
@@ -290,44 +291,56 @@ namespace ft
 			// 	}
 			// 	return (pos);
 			// };
-			template< class InputIt > iterator insert( iterator pos, InputIt first, InputIt last ){
-				if (!_first)
-					throw out_of_range_exception();
+			template< class InputIt > iterator insert( iterator pos, InputIt first, InputIt last,
+			typename std::enable_if<!std::is_integral<InputIt>::value >::type* = 0 ){
+				// if (!_first)
+				// 	throw out_of_range_exception();
 				size_t count = last - first;
-				if (pos < _first || pos > _first + _size)
+				if (!_first || pos < _first || pos > _first + _size)
 					throw out_of_range_exception();
+				size_t index = pos.getElemPtr() - begin().getElemPtr();
+
+				// std::cout << "capacity is : " << _capacity << " size is : " << _size << " index is : " << index << " pos is : " << pos.getElemPtr() << " begin is : " << begin().getElemPtr() << " end is : " << end().getElemPtr() << " counts is : " << count << std::endl;
 				if (_capacity <= _size + count && count < _size)
 					reserve(_size * 2);
 				else if (_capacity <= _size + count)
 					reserve(_size + count);
-				for (iterator i = end(); i > pos + count; i--){
-					i = i - count;
+				iterator end = this->end();
+				end += count;
+				// std::cout << "capacity : " << _capacity << " size : " << _size << std::endl;
+				for (size_t i = 0; i < count; i++){
+					_alloc.construct(end.getElemPtr(), *(end - count));
+					end--;
 				}
+				_size += count;
 				for (size_type i = 0; i < count; i++){
-					*(pos + i) = *(first + i);
+					_first[i + index] = first[i];
 				}
-				_size += last - first;
 				return (pos);
 			};
 			iterator erase( iterator pos ){
 				if (pos < _first || pos > _first + _size)
 					throw out_of_range_exception();
-				for (size_t i = pos - _first; i < _size - 1; i++){
-					_first[i] = _first[i + 1];
+				iterator tmp = pos;
+				for (; tmp < end(); tmp++){
+					*tmp = tmp[1];
 				}
 				_alloc.destroy(_first + _size - 1);
+				_size--;
 				return pos;
 			};
 			iterator erase( iterator first, iterator last ){
 				size_t count = last - first;
 				if (first < _first || first > _first + _size || last < _first || last > _first + _size)
 					throw out_of_range_exception();
-				for (iterator i = first; i != last; i++){
+				for (iterator i = first; i < end() - count; i++){
 					*i = *(i + count);
 				}
-				for (iterator i = 0; i < count; i++){
-					_alloc.destroy(_first + _first - first + count);
+				size_t counter = 0;
+				for (iterator i = end(); counter < count; counter++, i--){
+					_alloc.destroy(i.getElemPtr());
 				}
+				_size -= count;
 				return first;
 			};
 			void push_back( const T& value ){
@@ -381,12 +394,26 @@ namespace ft
 
 		//friends
 			friend void swap (Vector& a, Vector& b){ a.swap(b);};
-			friend bool operator==( const Vector<T>& lhs, const Vector<T>& rhs );
-			friend bool operator!=( const Vector<T>& lhs, const Vector<T>& rhs );
-			friend bool operator>=( const Vector<T>& lhs, const Vector<T>& rhs );
-			friend bool operator<=( const Vector<T>& lhs, const Vector<T>& rhs );
-			friend bool operator>( const Vector<T>& lhs, const Vector<T>& rhs );
-			friend bool operator<( const Vector<T>& lhs, const Vector<T>& rhs );
+			friend bool operator==( Vector& lhs, Vector& rhs ){
+				if (lhs.size() != rhs.size())
+					return false;
+				for (iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
+					if (*i != *j)
+						return false;
+				}
+				return true;
+			};
+			friend bool operator!=( Vector& lhs, Vector& rhs ){return !(lhs == rhs);};
+			friend bool operator>=( Vector& lhs, Vector& rhs ){return !(lhs < rhs);};
+			friend bool operator<=( Vector& lhs, Vector& rhs ){return (rhs >= lhs);};
+			friend bool operator>( Vector& lhs, Vector& rhs ){return (rhs < lhs);};
+			friend bool operator<( Vector& lhs, Vector& rhs ){
+				for (iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
+					if (*i < *j)
+						return true;
+				}
+				return (lhs.size() < rhs.size());
+			};
 		private:
 			template< typename F >
 			void swap( F& a, F& b ){
@@ -423,59 +450,59 @@ namespace ft
 		protected:
 	};
 };
-	// template< class T, class Allocator > bool operator==( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
-	// 	if (lhs.size() != rhs.size())
-	// 		return false;
-	// 	for (size_t i = 0; i < lhs.size(); i++){
-	// 		if (lhs[i] != rhs[i])
-	// 			return false;
-	// 	}
-	// 	return true;
-	// };
-	// template< class T, class Allocator > bool operator!=( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
-	// 	if (lhs.size() != rhs.size())
-	// 		return true;
-	// 	for (size_t i = 0; i < lhs.size(); i++){
-	// 		if (lhs[i] != rhs[i])
-	// 			return true;
-	// 	}
-	// 	return false;
-	// };
-	// template< class T, class Allocator > bool operator<( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
-	// 	for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
-	// 		if (lhs[i] < rhs[i])
-	// 			return true;
-	// 	}
-	// 	if (lhs.size() > rhs.size())
-	// 		return true;
-	// 	return false;
-	// };
-	// template< class T, class Allocator > bool operator<=( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
-	// 	for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
-	// 		if (lhs[i] <= rhs[i])
-	// 			return true;
-	// 	}
-	// 	if (lhs.size() >= rhs.size())
-	// 		return true;
-	// 	return false;
-	// };
-	// template< class T, class Allocator > bool operator>( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
-	// 	for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
-	// 		if (lhs[i] > rhs[i])
-	// 			return true;
-	// 	}
-	// 	if (lhs.size() < rhs.size())
-	// 		return true;
-	// 	return false;
-	// };
-	// template< class T, class Allocator > bool operator>=( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
-	// 	for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
-	// 		if (lhs[i] >= rhs[i])
-	// 			return true;
-	// 	}
-	// 	if (lhs.size() <= rhs.size())
-	// 		return true;
-	// 	return false;
-	// };
-
+// 	template< class T, class Allocator > bool operator==( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
+// 		if (lhs.size() != rhs.size())
+// 			return false;
+// 		for (size_t i = 0; i < lhs.size(); i++){
+// 			if (lhs[i] != rhs[i])
+// 				return false;
+// 		}
+// 		return true;
+// 	};
+// 	template< class T, class Allocator > bool operator!=( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
+// 		if (lhs.size() != rhs.size())
+// 			return true;
+// 		for (size_t i = 0; i < lhs.size(); i++){
+// 			if (lhs[i] != rhs[i])
+// 				return true;
+// 		}
+// 		return false;
+// 	};
+// 	template< class T, class Allocator > bool operator<( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
+// 		for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
+// 			if (lhs[i] < rhs[i])
+// 				return true;
+// 		}
+// 		if (lhs.size() > rhs.size())
+// 			return true;
+// 		return false;
+// 	};
+// 	template< class T, class Allocator > bool operator<=( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
+// 		for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
+// 			if (lhs[i] <= rhs[i])
+// 				return true;
+// 		}
+// 		if (lhs.size() >= rhs.size())
+// 			return true;
+// 		return false;
+// 	};
+// 	template< class T, class Allocator > bool operator>( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
+// 		for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
+// 			if (lhs[i] > rhs[i])
+// 				return true;
+// 		}
+// 		if (lhs.size() < rhs.size())
+// 			return true;
+// 		return false;
+// 	};
+// 	template< class T, class Allocator > bool operator>=( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
+// 		for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++){
+// 			if (lhs[i] >= rhs[i])
+// 				return true;
+// 		}
+// 		if (lhs.size() <= rhs.size())
+// 			return true;
+// 		return false;
+// 	};
+// };
 #endif
