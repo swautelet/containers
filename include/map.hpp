@@ -28,7 +28,7 @@ namespace ft{
 			typedef std::reverse_iterator<iterator>				reverse_iterator;
 			typedef std::reverse_iterator<const_iterator>		const_reverse_iterator;
 		//member functions
-			map();
+			map():_root(NULL), _nb_node(0);
 			explicit map( const Compare& comp, const Allocator& alloc = Allocator() );
 			template< class InputIt > map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator() );
 			map( const map& other );
@@ -84,16 +84,38 @@ namespace ft{
 		private:
 		//private attribute
 			map_node*						_root;
-			map_node*						_last;
-			size_type						nb_node;
+			size_type						_nb_node;
 			std::allocator < map_node > >	_alloc;
 
 		// nodes manipulation functions
-			map_node& new_node(ft::pair<const Key, T> value){
+			map_node* new_node(ft::pair<const Key, T> value){
 				map_node model(value);
 				map_node* temp = _alloc.allocate(1);
 				_alloc.construct(temp, model);
+				_nb_node++;
 				return temp;
+			};
+			void	add_node(ft::pair<const Key, T> value){
+				map_node* reader = _root;
+				while (reader->getChild_l() || reader->getChild_r()){
+					if (value.first == reader->First())
+						reader->setSecond(value.second);
+					else if (reader->getChild_l() && Compare(value.first, reader->First()))
+						reader = reader->getChild_l();
+					else if (reader->getChild_r() && Compare(reader->First(), value.first))
+						reader = reader->getChild_r();
+					else if (Compare(value.first, reader->First()))
+						add_child_l(reader, new_node(value));
+					else if (Compare(reader->First(), value.first))
+						add_child_r(reader, new_node(value));
+				}
+			};
+			void	delete_node(map_node& target){
+				while (target.getChild_r())
+					swapChild_r(target);
+				_alloc.destroy(&target);
+				_alloc.deallocate(&target, 1);
+				_nb_node--;
 			};
 			void	add_child_l(map_node& parent, map_node& child){
 				parent.setChild_l(&child);
@@ -155,6 +177,9 @@ namespace ft{
 					T&		Second(){
 						return _content.second;
 					};
+					void	setSecond(T& value){
+						_content.second = value;
+					};
 					void	setParent(map_node* parent){
 						_parent = parent;
 					};
@@ -190,5 +215,7 @@ namespace ft{
 	template< class Key, class T, class Compare, class Alloc > bool operator>( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs );
 	template< class Key, class T, class Compare, class Alloc > bool operator>=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs );
 };
+
+//check add_node and make a tidying function
 
 #endif
