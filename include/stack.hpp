@@ -3,9 +3,10 @@
 
 #include <deque>
 #include <memory>
+#include "Vector.hpp"
 
 namespace ft{
-	template< class T, class Container = std::deque<T> > class stack: public template<class T, class Allocator = std::allocator<T> > class vector{
+	template< class T, class Container = std::deque<T> > class stack: public template<class T, class Allocator = std::allocator<T> > class Vector{
 		public:
 		//member functions
 			explicit stack( const Container& cont = Container() );

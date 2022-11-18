@@ -51,7 +51,7 @@ namespace ft
 			// };
 			template <class InputIterator>
             Vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
-                    typename std::enable_if<!std::is_integral<InputIterator>::value >::type* = 0) :
+                    typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0) :
                     _alloc(alloc), _size(0)
             {
                 InputIterator tmp(first);
@@ -98,7 +98,7 @@ namespace ft
 				return *this;
 			};
 			template <class InputIterator>  void assign (InputIterator first, InputIterator last
-			, typename std::enable_if<!std::is_integral<InputIterator>::value >::type* = 0){
+			, typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0){
 				size_type count = last - first;
 				if (_capacity >= count){
 					for(size_t i = 0; i < count; i++){
@@ -292,7 +292,7 @@ namespace ft
 			// 	return (pos);
 			// };
 			template< class InputIt > iterator insert( iterator pos, InputIt first, InputIt last,
-			typename std::enable_if<!std::is_integral<InputIt>::value >::type* = 0 ){
+			typename ft::enable_if<!ft::is_integral<InputIt>::value >::type* = 0 ){
 				// if (!_first)
 				// 	throw out_of_range_exception();
 				size_t count = last - first;
@@ -322,10 +322,11 @@ namespace ft
 				if (pos < _first || pos > _first + _size)
 					throw out_of_range_exception();
 				iterator tmp = pos;
-				for (; tmp < end(); tmp++){
+				while (tmp < end()){
 					*tmp = tmp[1];
+					tmp++;
 				}
-				_alloc.destroy(_first + _size - 1);
+				_alloc.destroy(tmp.getElemPtr());
 				_size--;
 				return pos;
 			};
