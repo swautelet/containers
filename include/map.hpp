@@ -23,65 +23,230 @@ namespace ft{
 			typedef typename allocator_type::size_type			size_type;
 			typedef typename allocator_type::difference_type	difference_type;
 
-			typedef map_iterator								iterator;
-			typedef const map_iterator							const_iterator;
-			typedef std::reverse_iterator<iterator>				reverse_iterator;
-			typedef std::reverse_iterator<const_iterator>		const_reverse_iterator;
+			typedef ft::map_iterator							iterator;
+			typedef const ft::map_iterator						const_iterator;
+			typedef ft::reverse_map_iterator					reverse_iterator;
+			typedef const ft::reverse_map_iterator				const_reverse_iterator;
 		//member functions
-			map():_root(NULL), _nb_node(0);
-			explicit map( const Compare& comp, const Allocator& alloc = Allocator() );
-			template< class InputIt > map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator() );
-			map( const map& other );
-			~map();
-			map& operator=( const map& other );
-			allocator_type get_allocator() const;
+			map():_root(NULL), _nb_node(0){};
+			explicit map( const Compare& comp, const Allocator& alloc = Allocator()):_root(NULL), _nb_node(0){};
+			template< class InputIt > map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator() ):_root(NULL), _nb_node(0){
+				while (first != last){
+					add_node(*first);
+					first++;
+				}
+			};
+			map( const map& other ):_root(NULL), _nb_node(0){
+				for (ft::map_iterator i = other.first(); i != other.end(); i++){
+					add_node(*i);
+				}
+			};
+			~map(){
+				clear();
+			};
+			map& operator=( const map& other ){
+				clear();
+				for (ft::map_iterator i = other.first(); i != other.end(); i++){
+					add_node(*i);
+				}
+			};
+			allocator_type get_allocator() const{return Allocator};
 
 		//element access
-			T& at( const Key& key );
-			const T& at( const Key& key ) const;
-			T& operator[]( const Key& key );
+			T& at( const Key& key ){
+				for (ft::map_iterator i = other.first(); i != other.end(); i++){
+					if (i.first() == key)
+						return i.second();
+				}
+				throw (out_of_range_exception());
+			};
+			const T& at( const Key& key ) const{
+				for (ft::map_iterator i = other.first(); i != other.end(); i++){
+					if (i.first() == key)
+						return i.second();
+				}
+				throw (out_of_range_exception());
+			};
+			T& operator[]( const Key& key ){
+				for (ft::map_iterator i = other.first(); i != other.end(); i++){
+					if (i.first() == key)
+						return i.second();
+				}
+				add_node(ft::pair< key, T()>);
+				for (ft::map_iterator i = other.first(); i != other.end(); i++){
+					if (i.first() == key)
+						return i.second();
+				}
+				return _root.second();
+			};
 
 		//iterators
-			iterator begin();
-			const_iterator begin() const;
-			iterator end();
-			const_iterator end() const;
-			reverse_iterator rbegin();
-			const_reverse_iterator rbegin() const;
-			reverse_iterator rend();
-			const_reverse_iterator rend() const;
+			iterator begin(){return _root;};
+			const_iterator begin() const{return _root;};
+			iterator end(){return NULL;};
+			const_iterator end() const{return NULL;};
+			reverse_iterator rbegin(){return _root;};
+			const_reverse_iterator rbegin() const{return _root;};
+			reverse_iterator rend(){return NULL;};
+			const_reverse_iterator rend() const{return NULL;};
 
 		//capacity
-			bool empty() const;
-			size_type size() const;
-			size_type max_size() const;
+			bool empty() const{
+				if (_root)
+					return false;
+				else
+					return true;
+			};
+			size_type size() const{
+				return _nb_node;
+			};
+			size_type max_size() const{
+				return Allocator.max_size();
+			};
 
 		//modifiers
-			void clear();
-			std::pair<iterator, bool> insert( const value_type& value );
-			iterator insert( iterator pos, const value_type& value );
-			template< class InputIt > void insert( InputIt first, InputIt last );
-			iterator erase( iterator pos );
-			iterator erase( iterator first, iterator last );
-			size_type erase( const Key& key );
-			void swap( map& other );
+			void clear(){
+				while (_nb_node){
+					map_node* reader(_root);
+					while (i->getChild_l() || i->getChild_r()){
+						if (i->getChild_l())
+							i = i->getChild_l();
+						else if (i->getChild_r())
+							i = i->getChild_r();
+					}
+					delete_node(i);
+				}
+			};
+			std::pair<iterator, bool> insert( const value_type& value ){
+				add_node(value);
+			};
+			iterator insert( iterator pos, const value_type& value ){
+				add_node(value);
+			};
+			template< class InputIt > void insert( InputIt first, InputIt last ){
+				for (InputIt i = first; i != last; i++){
+					add_node(*i);
+				}
+			};
+			iterator erase( iterator pos ){
+				delete_node(pos);
+			};
+			iterator erase( iterator first, iterator last ){
+				for (iterator i = first; i != last; i++){
+					delete_node(i)
+				}
+			};
+			size_type erase( const Key& key ){
+				for (ft::map_iterator i = begin(); i != end(); i++){
+					if (i.first() == key)
+						delete_node(i);
+				}
+			};
+			void swap( map& other ){
+				swap(this->_root, other._root);
+				swap(this->_nb_node, other._nb_node);
+			};
 
 		//lookup
-			size_type count( const Key& key ) const;
-			iterator find( const Key& key );
-			const_iterator find( const Key& key ) const;
-			std::pair<iterator,iterator> equal_range( const Key& key );
-			std::pair<const_iterator,const_iterator> equal_range( const Key& key ) const;
-			iterator lower_bound( const Key& key );
-			const_iterator lower_bound( const Key& key ) const;
-			iterator upper_bound( const Key& key );
-			const_iterator upper_bound( const Key& key ) const;
+			size_type count( const Key& key ) const{
+				for (ft::map_iterator i = begin(); i != end(); i++){
+					if (i->first() == key)
+						return 1;
+				}
+				return 0;
+			};
+			iterator find( const Key& key ){
+				for (ft::map_iterator i = begin(); i != end(); i++){
+					if (i->first() == key)
+						return i;
+				}
+				return NULL;
+			};
+			const_iterator find( const Key& key ) const{
+				for (ft::map_iterator i = begin(); i != end(); i++){
+					if (i->first() == key)
+						return i;
+				}
+				return NULL;
+			};
+			ft::pair<iterator,iterator> equal_range( const Key& key ){
+				ft::pair<iterator, iterator> ret;
+				for (ft::map_iterator i = begin(); i != end(); i++){
+					if (!(i->first() < key) && i->first() == key){
+						ret.first = i;
+						i++;
+						ret.second = i;
+						break ;
+					}
+					else if (!(i->first() < key)){
+						ret.first = i;
+						ret.second = i;
+						break ;
+					}
+				}
+				return ret;
+			};
+			ft::pair<const_iterator,const_iterator> equal_range( const Key& key ) const{
+				ft::pair<iterator, iterator> ret;
+				for (ft::map_iterator i = begin(); i != end(); i++){
+					if (!(i->first() < key) && i->first() == key){
+						ret.first = i;
+						i++;
+						ret.second = i;
+						break ;
+					}
+					else if (!(i->first() < key)){
+						ret.first = i;
+						ret.second = i;
+						break ;
+					}
+				}
+				return ret;
+			};
+			iterator lower_bound( const Key& key ){
+				for (ft::map_iterator i = begin(); i != end(); i++){
+					if (!(i.first() < key))
+						return i;
+				}
+				return NULL;
+			};
+			const_iterator lower_bound( const Key& key ) const{
+				for (ft::map_iterator i = begin(); i != end(); i++){
+					if (!(i.first() < key))
+						return i;
+				}
+				return NULL;
+			};
+			iterator upper_bound( const Key& key ){
+				for (ft::map_iterator i = begin(); i != end(); i++){
+					if (i.first() > key)
+						return i;
+				}
+				return NULL;
+			};
+			const_iterator upper_bound( const Key& key ) const{
+				for (ft::map_iterator i = begin(); i != end(); i++){
+					if (i.first() > key)
+						return i;
+				}
+				return NULL;
+			};
 
 		//observer
-			key_compare key_comp() const;
-			std::map::value_compare value_comp() const;
+			key_compare key_comp() const{return Compare;};
+			ft::map::value_compare value_comp() const{return comp_node;};
 	
+		// exception
+			class out_of_range_exception: public std::exception{
+			public:
+				const char* what() const throw(){
+					return ("Error : out of range exception");
+				};
+			};
 		private:
+			bool	comp_node(ft::pair<const Key, T> one, ft::pair<const Key, T> two){
+				return Compare(one.first, two.first);
+			}
 		//private attribute
 			map_node*						_root;
 			size_type						_nb_node;

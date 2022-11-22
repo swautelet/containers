@@ -7,15 +7,16 @@ namespace ft
 {
 template<class T, bool B> class vect_iterator
 {
-	typedef long int                                        difference_type;
-	typedef T                                               value_type;
-	typedef size_t                                          size_type;
-
-	typedef std::random_access_iterator_tag                 iterator_category;
-	typedef typename chooseConst<B, T&, const T&>::type     reference;
-	typedef typename chooseConst<B, T*, const T*>::type     pointer;
-	typedef T*                                              elemPtr;
 	public:
+		typedef long int                                        difference_type;
+		typedef T                                               value_type;
+		typedef size_t                                          size_type;
+
+		typedef std::random_access_iterator_tag                 iterator_category;
+		typedef typename chooseConst<B, T&, const T&>::type     reference;
+		typedef typename chooseConst<B, T*, const T*>::type     pointer;
+		typedef T*                                              elemPtr;
+	
 		vect_iterator():_value(NULL){};
 		vect_iterator(T* val):_value(val){};
 		vect_iterator(const vect_iterator& other):_value(other._value){};
@@ -65,7 +66,7 @@ template<class T, bool B> class vect_iterator
 			vect_iterator it(*this);
 			it._value += nb;
 			return (it);
-		}
+		};
 		vect_iterator operator-(size_t nb) const{
 			vect_iterator it(*this);
 			it._value -= nb;
