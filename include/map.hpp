@@ -54,30 +54,27 @@ namespace ft{
 
 		//element access
 			T& at( const Key& key ){
-				for (ft::map_iterator i = other.first(); i != other.end(); i++){
-					if (i.first() == key)
-						return i.second();
-				}
-				throw (out_of_range_exception());
+				map_node* reader = find(key);
+				if (!reader)
+					throw (out_of_range_exception());
+				else
+					return reader->Second();
 			};
 			const T& at( const Key& key ) const{
-				for (ft::map_iterator i = other.first(); i != other.end(); i++){
-					if (i.first() == key)
-						return i.second();
-				}
-				throw (out_of_range_exception());
+				map_node* reader = find(key);
+				if (!reader)
+					throw (out_of_range_exception());
+				else
+					return reader->Second();
 			};
 			T& operator[]( const Key& key ){
-				for (ft::map_iterator i = other.first(); i != other.end(); i++){
-					if (i.first() == key)
-						return i.second();
-				}
-				add_node(ft::pair< key, T()>);
-				for (ft::map_iterator i = other.first(); i != other.end(); i++){
-					if (i.first() == key)
-						return i.second();
-				}
-				return _root.second();
+				map_node* reader = find(key);
+				if (reader)
+					return reader->Second();
+				else
+					add_node(ft::pair< key, T()>);
+				reader = find(key);
+				return reader.second();
 			};
 
 		//iterators
@@ -108,39 +105,50 @@ namespace ft{
 			void clear(){
 				while (_nb_node){
 					map_node* reader(_root);
-					while (i->getChild_l() || i->getChild_r()){
-						if (i->getChild_l())
-							i = i->getChild_l();
-						else if (i->getChild_r())
-							i = i->getChild_r();
+					while (reader->getChild_l() || reader->getChild_r()){
+						if (reader->getChild_l())
+							reader = reader->getChild_l();
+						else if (reader->getChild_r())
+							reader = reader->getChild_r();
 					}
-					delete_node(i);
+					delete_node(reader);
 				}
 			};
-			std::pair<iterator, bool> insert( const value_type& value ){
-				add_node(value);
+			ft::pair<iterator, bool> insert( const value_type& value ){
+				map_node* reader = find(value);
+				if (reader)
+					return make_pair(reader->getContent(), false);
+				return make_pair(add_node(value), true);
 			};
 			iterator insert( iterator pos, const value_type& value ){
-				add_node(value);
+				map_node* reader = find(value);
+				if (reader)
+					return reader;
+				return add_node(value);
 			};
 			template< class InputIt > void insert( InputIt first, InputIt last ){
 				for (InputIt i = first; i != last; i++){
-					add_node(*i);
+					if (!find(i.First()))
+						add_node(*i);
 				}
 			};
 			iterator erase( iterator pos ){
 				delete_node(pos);
+				return NULL;
 			};
 			iterator erase( iterator first, iterator last ){
 				for (iterator i = first; i != last; i++){
 					delete_node(i)
 				}
+				return NULL;
 			};
 			size_type erase( const Key& key ){
-				for (ft::map_iterator i = begin(); i != end(); i++){
-					if (i.first() == key)
-						delete_node(i);
+				map_node* reader = find(key);
+				if (reader){
+					delete_node(reader);
+					return 1;
 				}
+				return 0;
 			};
 			void swap( map& other ){
 				swap(this->_root, other._root);
@@ -149,18 +157,19 @@ namespace ft{
 
 		//lookup
 			size_type count( const Key& key ) const{
-				for (ft::map_iterator i = begin(); i != end(); i++){
-					if (i->first() == key)
-						return 1;
-				}
+				if (find(key))
+					return 1;
 				return 0;
 			};
 			iterator find( const Key& key ){
-				for (ft::map_iterator i = begin(); i != end(); i++){
-					if (i->first() == key)
-						return i;
+				map_node* reader = _root;
+				while(reader && reader->First() != value.first){
+					if (reader->First() < value.first)
+						reader = reader->getChild_l();
+					else 
+						reader = reader->getChild_r();
 				}
-				return NULL;
+				return reader;
 			};
 			const_iterator find( const Key& key ) const{
 				for (ft::map_iterator i = begin(); i != end(); i++){
@@ -204,32 +213,28 @@ namespace ft{
 				return ret;
 			};
 			iterator lower_bound( const Key& key ){
-				for (ft::map_iterator i = begin(); i != end(); i++){
-					if (!(i.first() < key))
-						return i;
-				}
-				return NULL;
+				map_node* reader = _root;
+				while (reader && Compare(reader->First(), key))
+					reader = reader->getChild_r();
+				return reader;
 			};
 			const_iterator lower_bound( const Key& key ) const{
-				for (ft::map_iterator i = begin(); i != end(); i++){
-					if (!(i.first() < key))
-						return i;
-				}
-				return NULL;
+				map_node* reader = _root;
+				while (reader && Compare(reader->First(), key))
+					reader = reader->getChild_r();
+				return reader;
 			};
 			iterator upper_bound( const Key& key ){
-				for (ft::map_iterator i = begin(); i != end(); i++){
-					if (i.first() > key)
-						return i;
-				}
-				return NULL;
+				map_node* reader = _root;
+				while (reader && (Compare(reader->First(), key) || reader->First() == key))
+					reader = reader->getChild_r();
+				return reader;
 			};
 			const_iterator upper_bound( const Key& key ) const{
-				for (ft::map_iterator i = begin(); i != end(); i++){
-					if (i.first() > key)
-						return i;
-				}
-				return NULL;
+				map_node* reader = _root;
+				while (reader && (Compare(reader->First(), key) || reader->First() == key))
+					reader = reader->getChild_r();
+				return reader;
 			};
 
 		//observer
@@ -260,20 +265,29 @@ namespace ft{
 				_nb_node++;
 				return temp;
 			};
-			void	add_node(ft::pair<const Key, T> value){
+			map_node*	add_node(ft::pair<const Key, T> value){
 				map_node* reader = _root;
-				while (reader->getChild_l() || reader->getChild_r()){
-					if (value.first == reader->First())
+				while (reader){
+					if (value.first == reader->First()){
 						reader->setSecond(value.second);
-					else if (reader->getChild_l() && Compare(value.first, reader->First()))
+						return reader;
+					}
+					else if (reader->getChild_l() && Compare(value.first, reader->First())){
 						reader = reader->getChild_l();
-					else if (reader->getChild_r() && Compare(reader->First(), value.first))
+					}
+					else if (reader->getChild_r() && Compare(reader->First(), value.first)){
 						reader = reader->getChild_r();
-					else if (Compare(value.first, reader->First()))
+					}
+					else if (Compare(value.first, reader->First())){
 						add_child_l(reader, new_node(value));
-					else if (Compare(reader->First(), value.first))
+						return reader->getChild_l();
+					}
+					else if (Compare(reader->First(), value.first)){
 						add_child_r(reader, new_node(value));
+						return reader->getChild_r();
+					}
 				}
+				return NULL;
 			};
 			void	delete_node(map_node& target){
 				while (target.getChild_r())
@@ -363,6 +377,12 @@ namespace ft{
 					map_node*	getChild_r(){
 						return _child_r;
 					};
+					ft::pair<const Key, T>*	getContent(){
+						return _content;
+					}
+					ft::pair<const Key, T>& operator *(){
+						return *_content;
+					};
 
 				private:
 					map_node*				_parent;
@@ -373,12 +393,39 @@ namespace ft{
 
 		protected:
 	};
-	template< class Key, class T, class Compare, class Alloc > bool operator==( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs );
-	template< class Key, class T, class Compare, class Alloc > bool operator!=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs );
-	template< class Key, class T, class Compare, class Alloc > bool operator<( const map<Key,T,Compare,Alloc>& lhs,  const map<Key,T,Compare,Alloc>& rhs );
-	template< class Key, class T, class Compare, class Alloc > bool operator<=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs );
-	template< class Key, class T, class Compare, class Alloc > bool operator>( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs );
-	template< class Key, class T, class Compare, class Alloc > bool operator>=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs );
+	template< class Key, class T, class Compare, class Alloc > bool operator==( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ){
+		if (lhs._nb_node != rhs._nb_node)
+			return false;
+		ft::map_iterator i = lhs.begin(), j = rhs.begin();
+		while (i && j){
+			if (i.second != j.second)
+				return false;
+			i++;
+			j++;
+		}
+		return (i == j);
+	};
+	template< class Key, class T, class Compare, class Alloc > bool operator!=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ){
+		return !(rhs == lhs);
+	};
+	template< class Key, class T, class Compare, class Alloc > bool operator<( const map<Key,T,Compare,Alloc>& lhs,  const map<Key,T,Compare,Alloc>& rhs ){
+		if (lhs._nb_node < rhs._nb_node)
+			return true;
+		for (ft::map_iterator i = lhs.begin(), j = rhs.begin(); i && j; i++, j++){
+			if (i.second < j.second)
+				return true;
+		}
+		return (i < j);
+	};
+	template< class Key, class T, class Compare, class Alloc > bool operator<=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ){
+		return !(rhs > lhs);
+	};
+	template< class Key, class T, class Compare, class Alloc > bool operator>( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ){
+		return (rhs < lhs);
+	};
+	template< class Key, class T, class Compare, class Alloc > bool operator>=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ){
+		return !(lhs < rhs);
+	};
 };
 
 //check add_node and make a tidying function
