@@ -96,7 +96,7 @@ namespace ft{
 				}
 			};
 			Map( const Map& other ):_root(NULL), _nb_node(0){
-				for (iterator i = other.first(); i != other.end(); i++){
+				for (iterator i = other.begin(); i != other.end(); i++){
 					add_node(*i);
 				}
 			};
@@ -105,7 +105,7 @@ namespace ft{
 			};
 			Map& operator=( const Map& other ){
 				clear();
-				for (iterator i = other.first(); i != other.end(); i++){
+				for (iterator i = other.begin(); i != other.end(); i++){
 					add_node(*i);
 				}
 			};
@@ -173,11 +173,11 @@ namespace ft{
 					delete_node(reader);
 				}
 			};
-			ft::pair<iterator, bool> insert( const value_type& value ){
-				node* reader = find(value.first);
+			ft::pair<iterator, bool> insert(const value_type& value ){
+				iterator reader = find(value.first);
 				if (reader)
 					return make_pair(reader, false);
-				return make_pair(add_node(value), true);
+				return (ft::make_pair(add_node(value), true));
 			};
 			iterator insert( iterator pos, const value_type& value ){
 				node* reader = find(value);
@@ -318,31 +318,31 @@ namespace ft{
 			Compare													_compare;
 
 		// nodes manipulation functions
-			node* new_node(ft::pair<const Key, T> value){
+			node* new_node(value_type value){
 				node model(value);
 				node* temp = _alloc.allocate(1);
 				_alloc.construct(temp, model);
 				_nb_node++;
 				return temp;
 			};
-			node*	add_node(ft::pair<const Key, T> value){
+			node*	add_node(value_type value){
 				node* reader = _root;
 				while (reader){
 					if (value.first == reader->First()){
 						reader->setSecond(value.second);
 						return reader;
 					}
-					else if (reader->getChild_l() && Compare(value.first, reader->First())){
+					else if (reader->getChild_l() && _compare(value.first, reader->First())){
 						reader = reader->getChild_l();
 					}
-					else if (reader->getChild_r() && Compare(reader->First(), value.first)){
+					else if (reader->getChild_r() && _compare(reader->First(), value.first)){
 						reader = reader->getChild_r();
 					}
-					else if (Compare(value.first, reader->First())){
+					else if (_compare(value.first, reader->First())){
 						add_child_l(reader, new_node(value));
 						return reader->getChild_l();
 					}
-					else if (Compare(reader->First(), value.first)){
+					else if (_compare(reader->First(), value.first)){
 						add_child_r(reader, new_node(value));
 						return reader->getChild_r();
 					}
@@ -351,43 +351,43 @@ namespace ft{
 			};
 			void	delete_node(node* target){
 				while (target->getChild_r())
-					swapChild_r(*target);
+					swapChild_r(target);
 				_alloc.destroy(target);
 				_alloc.deallocate(target, 1);
 				_nb_node--;
 			};
-			void	add_child_l(node& parent, node& child){
-				parent.setChild_l(&child);
-				child.setParent(&parent);
+			void	add_child_l(node* parent, node* child){
+				parent->setChild_l(child);
+				child->setParent(parent);
 			};
-			void	add_child_r(node& parent, node& child){
-				parent.setChild_r(&child);
-				child.setParent(&parent);
+			void	add_child_r(node* parent, node* child){
+				parent->setChild_r(child);
+				child->setParent(parent);
 			};
-			void	swapChild_l(node& parent){
-				if (!parent.getChild_l())
+			void	swapChild_l(node* parent){
+				if (!parent->getChild_l())
 					return ;
-				node* pp = parent.getParent();
-				node* pcl = parent.getChild_l();
-				node* pcr = parent.getChild_r();
+				node* pp = parent->getParent();
+				node* pcl = parent->getChild_l();
+				node* pcr = parent->getChild_r();
 				node* child = pcl;
-				parent.setParent(child->getParent());
-				parent.setChild_l(child->getChild_l());
-				parent.setChild_r(child->getChild_r());
+				parent->setParent(child->getParent());
+				parent->setChild_l(child->getChild_l());
+				parent->setChild_r(child->getChild_r());
 				child->setParent(pp);
 				child->setChild_l(pcl);
 				child->setChild_r(pcr);
 			};
-			void	swapChild_r(node& parent){
-				if (!parent.getChild_r())
+			void	swapChild_r(node* parent){
+				if (!parent->getChild_r())
 					return ;
-				node* pp = parent.getParent();
-				node* pcl = parent.getChild_l();
-				node* pcr = parent.getChild_r();
+				node* pp = parent->getParent();
+				node* pcl = parent->getChild_l();
+				node* pcr = parent->getChild_r();
 				node* child = pcr;
-				parent.setParent(child->getParent());
-				parent.setChild_l(child->getChild_l());
-				parent.setChild_r(child->getChild_r());
+				parent->setParent(child->getParent());
+				parent->setChild_l(child->getChild_l());
+				parent->setChild_r(child->getChild_r());
 				child->setParent(pp);
 				child->setChild_l(pcl);
 				child->setChild_r(pcr);
