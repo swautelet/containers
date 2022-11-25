@@ -8,7 +8,7 @@ namespace ft{
 template<class Key, class T, class Allocator = std::allocator<ft::pair<const Key, T> > >
 class map_node{
 	public:
-	typedef ft::pair<Key, T>				mapped_type;
+	typedef ft::pair<const Key, T>				mapped_type;
 	typedef map_node <Key, T, Allocator>	node;
 		map_node():_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){};
 		map_node(mapped_type content):_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){
