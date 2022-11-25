@@ -5,7 +5,7 @@
 
 namespace ft{
 
-template <class Key, class T, bool B >
+template <class Key, class T, bool B = false >
 class reverse_map_iterator
 {
 	public:
@@ -13,7 +13,7 @@ class reverse_map_iterator
 		typedef ft::pair<const Key, T>																	value_type;
 		typedef size_t																					size_type;
 
-		typedef map_node<Key, T>																	node_pointer;
+		typedef map_node<Key, T>*																		node_pointer;
 		typedef std::random_access_iterator_tag															iterator_category;
 		typedef typename chooseConst<B, ft::pair<const Key, T>&, const ft::pair<const Key, T>&>::type	reference;
 		typedef typename chooseConst<B, ft::pair<const Key, T>*, const ft::pair<const Key, T>*>::type	pointer;
@@ -21,7 +21,7 @@ class reverse_map_iterator
 
 		reverse_map_iterator():_target(NULL){};
 		reverse_map_iterator(map_node<Key, T>* target):_target(target){};
-		reverse_map_iterator(reverse_map_iterator<Key, T, true>& other):_target(other._target){};
+		reverse_map_iterator(reverse_map_iterator<Key, T>& other):_target(other._target){};
 		~reverse_map_iterator(){};
 
 		elemPtr getElemPtr() const      { return _target; };
@@ -91,7 +91,7 @@ class reverse_map_iterator
 	private:
 		node_pointer		_target;
 
-		void	move_right(){
+		void	move_left(){
 			ssize_t stage = 0;
 			map_node<Key, T>* reader = _target;
 			if (!reader)
@@ -115,7 +115,7 @@ class reverse_map_iterator
 			}
 			_target = reader;
 		};
-		void	move_left(){
+		void	move_right(){
 			ssize_t stage = 0;
 			map_node<Key, T>* reader = _target;
 			if (!reader)

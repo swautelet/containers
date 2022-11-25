@@ -176,7 +176,7 @@ namespace ft{
 			ft::pair<iterator, bool> insert(const value_type& value ){
 				iterator reader = find(value.first);
 				if (reader)
-					return make_pair(reader, false);
+					return ft::make_pair(reader, false);
 				return (ft::make_pair(add_node(value), true));
 			};
 			iterator insert( iterator pos, const value_type& value ){

@@ -3,8 +3,8 @@
 
 #include "Map.hpp"
 #include "is_const.hpp"
-#include "reverse_map_iterator.hpp"
 #include "map_node.hpp"
+#include "reverse_map_iterator.hpp"
 
 namespace ft{
 // template<class Key, class T, class Allocator = std::allocator<ft::pair<const Key, T> > >
@@ -70,7 +70,7 @@ namespace ft{
 // 		mapped_type*		_content;
 // 	};
 
-template <class Key, class T, bool B >
+template <class Key, class T, bool B = false >
 class map_iterator
 {
 	public:
@@ -78,20 +78,22 @@ class map_iterator
 		typedef ft::pair<const Key, T>																	value_type;
 		typedef size_t																					size_type;
 
-		typedef map_node<Key, T>																	node_pointer;
+		typedef map_node<Key, T>*																		node_pointer;
 		typedef std::random_access_iterator_tag															iterator_category;
 		typedef typename chooseConst<B, ft::pair<const Key, T>&, const ft::pair<const Key, T>&>::type	reference;
 		typedef typename chooseConst<B, ft::pair<const Key, T>*, const ft::pair<const Key, T>*>::type	pointer;
 		typedef ft::pair<const Key, T>*																	elemPtr;
 
 		map_iterator():_target(NULL){};
-		map_iterator(map_node<Key, T>* target):_target(target){};
-		map_iterator(map_iterator<Key, T, true>& other):_target(other._target){};
+		map_iterator(node_pointer target):_target(target){};
+		map_iterator(map_iterator<Key, T> other):_target(other._target){};
+		map_iterator(map_iterator<Key, T, true> other):_target(other.getNode_pointer()){};
 		~map_iterator(){};
 
-		elemPtr getElemPtr() const      { return _target; };
+		elemPtr getElemPtr() const      { return _target->getContent(); };
+		node_pointer	getNode_pointer() const {return _target;};
 
-		reference operator*() const         { return (_target->getContent()); };
+		reference operator*() const         { return (*_target); };
 		pointer operator->() const          { return (_target->getContent()); };
 		map_iterator& operator=(const map_iterator& other){
 			this->_target = other.getElemPtr();
