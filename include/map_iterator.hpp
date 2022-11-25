@@ -2,10 +2,72 @@
 # define MAP_ITERATOR_HPP
 
 #include "Map.hpp"
+#include "is_const.hpp"
 
 namespace ft{
+template<class Key, class T, class Allocator = std::allocator<ft::pair<const Key, T> > >
+class map_node{
+	public:
+	typedef ft::pair<Key, T>				mapped_type;
+	typedef map_node <Key, T, Allocator>	node;
+		map_node():_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){};
+		map_node(mapped_type content):_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){
+			_content = _alloc.allocate(1);
+			_alloc.construct(_content, content);
+		};
+		map_node(node& other):_parent(other._parent), _child_l(other._child_l), _child_r(other._child_r), _content(NULL){
+			_content = _alloc.allocate(1);
+			_alloc.construct(_content, other._content);
+		};
+		~map_node(){
+			if (_content){
+				_alloc.destroy(_content);
+				_alloc.deallocate(_content, 1);
+			}
+		};
+		Key&	First(){
+			return _content->first;
+		};
+		T&		Second(){
+			return _content->second;
+		};
+		void	setSecond(T& value){
+			_content->second = value;
+		};
+		void	setParent(node* parent){
+			_parent = parent;
+		};
+		void	setChild_l(node* child){
+			_child_l = child;
+		};
+		void	setChild_r(node* child){
+			_child_r = child;
+		};
+		node*	getParent() const{
+			return _parent;
+		};
+		node*	getChild_l() const{
+			return _child_l;
+		};
+		node*	getChild_r() const{
+			return _child_r;
+		};
+		mapped_type*	getContent() const{
+			return _content;
+		}
+		mapped_type& operator *(){
+			return *_content;
+		};
 
-template <class Key, class T, class Allocator = std::allocator<ft::pair<const Key, T> > >
+	private:
+		Allocator			_alloc;
+		node*				_parent;
+		node*				_child_l;
+		node*				_child_r;
+		mapped_type*		_content;
+	};
+
+template <class Key, class T, bool B >
 class map_iterator
 {
 	public:
@@ -19,15 +81,15 @@ class map_iterator
 		typedef ft::pair<const Key, T>*																	elemPtr;
 
 		map_iterator():_target(NULL){};
-		map_iterator(map_node& target):_target(target){};
-		map_iterator(map_iterator& other):_target(other._target){};
+		map_iterator(map_node<Key, T>* target):_target(target){};
+		map_iterator(map_iterator<Key, T, true>& other):_target(other._target){};
 		~map_iterator(){};
 
 		elemPtr getElemPtr() const      { return _target; };
 
 		reference operator*() const         { return (*_target); };
 		pointer operator->() const          { return (_target); };
-		vect_iterator& operator=(const vect_iterator& other){
+		map_iterator& operator=(const map_iterator& other){
 			this->_target = other.getElemPtr();
 			return (*this);
 		};
@@ -60,39 +122,39 @@ class map_iterator
 		};
 		map_iterator operator+(int nb) const{
 			map_iterator it(*this);
-			for (int i = 0; i < decal; i++){
+			for (int i = 0; i < nb; i++){
 				it.move_right();
 			}
 			return (it);
 		}
 		map_iterator operator-(int nb) const{
 			map_iterator it(*this);
-			for (int i = 0; i < decal; i++){
+			for (int i = 0; i < nb; i++){
 				it.move_left();
 			}
 			return (it);
 		};
 		map_iterator operator+(size_t nb) const{
 			map_iterator it(*this);
-			for (size_t i = 0; i < decal; i++){
+			for (size_t i = 0; i < nb; i++){
 				it.move_right();
 			}
 			return (it);
 		};
 		map_iterator operator-(size_t nb) const{
 			map_iterator it(*this);
-			for (size_t i = 0; i < decal; i++){
+			for (size_t i = 0; i < nb; i++){
 				it.move_left();
 			}
 			return (it);
 		};
 
 	private:
-		map_node*	_target;
+		map_node<Key, T>*	_target;
 
 		void	move_right(){
 			ssize_t stage = 0;
-			map_node* reader = _target;
+			map_node<Key, T>* reader = _target;
 			if (!reader)
 				return ;
 			while (reader->getParent() && reader == reader->getParent()->getChild_r()){
@@ -116,7 +178,7 @@ class map_iterator
 		};
 		void	move_left(){
 			ssize_t stage = 0;
-			map_node* reader = _target;
+			map_node<Key, T>* reader = _target;
 			if (!reader)
 				return ;
 			while (reader->getParent() && reader == reader->getParent()->getChild_l()){
@@ -139,8 +201,7 @@ class map_iterator
 			_target = reader;
 		};
 };
-
-template <class Key, class T, class Allocator = std::allocator<ft::pair<const Key, T> > >
+template <class Key, class T, bool B >
 class reverse_map_iterator
 {
 	public:
@@ -153,105 +214,81 @@ class reverse_map_iterator
 		typedef typename chooseConst<B, ft::pair<const Key, T>*, const ft::pair<const Key, T>*>::type	pointer;
 		typedef ft::pair<const Key, T>*																	elemPtr;
 
-		map_iterator():_target(NULL){};
-		map_iterator(map_node& target):_target(target){};
-		map_iterator(map_iterator& other):_target(other._target){};
-		~map_iterator(){};
+		reverse_map_iterator():_target(NULL){};
+		reverse_map_iterator(map_node<Key, T>* target):_target(target){};
+		reverse_map_iterator(reverse_map_iterator& other):_target(other._target){};
+		~reverse_map_iterator(){};
 
 		elemPtr getElemPtr() const      { return _target; };
 
 		reference operator*() const         { return (*_target); };
 		pointer operator->() const          { return (_target); };
-		vect_iterator& operator=(const vect_iterator& other){
+		reverse_map_iterator& operator=(const reverse_map_iterator& other){
 			this->_target = other.getElemPtr();
 			return (*this);
 		};
 		operator unsigned long(){return ((unsigned long)_target);};
 
-		map_iterator& operator++()       { move_right(); return (*this); };
-		map_iterator& operator--()       { move_left(); return (*this); };
+		reverse_map_iterator& operator++()       { move_right(); return (*this); };
+		reverse_map_iterator& operator--()       { move_left(); return (*this); };
 
-		map_iterator operator++(int){
-			map_iterator res(*this);
+		reverse_map_iterator operator++(int){
+			reverse_map_iterator res(*this);
 			move_right();
 			return (res);
 		};
-		map_iterator operator--(int){
-			map_iterator res(*this);
+		reverse_map_iterator operator--(int){
+			reverse_map_iterator res(*this);
 			move_left();
 			return (res);
 		};
-		map_iterator& operator+=(int decal){
+		reverse_map_iterator& operator+=(int decal){
 			for (int i = 0; i < decal; i++){
 				move_right();
 			}
 			return (*this);
 		};
-		map_iterator& operator-=(int decal){
+		reverse_map_iterator& operator-=(int decal){
 			for (int i = 0; i < decal; i++){
 				move_left();
 			}
 			return (*this);
 		};
-		map_iterator operator+(int nb) const{
-			map_iterator it(*this);
-			for (int i = 0; i < decal; i++){
+		reverse_map_iterator operator+(int nb) const{
+			reverse_map_iterator it(*this);
+			for (int i = 0; i < nb; i++){
 				it.move_right();
 			}
 			return (it);
 		}
-		map_iterator operator-(int nb) const{
-			map_iterator it(*this);
-			for (int i = 0; i < decal; i++){
+		reverse_map_iterator operator-(int nb) const{
+			reverse_map_iterator it(*this);
+			for (int i = 0; i < nb; i++){
 				it.move_left();
 			}
 			return (it);
 		};
-		map_iterator operator+(size_t nb) const{
-			map_iterator it(*this);
-			for (size_t i = 0; i < decal; i++){
+		reverse_map_iterator operator+(size_t nb) const{
+			reverse_map_iterator it(*this);
+			for (size_t i = 0; i < nb; i++){
 				it.move_right();
 			}
 			return (it);
 		};
-		map_iterator operator-(size_t nb) const{
-			map_iterator it(*this);
-			for (size_t i = 0; i < decal; i++){
+		reverse_map_iterator operator-(size_t nb) const{
+			reverse_map_iterator it(*this);
+			for (size_t i = 0; i < nb; i++){
 				it.move_left();
 			}
 			return (it);
 		};
 
 	private:
-		map_node*	_target;
+		map_node<Key, T>*	_target;
 
-		void	move_right(){
-			ssize_t stage = 0;
-			map_node* reader = _target;
-			if (!reader)
-				return ;
-			while (reader->getParent() && reader == reader->getParent()->getChild_l()){
-				reader = reader->getParent();
-				stage++;
-			}
-			if (reader->getParent() && reader->getParent()->getChild_l()){
-				reader = reader->getParent()->getChild_l();
-				while(stage > 0 && reader->getChild_r()){
-					reader = reader->getChild_r();
-					stage--;
-				}
-			}
-			else if (!reader->getParent()){
-				while (stage > 1){
-					reader = reader->getChild_r();
-					stage--;
-				}
-			}
-			_target = reader;
-		};
 		void	move_left(){
 			ssize_t stage = 0;
-			map_node* reader = _target;
+			map_node<Key, T>* reader = _target;
 			if (!reader)
 				return ;
 			while (reader->getParent() && reader == reader->getParent()->getChild_r()){
@@ -273,18 +310,42 @@ class reverse_map_iterator
 			}
 			_target = reader;
 		};
+		void	move_right(){
+			ssize_t stage = 0;
+			map_node<Key, T>* reader = _target;
+			if (!reader)
+				return ;
+			while (reader->getParent() && reader == reader->getParent()->getChild_l()){
+				reader = reader->getParent();
+				stage++;
+			}
+			if (reader->getParent() && reader->getParent()->getChild_l()){
+				reader = reader->getParent()->getChild_l();
+				while(stage > 0 && reader->getChild_r()){
+					reader = reader->getChild_r();
+					stage--;
+				}
+			}
+			else if (!reader->getParent()){
+				while (stage > 1){
+					reader = reader->getChild_r();
+					stage--;
+				}
+			}
+			_target = reader;
+		};
 };
 // template < class T >
-// class map_node{
+// class ft::map_node{
 // 	public:
-// 		map_node():_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){};
-// 		map_node(T	content):_parent(NULL), _child_l(NULL), _child_r(NULL), _content(content){};
-// 		map_node(map_node other):_parent(other._parent), _child_l(other._child_l), _child_r(other._child_r), _content(other._content){};
-// 		~map_node();
+// 		ft::map_node():_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){};
+// 		ft::map_node(T	content):_parent(NULL), _child_l(NULL), _child_r(NULL), _content(content){};
+// 		ft::map_node(ft::map_node other):_parent(other._parent), _child_l(other._child_l), _child_r(other._child_r), _content(other._content){};
+// 		~ft::map_node();
 // 	private:
-// 		map_node*	_parent;
-// 		map_node*	_child_l;
-// 		map_node*	_child_r;
+// 		ft::map_node*	_parent;
+// 		ft::map_node*	_child_l;
+// 		ft::map_node*	_child_r;
 // 		T*			_content;
 // };
 

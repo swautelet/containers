@@ -5,7 +5,7 @@
 
 namespace ft{
 template< class T1, class T2> 
-	class pair{
+	struct pair{
 		public:
 		// typedef
 			typedef T1 first_type;
@@ -14,7 +14,8 @@ template< class T1, class T2>
 		// member function
 			pair(): first(T1()), second(T2()){};
 			pair(const T1& x, const T2& y): first(x), second(y){};
-			template< class U1, class U2 >pair( const pair<U1, U2>& p ): first(p.first), second(p.second);
+			template< class U1, class U2 >pair( const pair<U1, U2>& p ): first(p.first), second(p.second){};
+			pair( const pair<T1, T2>& p ): first(p.first), second(p.second){};
 			pair& operator=( const pair& other ){
 				first = other.first;
 				second = other.second;
@@ -30,7 +31,7 @@ template< class T1, class T2>
 };
 template< class T1, class T2 >
 pair<T1, T2> make_pair( T1 t, T2 u ){
-	pair(t, u);
+	return (ft::pair<T1, T2>( t, u));
 };
 template< class T1, class T2 >
 bool operator==( const pair<T1,T2>& lhs, const pair<T1,T2>& rhs ){

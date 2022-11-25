@@ -7,10 +7,69 @@
 #include "map_iterator.hpp"
 
 namespace ft{
+	// class map_node{
+	// public:
+	// 	map_node():_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){};
+	// 	map_node(U	content):_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){
+	// 		_content = Allocator.allocate(1);
+	// 		Allocator.construct(_content, content);
+	// 	};
+	// 	map_node(map_node other):_parent(other._parent), _child_l(other._child_l), _child_r(other._child_r), _content(NULL){
+	// 		_content = Allocator.allocate(1);
+	// 		Allocator.construct(_content, other._content);
+	// 	};
+	// 	~map_node(){
+	// 		if (_content){
+	// 			Allocator.destroy(_content);
+	// 			Allocator.deallocate(_content, 1);
+	// 		}
+	// 	};
+	// 	Key&	First(){
+	// 		return _content.first;
+	// 	};
+	// 	T&		Second(){
+	// 		return _content.second;
+	// 	};
+	// 	void	setSecond(T& value){
+	// 		_content.second = value;
+	// 	};
+	// 	void	setParent(map_node* parent){
+	// 		_parent = parent;
+	// 	};
+	// 	void	setChild_l(map_node* child){
+	// 		_child_l = child;
+	// 	};
+	// 	void	setChild_r(map_node* child){
+	// 		_child_r = child;
+	// 	};
+	// 	map_node*	getParent(){
+	// 		return _parent;
+	// 	};
+	// 	map_node*	getChild_l(){
+	// 		return _child_l;
+	// 	};
+	// 	map_node*	getChild_r(){
+	// 		return _child_r;
+	// 	};
+	// 	ft::pair<const Key, T>*	getContent(){
+	// 		return _content;
+	// 	}
+	// 	ft::pair<const Key, T>& operator *(){
+	// 		return *_content;
+	// 	};
+
+	// private:
+	// 	ft::map_node*				_parent;
+	// 	ft::map_node*				_child_l;
+	// 	ft::map_node*				_child_r;
+	// 	ft::pair<const Key, T>*	_content;
+	// };
+
 	template<class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >
-	class map{
+	class Map{
 		public:
 		// typedef 
+			typedef map_node<Key, T, Allocator>			node;
 			typedef Key											key_type;
 			typedef T											mapped_type;
 			typedef ft::pair<const key_type, mapped_type>		value_type;
@@ -23,58 +82,58 @@ namespace ft{
 			typedef typename allocator_type::size_type			size_type;
 			typedef typename allocator_type::difference_type	difference_type;
 
-			typedef ft::map_iterator							iterator;
-			typedef const ft::map_iterator						const_iterator;
-			typedef ft::reverse_map_iterator					reverse_iterator;
-			typedef const ft::reverse_map_iterator				const_reverse_iterator;
+			typedef ft::map_iterator<Key, T, false>				iterator;
+			typedef ft::map_iterator<Key, T, true>				const_iterator;
+			typedef ft::reverse_map_iterator<Key, T, false>		reverse_iterator;
+			typedef ft::reverse_map_iterator<Key, T, true>		const_reverse_iterator;
 		//member functions
-			map():_root(NULL), _nb_node(0){};
-			explicit map( const Compare& comp, const Allocator& alloc = Allocator()):_root(NULL), _nb_node(0){};
-			template< class InputIt > map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator() ):_root(NULL), _nb_node(0){
+			Map():_root(NULL), _nb_node(0){};
+			explicit Map( const Compare& comp, const Allocator& alloc = Allocator()):_root(NULL), _nb_node(0){};
+			template< class InputIt > Map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator() ):_root(NULL), _nb_node(0){
 				while (first != last){
 					add_node(*first);
 					first++;
 				}
 			};
-			map( const map& other ):_root(NULL), _nb_node(0){
-				for (ft::map_iterator i = other.first(); i != other.end(); i++){
+			Map( const Map& other ):_root(NULL), _nb_node(0){
+				for (iterator i = other.first(); i != other.end(); i++){
 					add_node(*i);
 				}
 			};
-			~map(){
+			~Map(){
 				clear();
 			};
-			map& operator=( const map& other ){
+			Map& operator=( const Map& other ){
 				clear();
-				for (ft::map_iterator i = other.first(); i != other.end(); i++){
+				for (iterator i = other.first(); i != other.end(); i++){
 					add_node(*i);
 				}
 			};
-			allocator_type get_allocator() const{return Allocator};
+			allocator_type get_allocator() const{return _alloc;};
 
 		//element access
 			T& at( const Key& key ){
-				map_node* reader = find(key);
+				node* reader = find(key);
 				if (!reader)
 					throw (out_of_range_exception());
 				else
 					return reader->Second();
 			};
 			const T& at( const Key& key ) const{
-				map_node* reader = find(key);
+				node* reader = find(key);
 				if (!reader)
 					throw (out_of_range_exception());
 				else
 					return reader->Second();
 			};
 			T& operator[]( const Key& key ){
-				map_node* reader = find(key);
+				node* reader = find(key);
 				if (reader)
 					return reader->Second();
 				else
-					add_node(ft::pair< key, T()>);
+					add_node(ft::pair< Key, T >(key, T()) );
 				reader = find(key);
-				return reader.second();
+				return reader->second();
 			};
 
 		//iterators
@@ -98,13 +157,13 @@ namespace ft{
 				return _nb_node;
 			};
 			size_type max_size() const{
-				return Allocator.max_size();
+				return _alloc.max_size();
 			};
 
 		//modifiers
 			void clear(){
 				while (_nb_node){
-					map_node* reader(_root);
+					node* reader(_root);
 					while (reader->getChild_l() || reader->getChild_r()){
 						if (reader->getChild_l())
 							reader = reader->getChild_l();
@@ -115,13 +174,13 @@ namespace ft{
 				}
 			};
 			ft::pair<iterator, bool> insert( const value_type& value ){
-				map_node* reader = find(value);
+				node* reader = find(value.first);
 				if (reader)
-					return make_pair(reader->getContent(), false);
+					return make_pair(reader, false);
 				return make_pair(add_node(value), true);
 			};
 			iterator insert( iterator pos, const value_type& value ){
-				map_node* reader = find(value);
+				node* reader = find(value);
 				if (reader)
 					return reader;
 				return add_node(value);
@@ -138,19 +197,19 @@ namespace ft{
 			};
 			iterator erase( iterator first, iterator last ){
 				for (iterator i = first; i != last; i++){
-					delete_node(i)
+					delete_node(i);
 				}
 				return NULL;
 			};
 			size_type erase( const Key& key ){
-				map_node* reader = find(key);
+				node* reader = find(key);
 				if (reader){
 					delete_node(reader);
 					return 1;
 				}
 				return 0;
 			};
-			void swap( map& other ){
+			void swap( Map& other ){
 				swap(this->_root, other._root);
 				swap(this->_nb_node, other._nb_node);
 			};
@@ -162,9 +221,9 @@ namespace ft{
 				return 0;
 			};
 			iterator find( const Key& key ){
-				map_node* reader = _root;
-				while(reader && reader->First() != value.first){
-					if (reader->First() < value.first)
+				node* reader = _root;
+				while(reader && reader->First() != key){
+					if (reader->First() < key)
 						reader = reader->getChild_l();
 					else 
 						reader = reader->getChild_r();
@@ -172,7 +231,7 @@ namespace ft{
 				return reader;
 			};
 			const_iterator find( const Key& key ) const{
-				for (ft::map_iterator i = begin(); i != end(); i++){
+				for (iterator i = begin(); i != end(); i++){
 					if (i->first() == key)
 						return i;
 				}
@@ -180,7 +239,7 @@ namespace ft{
 			};
 			ft::pair<iterator,iterator> equal_range( const Key& key ){
 				ft::pair<iterator, iterator> ret;
-				for (ft::map_iterator i = begin(); i != end(); i++){
+				for (iterator i = begin(); i != end(); i++){
 					if (!(i->first() < key) && i->first() == key){
 						ret.first = i;
 						i++;
@@ -197,7 +256,7 @@ namespace ft{
 			};
 			ft::pair<const_iterator,const_iterator> equal_range( const Key& key ) const{
 				ft::pair<iterator, iterator> ret;
-				for (ft::map_iterator i = begin(); i != end(); i++){
+				for (iterator i = begin(); i != end(); i++){
 					if (!(i->first() < key) && i->first() == key){
 						ret.first = i;
 						i++;
@@ -213,33 +272,33 @@ namespace ft{
 				return ret;
 			};
 			iterator lower_bound( const Key& key ){
-				map_node* reader = _root;
+				node* reader = _root;
 				while (reader && Compare(reader->First(), key))
 					reader = reader->getChild_r();
 				return reader;
 			};
 			const_iterator lower_bound( const Key& key ) const{
-				map_node* reader = _root;
+				node* reader = _root;
 				while (reader && Compare(reader->First(), key))
 					reader = reader->getChild_r();
 				return reader;
 			};
 			iterator upper_bound( const Key& key ){
-				map_node* reader = _root;
+				node* reader = _root;
 				while (reader && (Compare(reader->First(), key) || reader->First() == key))
 					reader = reader->getChild_r();
 				return reader;
 			};
 			const_iterator upper_bound( const Key& key ) const{
-				map_node* reader = _root;
+				node* reader = _root;
 				while (reader && (Compare(reader->First(), key) || reader->First() == key))
 					reader = reader->getChild_r();
 				return reader;
 			};
 
 		//observer
-			key_compare key_comp() const{return Compare;};
-			ft::map::value_compare value_comp() const{return comp_node;};
+			key_compare key_comp() const{return _compare;};
+			Compare value_comp() const{return comp_node;};
 	
 		// exception
 			class out_of_range_exception: public std::exception{
@@ -253,20 +312,21 @@ namespace ft{
 				return Compare(one.first, two.first);
 			}
 		//private attribute
-			map_node*						_root;
-			size_type						_nb_node;
-			std::allocator < map_node > >	_alloc;
+			node*						_root;
+			size_type												_nb_node;
+			std::allocator < node >	_alloc;
+			Compare													_compare;
 
 		// nodes manipulation functions
-			map_node* new_node(ft::pair<const Key, T> value){
-				map_node model(value);
-				map_node* temp = _alloc.allocate(1);
+			node* new_node(ft::pair<const Key, T> value){
+				node model(value);
+				node* temp = _alloc.allocate(1);
 				_alloc.construct(temp, model);
 				_nb_node++;
 				return temp;
 			};
-			map_node*	add_node(ft::pair<const Key, T> value){
-				map_node* reader = _root;
+			node*	add_node(ft::pair<const Key, T> value){
+				node* reader = _root;
 				while (reader){
 					if (value.first == reader->First()){
 						reader->setSecond(value.second);
@@ -289,28 +349,28 @@ namespace ft{
 				}
 				return NULL;
 			};
-			void	delete_node(map_node& target){
-				while (target.getChild_r())
-					swapChild_r(target);
-				_alloc.destroy(&target);
-				_alloc.deallocate(&target, 1);
+			void	delete_node(node* target){
+				while (target->getChild_r())
+					swapChild_r(*target);
+				_alloc.destroy(target);
+				_alloc.deallocate(target, 1);
 				_nb_node--;
 			};
-			void	add_child_l(map_node& parent, map_node& child){
+			void	add_child_l(node& parent, node& child){
 				parent.setChild_l(&child);
 				child.setParent(&parent);
 			};
-			void	add_child_r(map_node& parent, map_node& child){
+			void	add_child_r(node& parent, node& child){
 				parent.setChild_r(&child);
 				child.setParent(&parent);
 			};
-			void	swapChild_l(map_node& parent){
+			void	swapChild_l(node& parent){
 				if (!parent.getChild_l())
 					return ;
-				map_node* pp = parent.getParent();
-				map_node* pcl = parent.getChild_l();
-				map_node* pcr = parent.getChild_r();
-				map_node* child = pcl;
+				node* pp = parent.getParent();
+				node* pcl = parent.getChild_l();
+				node* pcr = parent.getChild_r();
+				node* child = pcl;
 				parent.setParent(child->getParent());
 				parent.setChild_l(child->getChild_l());
 				parent.setChild_r(child->getChild_r());
@@ -318,13 +378,13 @@ namespace ft{
 				child->setChild_l(pcl);
 				child->setChild_r(pcr);
 			};
-			void	swapChild_r(map_node& parent){
+			void	swapChild_r(node& parent){
 				if (!parent.getChild_r())
 					return ;
-				map_node* pp = parent.getParent();
-				map_node* pcl = parent.getChild_l();
-				map_node* pcr = parent.getChild_r();
-				map_node* child = pcr;
+				node* pp = parent.getParent();
+				node* pcl = parent.getChild_l();
+				node* pcr = parent.getChild_r();
+				node* child = pcr;
 				parent.setParent(child->getParent());
 				parent.setChild_l(child->getChild_l());
 				parent.setChild_r(child->getChild_r());
@@ -333,70 +393,70 @@ namespace ft{
 				child->setChild_r(pcr);
 			};
 		// private template map node
-			class map_node{
-				public:
-					map_node():_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){};
-					map_node(U	content):_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){
-						_content = Allocator.allocate(1);
-						Allocator.construct(_content, content);
-					};
-					map_node(map_node other):_parent(other._parent), _child_l(other._child_l), _child_r(other._child_r), _content(NULL){
-						_content = Allocator.allocate(1);
-						Allocator.construct(_content, other._content);
-					};
-					~map_node(){
-						if (_content){
-							Allocator.destroy(_content);
-							Allocator.deallocate(_content, 1);
-						}
-					};
-					Key&	First(){
-						return _content.first;
-					};
-					T&		Second(){
-						return _content.second;
-					};
-					void	setSecond(T& value){
-						_content.second = value;
-					};
-					void	setParent(map_node* parent){
-						_parent = parent;
-					};
-					void	setChild_l(map_node* child){
-						_child_l = child;
-					};
-					void	setChild_r(map_node* child){
-						_child_r = child;
-					};
-					map_node*	getParent(){
-						return _parent;
-					};
-					map_node*	getChild_l(){
-						return _child_l;
-					};
-					map_node*	getChild_r(){
-						return _child_r;
-					};
-					ft::pair<const Key, T>*	getContent(){
-						return _content;
-					}
-					ft::pair<const Key, T>& operator *(){
-						return *_content;
-					};
+			// class map_node{
+			// 	public:
+			// 		map_node():_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){};
+			// 		map_node(U	content):_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){
+			// 			_content = Allocator.allocate(1);
+			// 			Allocator.construct(_content, content);
+			// 		};
+			// 		map_node(map_node other):_parent(other._parent), _child_l(other._child_l), _child_r(other._child_r), _content(NULL){
+			// 			_content = Allocator.allocate(1);
+			// 			Allocator.construct(_content, other._content);
+			// 		};
+			// 		~map_node(){
+			// 			if (_content){
+			// 				Allocator.destroy(_content);
+			// 				Allocator.deallocate(_content, 1);
+			// 			}
+			// 		};
+			// 		Key&	First(){
+			// 			return _content.first;
+			// 		};
+			// 		T&		Second(){
+			// 			return _content.second;
+			// 		};
+			// 		void	setSecond(T& value){
+			// 			_content.second = value;
+			// 		};
+			// 		void	setParent(map_node* parent){
+			// 			_parent = parent;
+			// 		};
+			// 		void	setChild_l(map_node* child){
+			// 			_child_l = child;
+			// 		};
+			// 		void	setChild_r(map_node* child){
+			// 			_child_r = child;
+			// 		};
+			// 		map_node*	getParent(){
+			// 			return _parent;
+			// 		};
+			// 		map_node*	getChild_l(){
+			// 			return _child_l;
+			// 		};
+			// 		map_node*	getChild_r(){
+			// 			return _child_r;
+			// 		};
+			// 		ft::pair<const Key, T>*	getContent(){
+			// 			return _content;
+			// 		}
+			// 		ft::pair<const Key, T>& operator *(){
+			// 			return *_content;
+			// 		};
 
-				private:
-					map_node*				_parent;
-					map_node*				_child_l;
-					map_node*				_child_r;
-					ft::pair<const Key, T>*	_content;
-			};
+			// 	private:
+			// 		map_node*				_parent;
+			// 		map_node*				_child_l;
+			// 		map_node*				_child_r;
+			// 		ft::pair<const Key, T>*	_content;
+			// };
 
 		protected:
 	};
 	template< class Key, class T, class Compare, class Alloc > bool operator==( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ){
 		if (lhs._nb_node != rhs._nb_node)
 			return false;
-		ft::map_iterator i = lhs.begin(), j = rhs.begin();
+		ft::map_iterator<Key, T, false> i = lhs.begin(), j = rhs.begin();
 		while (i && j){
 			if (i.second != j.second)
 				return false;
@@ -411,9 +471,12 @@ namespace ft{
 	template< class Key, class T, class Compare, class Alloc > bool operator<( const map<Key,T,Compare,Alloc>& lhs,  const map<Key,T,Compare,Alloc>& rhs ){
 		if (lhs._nb_node < rhs._nb_node)
 			return true;
-		for (ft::map_iterator i = lhs.begin(), j = rhs.begin(); i && j; i++, j++){
+		ft::map_iterator<Key, T, false> i = lhs.begin(), j = rhs.begin();
+		while (i && j){
 			if (i.second < j.second)
 				return true;
+			i++;
+			j++;
 		}
 		return (i < j);
 	};
