@@ -20,8 +20,10 @@ class map_node{
 		};
 		~map_node(){
 			if (_content){
+				// std::cout << "map node destroy " << _content << std::endl;
 				_alloc.destroy(_content);
 				_alloc.deallocate(_content, 1);
+				// std::cout << "theres  " << node_construct << " node" << std::endl;
 			}
 		};
 		const Key&	First(){
@@ -52,6 +54,9 @@ class map_node{
 			return _child_r;
 		};
 		mapped_type*	getContent() const{
+			return _content;
+		}
+		mapped_type*	operator->() const{
 			return _content;
 		}
 		mapped_type& operator *(){

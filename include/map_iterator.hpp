@@ -94,7 +94,9 @@ class map_iterator
 		node_pointer	getNode_pointer() const {return _target;};
 
 		reference operator*() const         { return (*_target->getContent()); };
-		pointer operator->() const          { return (_target->getContent()); };
+		pointer operator->() const          { 
+			// std::cout << _target->getContent() << std::endl;;
+			return (_target->getContent()); };
 		map_iterator& operator=(const map_iterator& other){
 			this->_target = other.getNode_pointer();
 			return (*this);
@@ -236,6 +238,7 @@ class map_iterator
 		};
 		void	move_right(){
 			ssize_t stage = 0;
+			// std::cout << "try to move right" << std::endl;
 			// map_node<Key, T>* reader = _target;
 			// if (!reader)
 			// 	return ;
@@ -258,6 +261,7 @@ class map_iterator
 			// }
 			// _target = reader;
 			_target = moving_up(_target, stage, false);
+			// std::cout << "done moving right" << std::endl;
 		};
 		void	move_left(){
 			ssize_t stage = 0;

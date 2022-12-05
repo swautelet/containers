@@ -70,7 +70,7 @@ namespace ft{
 		public:
 		// typedef 
 			typedef map_node<Key, T, Allocator>			node;
-			typedef Key											key_type;
+			typedef const Key									key_type;
 			typedef T											mapped_type;
 			typedef ft::pair<const key_type, mapped_type>		value_type;
 			typedef Compare										key_compare;
@@ -96,8 +96,9 @@ namespace ft{
 				}
 			};
 			Map( const Map& other ):_root(NULL), _nb_node(0){
+				bool first = true;
 				for (iterator i = other.begin(); i != other.end(); i++){
-					add_node(*i);
+						add_node(*i);
 				}
 			};
 			~Map(){
@@ -105,8 +106,11 @@ namespace ft{
 			};
 			Map& operator=( const Map& other ){
 				clear();
+				int count = 0;
 				for (iterator i = other.begin(); i != other.end(); i++){
 					add_node(*i);
+					count++;
+					std::cout << count << " node added " << std::endl;
 				}
 			};
 			allocator_type get_allocator() const{return _alloc;};
@@ -135,6 +139,9 @@ namespace ft{
 				reader = find(key);
 				return reader->second();
 			};
+			node*	getRoot(){
+				return _root;
+			}
 
 		//iterators
 			iterator begin(){return _root;};
@@ -171,6 +178,7 @@ namespace ft{
 							reader = reader->getChild_r();
 					}
 					delete_node(reader);
+					// std::cout << "here " << _nb_node << std::endl;
 				}
 			};
 			ft::pair<iterator, bool> insert(const value_type& value ){
@@ -327,6 +335,18 @@ namespace ft{
 			};
 			node*	add_node(value_type value){
 				node* reader = _root;
+			std::cout << "begin adding" << std::endl;
+				if (!_root){
+					_root = new_node(value);
+					std::cout << "first node " << std::endl;
+					std::cout << "reader is " << _root->First() << std::endl;
+				std::cout << "value " << value.first << std::endl;
+				}
+				else{
+					std::cout << "reader is " << reader << std::endl;
+					std::cout << reader->getChild_r() << std::endl;
+				std::cout << "value " << value.first << std::endl;
+				}
 				while (reader){
 					if (value.first == reader->First()){
 						reader->setSecond(value.second);
@@ -340,20 +360,33 @@ namespace ft{
 					}
 					else if (_compare(value.first, reader->First())){
 						add_child_l(reader, new_node(value));
+						std::cout << "done adding" << std::endl;
+						std::cout << "reader is " << reader->First() << std::endl;
+				std::cout << "value " << value.first << std::endl;
 						return reader->getChild_l();
 					}
 					else if (_compare(reader->First(), value.first)){
 						add_child_r(reader, new_node(value));
+						std::cout << "done adding" << std::endl;
+						std::cout << "reader is " << reader->First() << std::endl;
+				std::cout << "value " << value.first << std::endl;
 						return reader->getChild_r();
 					}
 				}
-				return NULL;
+				std::cout << "done adding" << std::endl;
+				return _root;
 			};
 			void	delete_node(node* target){
 				while (target->getChild_r())
 					swapChild_r(target);
+				// std::cout << "node destroyed " << target->getContent() << std::endl;
+				if (target->getParent() && target == target->getParent()->getChild_l())
+					target->getParent()->setChild_l(NULL);
+				else if (target->getParent() && target == target->getParent()->getChild_r())
+					target->getParent()->setChild_r(NULL);
 				_alloc.destroy(target);
 				_alloc.deallocate(target, 1);
+				// std::cout << "done " << std::endl;
 				_nb_node--;
 			};
 			void	add_child_l(node* parent, node* child){
