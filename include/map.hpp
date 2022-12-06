@@ -110,7 +110,7 @@ namespace ft{
 				for (iterator i = other.begin(); i != other.end(); i++){
 					add_node(*i);
 					count++;
-					std::cout << count << " node added " << std::endl;
+					// std::cout << count << " node added " << std::endl;
 				}
 			};
 			allocator_type get_allocator() const{return _alloc;};
@@ -144,14 +144,50 @@ namespace ft{
 			}
 
 		//iterators
-			iterator begin(){return _root;};
-			const_iterator begin() const{return _root;};
-			iterator end(){return NULL;};
-			const_iterator end() const{return NULL;};
-			reverse_iterator rbegin(){return _root;};
-			const_reverse_iterator rbegin() const{return _root;};
-			reverse_iterator rend(){return NULL;};
-			const_reverse_iterator rend() const{return NULL;};
+			iterator begin(){
+				node* reader = _root;
+				while (reader && reader->getChild_l())
+					reader = reader->getChild_l();
+				iterator ret (reader, _root);
+				return ret;
+			};
+			const_iterator begin() const{
+				node* reader = _root;
+				while (reader && reader->getChild_l())
+					reader = reader->getChild_l();
+				iterator ret (reader, _root);
+				return ret;
+			};
+			iterator end(){
+				iterator ret (NULL, _root);
+				return ret;
+			};
+			const_iterator end() const{
+				iterator ret (NULL, _root);
+				return ret;
+			};
+			reverse_iterator rbegin(){
+				node* reader = _root;
+				while (reader && reader->getChild_l())
+					reader = reader->getChild_l();
+				reverse_iterator ret (reader, _root);
+				return ret;
+			};
+			const_reverse_iterator rbegin() const{
+				node* reader = _root;
+				while (reader && reader->getChild_l())
+					reader = reader->getChild_l();
+				reverse_iterator ret (reader, _root);
+				return ret;
+			};
+			reverse_iterator rend(){
+				reverse_iterator ret (NULL, _root);
+				return ret;
+			};
+			const_reverse_iterator rend() const{
+				reverse_iterator ret (NULL, _root);
+				return ret;
+			};
 
 		//capacity
 			bool empty() const{
@@ -180,12 +216,16 @@ namespace ft{
 					delete_node(reader);
 					// std::cout << "here " << _nb_node << std::endl;
 				}
+				_root = NULL;
 			};
 			ft::pair<iterator, bool> insert(const value_type& value ){
 				iterator reader = find(value.first);
-				if (reader)
-					return ft::make_pair(reader, false);
-				return (ft::make_pair(add_node(value), true));
+				if (reader){
+					iterator ret (reader.getNode_pointer(), _root);
+					return ft::make_pair(ret, false);
+				};
+				iterator ret (add_node(value), _root);
+				return (ft::make_pair(ret, true));
 			};
 			iterator insert( iterator pos, const value_type& value ){
 				node* reader = find(value);
@@ -236,14 +276,15 @@ namespace ft{
 					else 
 						reader = reader->getChild_r();
 				}
-				return reader;
+				iterator ret (reader, _root);
+				return (ret);
 			};
 			const_iterator find( const Key& key ) const{
 				for (iterator i = begin(); i != end(); i++){
 					if (i->first() == key)
-						return i;
+						return (i);
 				}
-				return NULL;
+				return (NULL, _root);
 			};
 			ft::pair<iterator,iterator> equal_range( const Key& key ){
 				ft::pair<iterator, iterator> ret;
@@ -283,25 +324,25 @@ namespace ft{
 				node* reader = _root;
 				while (reader && Compare(reader->First(), key))
 					reader = reader->getChild_r();
-				return reader;
+				return (reader, _root);
 			};
 			const_iterator lower_bound( const Key& key ) const{
 				node* reader = _root;
 				while (reader && Compare(reader->First(), key))
 					reader = reader->getChild_r();
-				return reader;
+				return (reader, _root);
 			};
 			iterator upper_bound( const Key& key ){
 				node* reader = _root;
 				while (reader && (Compare(reader->First(), key) || reader->First() == key))
 					reader = reader->getChild_r();
-				return reader;
+				return (reader, _root);
 			};
 			const_iterator upper_bound( const Key& key ) const{
 				node* reader = _root;
 				while (reader && (Compare(reader->First(), key) || reader->First() == key))
 					reader = reader->getChild_r();
-				return reader;
+				return (reader, _root);
 			};
 
 		//observer
@@ -327,53 +368,63 @@ namespace ft{
 
 		// nodes manipulation functions
 			node* new_node(value_type value){
-				node model(value);
+				// node model(value);
 				node* temp = _alloc.allocate(1);
-				_alloc.construct(temp, model);
+				_alloc.construct(temp, value);
 				_nb_node++;
+				// std::cout << "new_node created : " << temp << "|" << temp->getChild_l() << "|" << temp->getChild_r() << "|" << temp->getParent() << std::endl;
+				// if (temp == _root)
+				// 	std::cout << "it's over 9999999999 impossible " << std::endl;
 				return temp;
 			};
 			node*	add_node(value_type value){
 				node* reader = _root;
-			std::cout << "begin adding" << std::endl;
+			// std::cout << "begin adding" << std::endl;
 				if (!_root){
 					_root = new_node(value);
-					std::cout << "first node " << std::endl;
-					std::cout << "reader is " << _root->First() << std::endl;
-				std::cout << "value " << value.first << std::endl;
+					// std::cout << "first node " << std::endl;
+				// 	std::cout << "reader is " << _root->First() << std::endl;
+				// std::cout << "value " << value.first << std::endl;
 				}
-				else{
-					std::cout << "reader is " << reader << std::endl;
-					std::cout << reader->getChild_r() << std::endl;
-				std::cout << "value " << value.first << std::endl;
-				}
+				// else{
+				// 	std::cout << "reader is " << reader << std::endl;
+				// 	std::cout << reader->getChild_r() << std::endl;
+				// std::cout << "value " << value.first << std::endl;
+				// }
 				while (reader){
+					
 					if (value.first == reader->First()){
 						reader->setSecond(value.second);
+						// std::cout << "assigned" << std::endl;
 						return reader;
 					}
-					else if (reader->getChild_l() && _compare(value.first, reader->First())){
+					else if (reader->getChild_l() != NULL && _compare(value.first, reader->First())){
 						reader = reader->getChild_l();
+						// std::cout << "looping left" << std::endl;
 					}
-					else if (reader->getChild_r() && _compare(reader->First(), value.first)){
+					else if (reader->getChild_r() != NULL && _compare(reader->First(), value.first)){
+						// std::cout << "looping right : " << reader << " " << reader->getChild_l() << " " << reader->getChild_r() << std::endl;
+						// std::cout << reader->First() << "|" << reader->getChild_r()->First() << std::endl;
 						reader = reader->getChild_r();
 					}
 					else if (_compare(value.first, reader->First())){
 						add_child_l(reader, new_node(value));
-						std::cout << "done adding" << std::endl;
-						std::cout << "reader is " << reader->First() << std::endl;
-				std::cout << "value " << value.first << std::endl;
+						// std::cout << "done adding left" << std::endl;
+				// 		std::cout << "reader is " << reader->First() << std::endl;
+				// std::cout << "value " << value.first << std::endl;
 						return reader->getChild_l();
 					}
 					else if (_compare(reader->First(), value.first)){
 						add_child_r(reader, new_node(value));
-						std::cout << "done adding" << std::endl;
-						std::cout << "reader is " << reader->First() << std::endl;
-				std::cout << "value " << value.first << std::endl;
+						// std::cout << "done adding right" << std::endl;
+				// 		std::cout << "reader is " << reader->First() << std::endl;
+				// std::cout << "value " << value.first << std::endl;
 						return reader->getChild_r();
 					}
+					// else 
+					// 	std::cout << "hello from loop " << reader << " " << reader->getChild_l() << " " << reader->getChild_r() << std::endl;
 				}
-				std::cout << "done adding" << std::endl;
+				// std::cout << "done adding" << std::endl;
 				return _root;
 			};
 			void	delete_node(node* target){
@@ -394,6 +445,8 @@ namespace ft{
 				child->setParent(parent);
 			};
 			void	add_child_r(node* parent, node* child){
+				if (parent == child)
+					std::cout << " Warning ---------------- : " << _root << "|" << parent << "|" << child << std::endl;
 				parent->setChild_r(child);
 				child->setParent(parent);
 			};
