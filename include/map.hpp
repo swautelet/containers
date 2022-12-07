@@ -168,15 +168,15 @@ namespace ft{
 			};
 			reverse_iterator rbegin(){
 				node* reader = _root;
-				while (reader && reader->getChild_l())
-					reader = reader->getChild_l();
+				while (reader && reader->getChild_r())
+					reader = reader->getChild_r();
 				reverse_iterator ret (reader, _root);
 				return ret;
 			};
 			const_reverse_iterator rbegin() const{
 				node* reader = _root;
-				while (reader && reader->getChild_l())
-					reader = reader->getChild_l();
+				while (reader && reader->getChild_r())
+					reader = reader->getChild_r();
 				reverse_iterator ret (reader, _root);
 				return ret;
 			};
@@ -250,9 +250,9 @@ namespace ft{
 				return NULL;
 			};
 			size_type erase( const Key& key ){
-				node* reader = find(key);
-				if (reader){
-					delete_node(reader);
+				iterator reader = find(key);
+				if (reader.getNode_pointer()){
+					delete_node(reader.getNode_pointer());
 					return 1;
 				}
 				return 0;
