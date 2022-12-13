@@ -5,7 +5,7 @@
 
 namespace ft{
 
-template <class Key, class T, bool B = false >
+template <class Key, class T,class Compare = std::less<Key>, bool B = false >
 class reverse_map_iterator
 {
 	public:
@@ -22,7 +22,7 @@ class reverse_map_iterator
 		reverse_map_iterator():_target(NULL){};
 		reverse_map_iterator(node_pointer target, node_pointer root):_target(target), _root(root){};
 		reverse_map_iterator(reverse_map_iterator<Key, T> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
-		reverse_map_iterator(reverse_map_iterator<Key, T, true> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		reverse_map_iterator(reverse_map_iterator<Key, T,Compare, true> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
 		~reverse_map_iterator(){};
 
 		elemPtr getElemPtr() const      { return _target->getContent(); };

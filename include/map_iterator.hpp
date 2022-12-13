@@ -70,7 +70,7 @@ namespace ft{
 // 		mapped_type*		_content;
 // 	};
 
-template <class Key, class T, bool B = false >
+template <class Key, class T,class Compare = std::less<Key>, bool B = false >
 class map_iterator
 {
 	public:
@@ -87,7 +87,8 @@ class map_iterator
 		map_iterator():_target(NULL){};
 		map_iterator(node_pointer target, node_pointer root):_target(target), _root(root){};
 		map_iterator(map_iterator<Key, T> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
-		map_iterator(map_iterator<Key, T, true> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		template < class F> map_iterator(map_iterator<Key, T, F> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		map_iterator(map_iterator<Key, T, Compare, true> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
 		~map_iterator(){};
 
 		elemPtr getElemPtr() const      { return _target->getContent(); };
@@ -162,92 +163,93 @@ class map_iterator
 	private:
 		node_pointer		_target;
 		node_pointer		_root;
+		Compare				_compare;
 
-		map_node<Key, T>*	moving_up(map_node<Key, T>* reader, ssize_t& stage, bool called_from_down){
-			while (reader->getParent() && reader == reader->getParent()->getChild_r()){
-				reader = reader->getParent();
-				stage++;
-			}
-			if (reader->getParent() && reader->getParent()->getChild_r()){
-				reader = reader->getParent()->getChild_r();
-				return (moving_down(reader, stage, false));
-			}
-			else{
-				while (reader->getParent() && !reader->getParent()->getChild_r()){
-					reader = reader->getParent();
-					stage++;
-				}
-				if (reader->getParent() && reader->getParent()->getChild_r()){
-					reader = reader->getParent()->getChild_r();
-					return (moving_down(reader, stage, false));
-				}
-			}
-			if (!reader->getParent() && !called_from_down)
-				return (moving_down(reader, stage, true));
-			else 
-				return NULL;
-			// if (!reader->getParent() && called_from_down)
-		};
-		map_node<Key, T>*	moving_down(map_node<Key, T>* reader, ssize_t& stage, bool next_stage){
-			if (next_stage)
-				stage++;
-			if (!stage)
-				return reader;
-			if (stage && reader->getChild_l())
-				return (moving_down(reader->getChild_l(), --stage, false));
-			else if (stage && reader->getChild_r())
-				return (moving_down(reader->getChild_r(), --stage, false));
-			else 
-				return (moving_up(reader, stage, true));
-				// if (stage && !reader->getChild_l() && !reader->getChild_r())
-		};
-		map_node<Key, T>*	moving_up_r(map_node<Key, T>* reader, ssize_t& stage, bool called_from_down){
-			// std::cout << "test " << stage << "|" << std::endl;
-			// std::cout << "first test " << reader->getParent() << "|" << reader << "|" << stage << std::endl;
-			while (reader->getParent() && reader == reader->getParent()->getChild_l()){
-				reader = reader->getParent();
-				stage++;
-				// std::cout << "i go up  " << reader << std::endl;
-			}
-			// std::cout << "second test " << reader->getParent() << "|" << reader << "|" << stage << std::endl;
-			if (reader->getParent() && reader->getParent()->getChild_l()){
-				reader = reader->getParent()->getChild_l();
-				// std::cout << "first moving down " << reader << std::endl;
-				return (moving_down_r(reader, stage, false));
-			}
-			else{
-				while (reader->getParent() && !reader->getParent()->getChild_l()){
-					reader = reader->getParent();
-					stage++;
-				}
-				if (reader->getParent() && reader->getParent()->getChild_l()){
-					reader = reader->getParent()->getChild_l();
-					// std::cout << "second moving down " << reader << std::endl;
-					return (moving_down_r(reader, stage, false));
-				}
-			}
-			if (!reader->getParent() && !called_from_down){
-				// std::cout << "third moving down " << reader << std::endl;
-				return (moving_down_r(reader, stage, true));}
-			else {
-				// std::cout << "should not happen" << std::endl;
-				return NULL;
-			}
-				// if (!reader->getParent() && called_from_down)
-		};
-		map_node<Key, T>*	moving_down_r(map_node<Key, T>* reader, ssize_t& stage, bool previous_stage){
-			if (previous_stage)
-				stage--;
-			if (!stage)
-				return reader;
-			if (stage && reader->getChild_r())
-				return (moving_down_r(reader->getChild_r(), --stage, false));
-			else if (stage && reader->getChild_l())
-				return (moving_down_r(reader->getChild_l(), --stage, false));
-			else 
-				return (moving_up_r(reader, stage, true));
-				// if (stage && !reader->getChild_l() && !reader->getChild_r())
-		};
+		// map_node<Key, T>*	moving_up(map_node<Key, T>* reader, ssize_t& stage, bool called_from_down){
+		// 	while (reader->getParent() && reader == reader->getParent()->getChild_r()){
+		// 		reader = reader->getParent();
+		// 		stage++;
+		// 	}
+		// 	if (reader->getParent() && reader->getParent()->getChild_r()){
+		// 		reader = reader->getParent()->getChild_r();
+		// 		return (moving_down(reader, stage, false));
+		// 	}
+		// 	else{
+		// 		while (reader->getParent() && !reader->getParent()->getChild_r()){
+		// 			reader = reader->getParent();
+		// 			stage++;
+		// 		}
+		// 		if (reader->getParent() && reader->getParent()->getChild_r()){
+		// 			reader = reader->getParent()->getChild_r();
+		// 			return (moving_down(reader, stage, false));
+		// 		}
+		// 	}
+		// 	if (!reader->getParent() && !called_from_down)
+		// 		return (moving_down(reader, stage, true));
+		// 	else 
+		// 		return NULL;
+		// 	// if (!reader->getParent() && called_from_down)
+		// };
+		// map_node<Key, T>*	moving_down(map_node<Key, T>* reader, ssize_t& stage, bool next_stage){
+		// 	if (next_stage)
+		// 		stage++;
+		// 	if (!stage)
+		// 		return reader;
+		// 	if (stage && reader->getChild_l())
+		// 		return (moving_down(reader->getChild_l(), --stage, false));
+		// 	else if (stage && reader->getChild_r())
+		// 		return (moving_down(reader->getChild_r(), --stage, false));
+		// 	else 
+		// 		return (moving_up(reader, stage, true));
+		// 		// if (stage && !reader->getChild_l() && !reader->getChild_r())
+		// };
+		// map_node<Key, T>*	moving_up_r(map_node<Key, T>* reader, ssize_t& stage, bool called_from_down){
+		// 	// std::cout << "test " << stage << "|" << std::endl;
+		// 	// std::cout << "first test " << reader->getParent() << "|" << reader << "|" << stage << std::endl;
+		// 	while (reader->getParent() && reader == reader->getParent()->getChild_l()){
+		// 		reader = reader->getParent();
+		// 		stage++;
+		// 		// std::cout << "i go up  " << reader << std::endl;
+		// 	}
+		// 	// std::cout << "second test " << reader->getParent() << "|" << reader << "|" << stage << std::endl;
+		// 	if (reader->getParent() && reader->getParent()->getChild_l()){
+		// 		reader = reader->getParent()->getChild_l();
+		// 		// std::cout << "first moving down " << reader << std::endl;
+		// 		return (moving_down_r(reader, stage, false));
+		// 	}
+		// 	else{
+		// 		while (reader->getParent() && !reader->getParent()->getChild_l()){
+		// 			reader = reader->getParent();
+		// 			stage++;
+		// 		}
+		// 		if (reader->getParent() && reader->getParent()->getChild_l()){
+		// 			reader = reader->getParent()->getChild_l();
+		// 			// std::cout << "second moving down " << reader << std::endl;
+		// 			return (moving_down_r(reader, stage, false));
+		// 		}
+		// 	}
+		// 	if (!reader->getParent() && !called_from_down){
+		// 		// std::cout << "third moving down " << reader << std::endl;
+		// 		return (moving_down_r(reader, stage, true));}
+		// 	else {
+		// 		// std::cout << "should not happen" << std::endl;
+		// 		return NULL;
+		// 	}
+		// 		// if (!reader->getParent() && called_from_down)
+		// };
+		// map_node<Key, T>*	moving_down_r(map_node<Key, T>* reader, ssize_t& stage, bool previous_stage){
+		// 	if (previous_stage)
+		// 		stage--;
+		// 	if (!stage)
+		// 		return reader;
+		// 	if (stage && reader->getChild_r())
+		// 		return (moving_down_r(reader->getChild_r(), --stage, false));
+		// 	else if (stage && reader->getChild_l())
+		// 		return (moving_down_r(reader->getChild_l(), --stage, false));
+		// 	else 
+		// 		return (moving_up_r(reader, stage, true));
+		// 		// if (stage && !reader->getChild_l() && !reader->getChild_r())
+		// };
 		void	move_right(){
 			ssize_t stage = 0;
 			// std::cout << "try to move right" << std::endl;
@@ -336,11 +338,11 @@ class map_iterator
 					// if (reader->getChild_r())
 					// 	std::cout << "		key child right  " << reader->getChild_r()->First();
 					// std::cout << std::endl;
-					if (reader->First() <= now && reader->getChild_r())
+					if ((_compare(reader->First(), now) || reader->First() == now) && reader->getChild_r())
 						reader = reader->getChild_r();
-					else if (reader->First() >= now && reader->getChild_l() && still_something_higher(reader->getChild_l(), now))
+					else if ((_compare(now, reader->First()) || reader->First() == now) && reader->getChild_l() && still_something_higher(reader->getChild_l(), now))
 						reader = reader->getChild_l();
-					else if (reader->First() > now)
+					else if (_compare(now, reader->First()))
 						break ;
 					else
 						reader = NULL;
@@ -351,7 +353,7 @@ class map_iterator
 			}
 		};
 		void	find_previous(){
-			// std::cout << "begin decrease : " << _target->First() << std::endl;
+			std::cout << "begin decrease : " << _target->First() << std::endl;
 			node_pointer reader = _root;
 			Key now = _target->First();
 			while (reader){
@@ -361,21 +363,22 @@ class map_iterator
 				// if (reader->getChild_r())
 				// 	std::cout << "		key child right  " << reader->getChild_r()->First();
 				// std::cout << std::endl;
-				if (reader->First() >= now && reader->getChild_l())
+				// std::cout << " compare is : " << _compare(reader->First(), now) << std::endl;
+				if ((_compare(now, reader->First()) || reader->First() == now) && reader->getChild_l())
 					reader = reader->getChild_l();
-				else if (reader->First() <= now && reader->getChild_r() && still_something_lower(reader->getChild_r(), now)){
+				else if ((_compare(reader->First(), now) || reader->First() == now) && reader->getChild_r() && still_something_lower(reader->getChild_r(), now)){
 					// std::cout << "returned true" << std::endl;
 					reader = reader->getChild_r();
 				}
-				else if (reader->First() < now)
+				else if (_compare(reader->First(), now))
 					break ;
 				else
-					reader = NULL;
+					break ;
 			}
 			_target = reader;
 			// if (_target)
-			// 	std::cout << "found : " << _target->First() << " with : " << now << std::endl;
-			// std::cout << "done  " << _target << std::endl;
+				std::cout << "found : " << _target->First() << " with : " << now << std::endl;
+			std::cout << "done  " << _target << std::endl;
 		};
 		void	find_last(){
 			// std::cout << "test" << std::endl;
@@ -388,9 +391,9 @@ class map_iterator
 		bool still_something_higher(node_pointer reader, Key& searched){
 			if (reader->First() > searched)
 				return true;
-			else if (reader->getChild_l() && reader->getChild_l()->First() > searched)
+			else if (reader->getChild_l() && _compare(searched, reader->getChild_l()->First()))
 				return true;
-			else if (reader->getChild_r() && reader->getChild_r()->First() > searched)
+			else if (reader->getChild_r() && _compare(searched, reader->getChild_l()->First()))
 				return true;
 			else if (reader->getChild_r())
 				return still_something_higher(reader->getChild_r(), searched);
@@ -403,9 +406,9 @@ class map_iterator
 			// std::cout << "still lower : " << reader->First() << "|" << searched << std::endl;
 			if (reader->First() < searched)
 				return true;
-			else if (reader->getChild_l() && reader->getChild_l()->First() < searched)
+			else if (reader->getChild_l() && _compare(reader->getChild_l()->First(), searched))
 				return true;
-			else if (reader->getChild_r() && reader->getChild_r()->First() < searched)
+			else if (reader->getChild_r() && _compare(reader->getChild_r()->First(), searched))
 				return true;
 			else if (reader->getChild_r())
 				return still_something_lower(reader->getChild_r(), searched);

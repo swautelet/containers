@@ -69,23 +69,23 @@ namespace ft{
 	class Map{
 		public:
 		// typedef 
-			typedef map_node<Key, T, Allocator>			node;
-			typedef const Key									key_type;
-			typedef T											mapped_type;
-			typedef ft::pair<const key_type, mapped_type>		value_type;
-			typedef Compare										key_compare;
-			typedef Allocator									allocator_type;
-			typedef typename allocator_type::reference			reference;
-			typedef typename allocator_type::const_reference	const_reference;
-			typedef typename allocator_type::pointer			pointer;
-			typedef typename allocator_type::const_pointer		const_pointer;
-			typedef typename allocator_type::size_type			size_type;
-			typedef typename allocator_type::difference_type	difference_type;
+			typedef map_node<Key, T, Allocator>							node;
+			typedef const Key											key_type;
+			typedef T													mapped_type;
+			typedef ft::pair<const key_type, mapped_type>				value_type;
+			typedef Compare												key_compare;
+			typedef Allocator											allocator_type;
+			typedef typename allocator_type::reference					reference;
+			typedef typename allocator_type::const_reference			const_reference;
+			typedef typename allocator_type::pointer					pointer;
+			typedef typename allocator_type::const_pointer				const_pointer;
+			typedef typename allocator_type::size_type					size_type;
+			typedef typename allocator_type::difference_type			difference_type;
 
-			typedef ft::map_iterator<Key, T, false>				iterator;
-			typedef ft::map_iterator<Key, T, true>				const_iterator;
-			typedef ft::reverse_map_iterator<Key, T, false>		reverse_iterator;
-			typedef ft::reverse_map_iterator<Key, T, true>		const_reverse_iterator;
+			typedef ft::map_iterator<Key, T,Compare, false>				iterator;
+			typedef ft::map_iterator<Key, T,Compare, true>				const_iterator;
+			typedef ft::reverse_map_iterator<Key, T,Compare, false>		reverse_iterator;
+			typedef ft::reverse_map_iterator<Key, T,Compare, true>		const_reverse_iterator;
 		//member functions
 			Map():_root(NULL), _nb_node(0){};
 			explicit Map( const Compare& comp, const Allocator& alloc = Allocator()):_root(NULL), _nb_node(0){};
@@ -271,7 +271,7 @@ namespace ft{
 			iterator find( const Key& key ){
 				node* reader = _root;
 				while(reader && reader->First() != key){
-					if (reader->First() < key)
+					if (_compare(reader->First(), key))
 						reader = reader->getChild_l();
 					else 
 						reader = reader->getChild_r();
@@ -289,13 +289,13 @@ namespace ft{
 			ft::pair<iterator,iterator> equal_range( const Key& key ){
 				ft::pair<iterator, iterator> ret;
 				for (iterator i = begin(); i != end(); i++){
-					if (!(i->first() < key) && i->first() == key){
+					if (!_compare(i->first(), key) && i->first() == key){
 						ret.first = i;
 						i++;
 						ret.second = i;
 						break ;
 					}
-					else if (!(i->first() < key)){
+					else if (!_compare(i->first(), key)){
 						ret.first = i;
 						ret.second = i;
 						break ;
@@ -306,13 +306,13 @@ namespace ft{
 			ft::pair<const_iterator,const_iterator> equal_range( const Key& key ) const{
 				ft::pair<iterator, iterator> ret;
 				for (iterator i = begin(); i != end(); i++){
-					if (!(i->first() < key) && i->first() == key){
+					if (!_compare(i->first(), key) && i->first() == key){
 						ret.first = i;
 						i++;
 						ret.second = i;
 						break ;
 					}
-					else if (!(i->first() < key)){
+					else if (!_compare(i->first(), key)){
 						ret.first = i;
 						ret.second = i;
 						break ;
@@ -542,7 +542,7 @@ namespace ft{
 	template< class Key, class T, class Compare, class Alloc > bool operator==( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ){
 		if (lhs._nb_node != rhs._nb_node)
 			return false;
-		ft::map_iterator<Key, T, false> i = lhs.begin(), j = rhs.begin();
+		ft::map_iterator<Key, T,Compare, false> i = lhs.begin(), j = rhs.begin();
 		while (i && j){
 			if (i.second != j.second)
 				return false;
@@ -557,7 +557,7 @@ namespace ft{
 	template< class Key, class T, class Compare, class Alloc > bool operator<( const map<Key,T,Compare,Alloc>& lhs,  const map<Key,T,Compare,Alloc>& rhs ){
 		if (lhs._nb_node < rhs._nb_node)
 			return true;
-		ft::map_iterator<Key, T, false> i = lhs.begin(), j = rhs.begin();
+		ft::map_iterator<Key, T,Compare, false> i = lhs.begin(), j = rhs.begin();
 		while (i && j){
 			if (i.second < j.second)
 				return true;
