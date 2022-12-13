@@ -204,7 +204,7 @@ namespace ft
 
 		//Capacity
 			bool empty() const{
-				if (_first)
+				if (_first && size())
 					return false;
 				else
 					return true;
@@ -296,7 +296,7 @@ namespace ft
 				// if (!_first)
 				// 	throw out_of_range_exception();
 				size_t count = last - first;
-				if (!_first || pos < _first || pos > _first + _size)
+				if (!_first || pos < _first || pos > _first + _size || first > last)
 					throw out_of_range_exception();
 				size_t index = pos.getElemPtr() - begin().getElemPtr();
 

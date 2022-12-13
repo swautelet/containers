@@ -70,7 +70,7 @@ namespace ft{
 // 		mapped_type*		_content;
 // 	};
 
-template <class Key, class T,class Compare = std::less<Key>, bool B = false >
+template <class Key, class T, class Compare, bool B = false >
 class map_iterator
 {
 	public:
@@ -86,7 +86,7 @@ class map_iterator
 
 		map_iterator():_target(NULL){};
 		map_iterator(node_pointer target, node_pointer root):_target(target), _root(root){};
-		map_iterator(map_iterator<Key, T> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		map_iterator(map_iterator<Key, T, Compare> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
 		template < class F> map_iterator(map_iterator<Key, T, F> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
 		map_iterator(map_iterator<Key, T, Compare, true> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
 		~map_iterator(){};
@@ -353,9 +353,13 @@ class map_iterator
 			}
 		};
 		void	find_previous(){
-			std::cout << "begin decrease : " << _target->First() << std::endl;
+			// std::cout << "begin decrease : " << _target->First() << std::endl;
 			node_pointer reader = _root;
 			Key now = _target->First();
+			// if (std::is_same<Compare, std::plus<Key> >::value == true)
+			// 	std::cout << "in iterator Compare is stdplus " << std::endl;
+			// else
+			// 	std::cout << " in iterator Compare is wrong "<< std::endl;
 			while (reader){
 				// std::cout << "key : " << reader->First();
 				// if (reader->getChild_l())
@@ -377,8 +381,8 @@ class map_iterator
 			}
 			_target = reader;
 			// if (_target)
-				std::cout << "found : " << _target->First() << " with : " << now << std::endl;
-			std::cout << "done  " << _target << std::endl;
+			// 	std::cout << "found : " << _target->First() << " with : " << now << std::endl;
+			// std::cout << "done  " << _target << std::endl;
 		};
 		void	find_last(){
 			// std::cout << "test" << std::endl;

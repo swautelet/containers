@@ -160,7 +160,11 @@ namespace ft{
 			};
 			iterator end(){
 				iterator ret (NULL, _root);
-				return ret;
+			// if (std::is_same<Compare, std::plus<Key> >::value == true)
+			// 	std::cout << "in map Compare is stdplus " << std::endl;
+			// else
+			// 	std::cout << " in map Compare is wrong "<< std::endl;
+			return ret;
 			};
 			const_iterator end() const{
 				iterator ret (NULL, _root);
