@@ -11,7 +11,7 @@
 
 namespace ft{
 
-template <class Key, class T, bool B = false >
+template <class Key, class T, class Allocator, bool B = false >
 class map_iterator
 {
 	public:
@@ -19,7 +19,7 @@ class map_iterator
 		typedef ft::pair<const Key, T>																	value_type;
 		typedef size_t																					size_type;
 
-		typedef map_node<Key, T>*																		node_pointer;
+		typedef map_node<Key, T, Allocator>*																		node_pointer;
 		typedef std::random_access_iterator_tag															iterator_category;
 		typedef typename chooseConst<B, ft::pair<const Key, T>&, const ft::pair<const Key, T>&>::type	reference;
 		typedef typename chooseConst<B, ft::pair<const Key, T>*, const ft::pair<const Key, T>*>::type	pointer;
@@ -27,8 +27,8 @@ class map_iterator
 
 		map_iterator():_target(NULL){};
 		map_iterator(node_pointer target, node_pointer root):_target(target), _root(root){};
-		map_iterator(map_iterator<Key, T> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
-		map_iterator(map_iterator<Key, T, true> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		map_iterator(map_iterator<Key, T, Allocator> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		map_iterator(map_iterator<Key, T, Allocator, true> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
 		~map_iterator(){};
 
 		elemPtr getElemPtr() const      { return _target->getContent(); };
