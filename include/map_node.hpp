@@ -62,13 +62,20 @@ class map_node{
 		mapped_type& operator *(){
 			return *_content;
 		};
-
+		void	setPos(bool x){
+			_red_black = x;
+		};
+		bool	getPos(){
+			return _red_black;
+		};
 	private:
 		Allocator			_alloc;
 		node*				_parent;
 		node*				_child_l;
 		node*				_child_r;
 		mapped_type*		_content;
+		bool				_red_black;
+
 	};
 
 	#endif
