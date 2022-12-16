@@ -1,8 +1,11 @@
 #ifndef MAP_HPP
 # define MAP_HPP
 
+
 #include <memory>
-// #include <map>
+
+#include <map>
+
 #include "Pair.hpp"
 #include "map_iterator.hpp"
 #include "print_map.hpp"
@@ -195,9 +198,14 @@ namespace ft{
 				return iterator(NULL, _root);
 			};
 			iterator erase( iterator first, iterator last ){
+				iterator previous(NULL, _root);
 				for (iterator i = first; i != last; i++){
-					delete_node(i.getNode_pointer());
+					if (previous.getNode_pointer())
+						delete_node(previous.getNode_pointer());
+					previous = i;
 				}
+				if (previous.getNode_pointer())
+					delete_node(previous.getNode_pointer());
 				return iterator(NULL, _root);
 			};
 			size_type erase( const Key& key ){
@@ -480,8 +488,8 @@ namespace ft{
 			};
 			void	delete_root(){
 				node* temp = _root;
-				if (_nb_node > 1)
-					extract_root();
+				if (_nb_node > 1){
+					extract_root();}
 				// if (!_root)
 				// 	return ;
 				// else if (!_root->getChild_l() && _root->getChild_r()){
@@ -627,40 +635,40 @@ namespace ft{
 
 		protected:
 	};
-	template< class Key, class T, class Compare, class Alloc > bool operator==( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ){
-		if (lhs._nb_node != rhs._nb_node)
+	template< class Key, class T, class Compare, class Alloc > bool operator==( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
+		if (lhs.size() != rhs.size())
 			return false;
 		ft::map_iterator<Key, T, Alloc, false> i = lhs.begin(), j = rhs.begin();
 		while (i && j){
-			if (i.second != j.second)
+			if (*i != *j)
 				return false;
 			i++;
 			j++;
 		}
 		return (i == j);
 	};
-	template< class Key, class T, class Compare, class Alloc > bool operator!=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ){
+	template< class Key, class T, class Compare, class Alloc > bool operator!=( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
 		return !(rhs == lhs);
 	};
-	template< class Key, class T, class Compare, class Alloc > bool operator<( const map<Key,T,Compare,Alloc>& lhs,  const map<Key,T,Compare,Alloc>& rhs ){
-		if (lhs._nb_node < rhs._nb_node)
+	template< class Key, class T, class Compare, class Alloc > bool operator<( const Map<Key,T,Compare,Alloc>& lhs,  const Map<Key,T,Compare,Alloc>& rhs ){
+		if (lhs.size() < rhs.size())
 			return true;
 		ft::map_iterator<Key, T, Alloc, false> i = lhs.begin(), j = rhs.begin();
 		while (i && j){
-			if (i.second < j.second)
+			if (*i < *j)
 				return true;
 			i++;
 			j++;
 		}
 		return (i < j);
 	};
-	template< class Key, class T, class Compare, class Alloc > bool operator<=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ){
-		return !(rhs > lhs);
+	template< class Key, class T, class Compare, class Alloc > bool operator<=( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
+		return !(lhs > rhs);
 	};
-	template< class Key, class T, class Compare, class Alloc > bool operator>( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ){
+	template< class Key, class T, class Compare, class Alloc > bool operator>( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
 		return (rhs < lhs);
 	};
-	template< class Key, class T, class Compare, class Alloc > bool operator>=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ){
+	template< class Key, class T, class Compare, class Alloc > bool operator>=( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
 		return !(lhs < rhs);
 	};
 };
