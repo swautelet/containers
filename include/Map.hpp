@@ -414,6 +414,7 @@ namespace ft{
 					// 	std::cout << "hello from loop " << reader << " " << reader->getChild_l() << " " << reader->getChild_r() << std::endl;
 				}
 				// std::cout << "done adding" << std::endl;
+				// reorder_map();
 				return _root;
 			};
 			void	extract_node(node* target){
@@ -486,6 +487,7 @@ namespace ft{
 				_nb_node--;
 				if (_nb_node == 0)
 					_root = NULL;
+				// reorder_map();
 			};
 			void	delete_root(){
 				node* temp = _root;
@@ -540,6 +542,9 @@ namespace ft{
 				parent->setChild_r(child);
 				child->setParent(parent);
 				child->setPos(HIGHER);
+			};
+			reorder_map(){
+
 			};
 			// void	swapChild_l(node* parent){
 			// 	if (!parent->getChild_l())
