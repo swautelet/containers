@@ -11,7 +11,7 @@
 
 namespace ft{
 
-template <class Key, class T, class Allocator, bool B = false >
+template <class Key, class T, class Allocator = std::allocator<ft::pair<const Key, T> >, bool B = false >
 class map_iterator
 {
 	public:

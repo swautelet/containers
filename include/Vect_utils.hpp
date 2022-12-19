@@ -5,7 +5,7 @@
 
 namespace ft
 {
-template<class T, bool B> class vect_iterator
+template<class T, bool B = false> class vect_iterator
 {
 	public:
 		typedef long int                                        difference_type;
