@@ -18,6 +18,7 @@ namespace ft{
 			~Stack(){};
 			Stack& operator=( const Stack& other ){
 				_content = other._content;
+				return *(this);
 			};
 
 		//element access

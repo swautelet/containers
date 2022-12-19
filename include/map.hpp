@@ -64,6 +64,7 @@ namespace ft{
 					count++;
 					// std::cout << count << " node added " << std::endl;
 				}
+				return (*this);
 			};
 			allocator_type get_allocator() const{return _alloc;};
 
