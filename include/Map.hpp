@@ -58,12 +58,13 @@ namespace ft{
 			};
 			Map& operator=( const Map& other ){
 				clear();
-				int count = 0;
-				for (iterator i = other.begin(); i != other.end(); i++){
-					add_node(*i);
-					count++;
-					// std::cout << count << " node added " << std::endl;
-				}
+				// int count = 0;
+				// for (iterator i = other.begin(); i != other.end(); i++){
+				// 	add_node(*i);
+				// 	count++;
+				// 	// std::cout << count << " node added " << std::endl;
+				// }
+				copy_ordered(other.begin(), other.size());
 				return (*this);
 			};
 			allocator_type get_allocator() const{return _alloc;};
@@ -543,9 +544,26 @@ namespace ft{
 				child->setParent(parent);
 				child->setPos(HIGHER);
 			};
-			reorder_map(){
-
+			void	copy_ordered(iterator begin, size_type size){
+				if (size < 1){
+					return ;
+				}
+				iterator new_root = find_middle(begin, size);
+				std::cout << " i begin with node : " << new_root->first << " size is " << size << std::endl;
+				if (new_root.getNode_pointer())
+					insert(*new_root);
+				copy_ordered(begin, size / 2);
+				copy_ordered(new_root, size / 2);
 			};
+			iterator	find_middle(iterator begin, size_type size){
+				if (size < 2)
+					return begin;
+				if (size % 2)
+					size++;
+				for (size_t i = 0; i < size / 2; i++)
+					begin++;
+				return begin;
+			}
 			// void	swapChild_l(node* parent){
 			// 	if (!parent->getChild_l())
 			// 		return ;
