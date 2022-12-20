@@ -58,13 +58,14 @@ namespace ft{
 			};
 			Map& operator=( const Map& other ){
 				clear();
-				// int count = 0;
-				// for (iterator i = other.begin(); i != other.end(); i++){
-				// 	add_node(*i);
-				// 	count++;
-				// 	// std::cout << count << " node added " << std::endl;
-				// }
-				copy_ordered(other.begin(), other.size());
+				int count = 0;
+				// std::cout << "clear before copy" << std::endl;
+				for (iterator i = other.begin(); i != other.end(); i++){
+					add_node(*i);
+					count++;
+					// std::cout << count << " node added " << std::endl;
+				}
+				// ordered_copy(other);
 				return (*this);
 			};
 			allocator_type get_allocator() const{return _alloc;};
@@ -376,6 +377,12 @@ namespace ft{
 				// 	std::cout << "reader is " << _root->First() << std::endl;
 				// std::cout << "value " << value.first << std::endl;
 				}
+				tidying_tree();
+				// if (!(_nb_node % 100)){
+				// 	ft::Map<Key, T, Compare, Allocator> temp;
+				// 	temp = (*this);
+				// 	*this = temp;
+				// }
 				// else{
 				// 	std::cout << "reader is " << reader << std::endl;
 				// 	std::cout << reader->getChild_r() << std::endl;
@@ -519,16 +526,31 @@ namespace ft{
 			};
 			void	reposition_node(node* x){
 				node* reader = _root;
-				while (reader->getChild_l() && reader->getChild_r()){
+				// std::cout << "repositioning : " << x->First() << " root is : " << _root->First() << std::endl;
+				// if (x->First() < _root->First() && )
+				// print_node(getRoot());->getChild_l() && reader->getChild_r()
+				while (reader){
 					if (reader->getChild_l() && _compare(x->First(), reader->First()))
 						reader = reader->getChild_l();
 					else if (reader->getChild_r() && _compare(reader->First(), x->First()))
 						reader = reader->getChild_r();
-					else if (!reader->getChild_l() && _compare(x->First(), reader->First()))
+					else if (!reader->getChild_l() && _compare(x->First(), reader->First())){
 						add_child_l(reader, x);
-					else if (!reader->getChild_r() && _compare(reader->First(), x->First()))
+						break ;
+					}
+					else if (!reader->getChild_r() && _compare(reader->First(), x->First())){
 						add_child_r(reader, x);
+						break ;
+					}
 				}
+				while (true){
+					bool checker = false;
+					check_all_position(_root, checker);
+					if (!checker)
+						break ;
+				}
+				// std::cout << "end repositioning " << std::endl;
+				// print_node(getRoot());
 			};
 			void	add_child_l(node* parent, node* child){
 				if (parent == child)
@@ -544,60 +566,208 @@ namespace ft{
 				child->setParent(parent);
 				child->setPos(HIGHER);
 			};
-			void	copy_ordered(iterator begin, size_type size){
-				if (size < 1){
+			// void	ordered_copy(const Map& other){
+			// 	recursive_copy(other.begin(), other.size());
+			// 	for (iterator i = other.begin(); i != other.end(); i++){
+			// 		insert(*i);
+			// 	}
+			// };
+			// void	recursive_copy(iterator begin, size_type size){
+			// 	if (size < 1){
+			// 		return ;
+			// 	}
+			// 	iterator new_root = find_middle(begin, size);
+			// 	// std::cout << " i begin with node : " << begin->first << " new_middle found : " << new_root->first << " size is " << size << std::endl;
+			// 	if (new_root == begin)
+			// 		return ;
+			// 	if (new_root.getNode_pointer()){
+			// 		// std::cout << "i insert node : " << new_root->first << std::endl;
+			// 		insert(*new_root);}
+			// 	if (size > 1){
+			// 		// size++;
+			// 		recursive_copy(begin, size / 2);
+			// 		recursive_copy(new_root, size / 2);
+			// 	}
+			// };
+			// iterator	find_middle(iterator begin, size_type size){
+			// 	// std::cout << "test" << std::endl;
+			// 	// std::cout << "	find_middle begin with : " << begin->first << " and size : " << size << std::endl;
+			// 	if (size < 2){
+			// 		// std::cout << "	end of find middle secur  " << std::endl;
+			// 		return begin;}
+			// 	if (size % 2)
+			// 		size--;
+			// 	for (size_t i = 0; i < size / 2; i++)
+			// 		begin++;
+			// 	// std::cout << "	end of find middle " << std::endl;
+			// 	return begin;
+			// };
+			void	check_all_position(node* begin, bool& checker){
+				if (begin == NULL)
 					return ;
-				}
-				iterator new_root = find_middle(begin, size);
-				std::cout << " i begin with node : " << new_root->first << " size is " << size << std::endl;
-				if (new_root.getNode_pointer())
-					insert(*new_root);
-				copy_ordered(begin, size / 2);
-				copy_ordered(new_root, size / 2);
+				// std::cout << "chekcing position with : " << begin->First() << std::endl;
+				if (begin->getChild_l() && _compare(begin->First(), begin->getChild_l()->First())){
+					// std::cout << "swapping left : " << begin->First() << " and : " << begin->getChild_l()->First() << std::endl;
+					checker = true;
+					swapChild_l(begin);}
+				if (begin->getChild_r() && _compare(begin->getChild_r()->First(), begin->First())){
+					checker = true;
+					// std::cout << "swapping right " << std::endl;
+					swapChild_r(begin);}
+				check_all_position(begin->getChild_l(), checker);
+				check_all_position(begin->getChild_r(), checker);
+				// std::cout << " end of position check " << std::endl;
 			};
-			iterator	find_middle(iterator begin, size_type size){
-				if (size < 2)
-					return begin;
-				if (size % 2)
-					size++;
-				for (size_t i = 0; i < size / 2; i++)
-					begin++;
-				return begin;
-			}
-			// void	swapChild_l(node* parent){
-			// 	if (!parent->getChild_l())
-			// 		return ;
-			// 	node* pp = parent->getParent();
-			// 	node* pcl = parent->getChild_l();
-			// 	node* pcr = parent->getChild_r();
-			// 	bool tmp_pos = parent->getPos();
-			// 	node* child = pcl;
-			// 	parent->setParent(child->getParent());
-			// 	parent->setChild_l(child->getChild_l());
-			// 	parent->setChild_r(child->getChild_r());
-			// 	parent->setPos(child->getPos());
-			// 	child->setPos(tmp_pos);
-			// 	child->setParent(pp);
-			// 	child->setChild_l(pcl);
-			// 	child->setChild_r(pcr);
-			// };
-			// void	swapChild_r(node* parent){
-			// 	if (!parent->getChild_r())
-			// 		return ;
-			// 	node* pp = parent->getParent();
-			// 	node* pcl = parent->getChild_l();
-			// 	node* pcr = parent->getChild_r();
-			// 	bool tmp_pos = parent->getPos();
-			// 	node* child = pcr;
-			// 	parent->setParent(child->getParent());
-			// 	parent->setChild_l(child->getChild_l());
-			// 	parent->setChild_r(child->getChild_r());
-			// 	parent->setPos(child->getPos());
-			// 	child->setPos(tmp_pos);
-			// 	child->setParent(pp);
-			// 	child->setChild_l(pcl);
-			// 	child->setChild_r(pcr);
-			// };
+			void	tidying_tree(){
+				// std::cout << "begin tidying tree : " << _root << std::endl;
+				size_t right = 0;
+				size_t left = 0;
+				if (_root->getChild_l()){
+					left++;
+					how_much_child(_root->getChild_l(), left);
+				}
+				if (_root->getChild_r()){
+					right++;
+					how_much_child(_root->getChild_r(), right);
+				}
+				if (left > right + 1)
+					decal_root_left();
+				else if (right > left + 1)
+					decal_root_right();
+				if (_root->getChild_l())
+					stabilize_node(_root->getChild_l());
+				if (_root->getChild_r())
+					stabilize_node(_root->getChild_r());
+				// std::cout << "end tidying tree " << _root << std::endl;
+			};
+			void	how_much_child(node* begin, size_t& counter){
+				// std::cout << "begin how much child  " << std::endl;
+				if (begin->getChild_l()){
+					counter++;
+					how_much_child(begin->getChild_l(), counter);
+				}
+				if (begin->getChild_r()){
+					counter++;
+					how_much_child(begin->getChild_r(), counter);
+				}
+				// std::cout << "end how much child " << std::endl;
+			};
+			void	decal_root_right(){
+				// std::cout << "begin decal root right : " << _root << std::endl;
+				if (_root->getChild_r()){
+					node* temp = _root;
+					_root = _root->getChild_r();
+					temp->setChild_r(NULL);
+					_root->setParent(NULL);
+					reposition_node(temp);
+				}
+				// std::cout << "end decal root right : " << _root << std::endl;
+			};
+			void	decal_root_left(){
+				// std::cout << "begin decal root left : " << _root << std::endl;
+				if (_root->getChild_l()){
+					node* temp = _root;
+					_root = _root->getChild_l();
+					temp->setChild_l(NULL);
+					_root->setParent(NULL);
+					reposition_node(temp);
+				}
+				// std::cout << "end decal root left : " << _root << std::endl;
+			};
+			void	stabilize_node(node* target){
+				// std::cout << "begin stabilize node : " << target << std::endl;
+				size_t right = 0;
+				size_t left = 0;
+				if (target->getChild_l()){
+					left++;
+					how_much_child(_root->getChild_l(), left);
+				}
+				if (target->getChild_r()){
+					right++;
+					how_much_child(_root->getChild_r(), right);
+				}
+				if (right > left)
+					decal_node_left(target);
+				else if (left > right)
+					decal_node_right(target);
+				if (target->getChild_l())
+					stabilize_node(target->getChild_l());
+				if (target->getChild_r())
+					stabilize_node(target->getChild_r());
+				// std::cout << "end stabilize node : " << target << std::endl;
+			};
+			void	decal_node_right(node* target){
+				// std::cout << "begin decal node right : " << target << std::endl;
+				if (!target->getChild_r() || !target->getParent())
+					return ;
+				node* parent = target->getParent();
+				node* child = target->getChild_r();
+				target->setParent(NULL);
+				target->setChild_r(NULL);
+				if (target->getPos() == HIGHER){
+					add_child_r(parent, child);}
+				else if (target->getPos() == LOWER){
+					add_child_l(parent, child);}
+				reposition_node(target);
+				// std::cout << "end decal node right : " << target << std::endl;
+			};
+			void	decal_node_left(node* target){
+				// std::cout << "begin decal node left : " << target << std::endl;
+				if (!target->getChild_l() || !target->getParent())
+					return ;
+				node* parent = target->getParent();
+				node* child = target->getChild_l();
+				target->setParent(NULL);
+				target->setChild_l(NULL);
+				if (target->getPos() == HIGHER){
+					add_child_r(parent, child);}
+				else if (target->getPos() == LOWER){
+					add_child_l(parent, child);}
+				reposition_node(target);
+				// std::cout << "end decal node left : " << target << std::endl;
+			};
+			void	swapChild_l(node* parent){
+				if (!parent->getChild_l())
+					return ;
+				value_type* temp = parent->getContent();
+				parent->setContent(parent->getChild_l()->getContent());
+				parent->getChild_l()->setContent(temp);
+				// ft::swap(*parent, *parent->getChild_l());
+				// node* pp = parent->getParent();
+				// node* pcl = parent->getChild_l();
+				// node* pcr = parent->getChild_r();
+				// bool tmp_pos = parent->getPos();
+				// node* child = pcl;
+				// parent->setParent(child->getParent());
+				// parent->setChild_l(child->getChild_l());
+				// parent->setChild_r(child->getChild_r());
+				// parent->setPos(child->getPos());
+				// child->setPos(tmp_pos);
+				// child->setParent(pp);
+				// child->setChild_l(pcl);
+				// child->setChild_r(pcr);
+			};
+			void	swapChild_r(node* parent){
+				if (!parent->getChild_r())
+					return ;
+				value_type* temp = parent->getContent();
+				parent->setContent(parent->getChild_r()->getContent());
+				parent->getChild_r()->setContent(temp);
+				// ft::swap(*parent, *parent->getChild_r());
+				// node* pp = parent->getParent();
+				// node* pcl = parent->getChild_l();
+				// node* pcr = parent->getChild_r();
+				// bool tmp_pos = parent->getPos();
+				// node* child = pcr;
+				// parent->setParent(child->getParent());
+				// parent->setChild_l(child->getChild_l());
+				// parent->setChild_r(child->getChild_r());
+				// parent->setPos(child->getPos());
+				// child->setPos(tmp_pos);
+				// child->setParent(pp);
+				// child->setChild_l(pcl);
+				// child->setChild_r(pcr);
+			};
 		// private template map node
 			// class map_node{
 			// 	public:
