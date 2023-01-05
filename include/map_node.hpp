@@ -20,10 +20,8 @@ class map_node{
 		};
 		~map_node(){
 			if (_content){
-				// std::cout << "map node destroy " << _content << std::endl;
 				_alloc.destroy(_content);
 				_alloc.deallocate(_content, 1);
-				// std::cout << "theres  " << node_construct << " node" << std::endl;
 			}
 		};
 		const Key&	First(){
@@ -34,6 +32,9 @@ class map_node{
 		};
 		void	setSecond(T& value){
 			_content->second = value;
+		};
+		void	setContent(mapped_type* value){
+			_content = value;
 		};
 		void	setParent(node* parent){
 			_parent = parent;
@@ -69,6 +70,7 @@ class map_node{
 			return _red_black;
 		};
 	private:
+
 		Allocator			_alloc;
 		node*				_parent;
 		node*				_child_l;

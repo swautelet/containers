@@ -3,10 +3,14 @@
 
 #include "Map.hpp"
 
-// template <class A, class B>
-void    print_node(map_node<int, int >* x){
+template <class A, class B>
+void    print_node(map_node<A, B >* x){
 	if (!x){
 		std::cout << "this is not a node but a null pointer " << std::endl;
+		return ;
+	}
+	if (x == x->getChild_l() || x == x->getChild_r()){
+		std::cout << "ERROR : there's a loop : " << x->First() << " is his own child" << std::endl;
 		return ;
 	}
 	else if (x->getChild_l() && x->getChild_r())

@@ -28,22 +28,38 @@ class map_iterator
 		typedef ft::pair<const Key, T>*																	elemPtr;
 
 		map_iterator():_target(NULL){};
-		map_iterator(node_pointer target, node_pointer root):_target(target), _root(root){};
-		map_iterator(map_iterator<Key, T, Allocator> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
-		map_iterator(map_iterator<Key, T, Allocator, true> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		map_iterator(node_pointer target, node_pointer root):_target(target), _root(root){
+			if (target)
+				_actual_key = target->First();
+		};
+		map_iterator(map_iterator<Key, T, Allocator> other):_target(other.getNode_pointer()), _root(other.getRoot()), _actual_key(other.getKey()){};
+		map_iterator(map_iterator<Key, T, Allocator, true> other):_target(other.getNode_pointer()), _root(other.getRoot()), _actual_key(other.getKey()){};
 		~map_iterator(){};
 
 		elemPtr getElemPtr() const      { return _target->getContent(); };
 		node_pointer	getNode_pointer() const {return _target;};
 		node_pointer	getRoot() const {return _root;};
+		Key		getKey(){return _actual_key;};
 
-		reference operator*() const         { return (*_target->getContent()); };
-		pointer operator->() const          { return (_target->getContent()); };
+		reference operator*() const         {
+			// check_address();
+			return (*_target->getContent());
+		};
+		pointer operator->() const          {
+			// check_address();
+			return (_target->getContent());
+		};
 		map_iterator& operator=(const map_iterator& other){
 			this->_target = other.getNode_pointer();
 			return (*this);
 		};
 		operator unsigned long(){return ((unsigned long)_target);};
+		operator bool(){
+			if (_target)
+				return true;
+			else
+				return false;
+		};
 
 		map_iterator& operator++()       { move_right(); return (*this); };
 		map_iterator& operator--()       { move_left(); return (*this); };
@@ -104,7 +120,20 @@ class map_iterator
 	private:
 		node_pointer		_target;
 		node_pointer		_root;
+		Key					_actual_key;
 
+		// void	check_address(){
+		// 	if (_actual_key != _target->First()){
+		// 		node_pointer reader = _root;
+		// 		while (reader && reader->First() != _actual_key){
+		// 			if (_actual_key < reader->First())
+		// 				reader = reader->getChild_l();
+		// 			if (_actual_key > reader->First())
+		// 				reader = reader->getChild_r();
+		// 		}
+		// 		_target = reader;
+		// 	}
+		// };
 		void	move_right(){
 			if (!_target)
 				find_first();
@@ -120,8 +149,9 @@ class map_iterator
 		void	find_previous(){
 			if (_target->getChild_l()){
 				node_pointer reader = _target->getChild_l();
-				while (reader->getChild_r())
+				while (reader->getChild_r()){
 					reader = reader->getChild_r();
+				}
 				_target = reader;
 			}
 			else if (_target->getParent() && _target->getPos() == HIGHER)
