@@ -5,6 +5,7 @@
 #include "is_const.hpp"
 #include "map_node.hpp"
 #include "reverse_map_iterator.hpp"
+#include "utilities.hpp"
 
 #define HIGHER true
 #define LOWER false
@@ -19,8 +20,9 @@ class map_iterator
 		typedef ft::pair<const Key, T>																	value_type;
 		typedef size_t																					size_type;
 
-		typedef map_node<Key, T, Allocator>*																		node_pointer;
+		typedef map_node<Key, T, Allocator>*															node_pointer;
 		typedef std::random_access_iterator_tag															iterator_category;
+		typedef iterator_category																		iterator_type;
 		typedef typename chooseConst<B, ft::pair<const Key, T>&, const ft::pair<const Key, T>&>::type	reference;
 		typedef typename chooseConst<B, ft::pair<const Key, T>*, const ft::pair<const Key, T>*>::type	pointer;
 		typedef ft::pair<const Key, T>*																	elemPtr;

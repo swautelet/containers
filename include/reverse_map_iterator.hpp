@@ -18,6 +18,7 @@ class reverse_map_iterator
 
 		typedef map_node<Key, T, Allocator>*																		node_pointer;
 		typedef std::random_access_iterator_tag															iterator_category;
+		typedef iterator_category								iterator_type;
 		typedef typename chooseConst<B, ft::pair<const Key, T>&, const ft::pair<const Key, T>&>::type	reference;
 		typedef typename chooseConst<B, ft::pair<const Key, T>*, const ft::pair<const Key, T>*>::type	pointer;
 		typedef ft::pair<const Key, T>*																	elemPtr;

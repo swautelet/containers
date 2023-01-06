@@ -20,7 +20,7 @@ class map_node{
 		};
 		~map_node(){
 			if (_content){
-				// std::cout << "map node destroy " << _content << std::endl;
+				// std::cout << "map node destroy " << this << " conteining : " << _content << " key : " << _content->first << std::endl;
 				_alloc.destroy(_content);
 				_alloc.deallocate(_content, 1);
 				// std::cout << "theres  " << node_construct << " node" << std::endl;
@@ -44,6 +44,9 @@ class map_node{
 		void	setChild_r(node* child){
 			_child_r = child;
 		};
+		void	setContent(mapped_type* content){
+			_content = content;
+		};
 		node*	getParent() const{
 			return _parent;
 		};
@@ -63,10 +66,10 @@ class map_node{
 			return *_content;
 		};
 		void	setPos(bool x){
-			_red_black = x;
+			_pos = x;
 		};
 		bool	getPos(){
-			return _red_black;
+			return _pos;
 		};
 	private:
 		Allocator			_alloc;
@@ -74,7 +77,7 @@ class map_node{
 		node*				_child_l;
 		node*				_child_r;
 		mapped_type*		_content;
-		bool				_red_black;
+		bool				_pos;
 
 	};
 

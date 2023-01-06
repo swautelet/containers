@@ -16,6 +16,7 @@ template<class T, bool B = false> class vect_iterator
 		typedef typename chooseConst<B, T&, const T&>::type     reference;
 		typedef typename chooseConst<B, T*, const T*>::type     pointer;
 		typedef T*                                              elemPtr;
+		typedef pointer											iterator_type;
 	
 		vect_iterator():_value(NULL){};
 		vect_iterator(T* val):_value(val){};
@@ -107,15 +108,16 @@ template<class T, bool B = false> class vect_iterator
 };
 template<class T, bool B> class reverse_vect_iterator
 {
-	typedef long int                                        difference_type;
-	typedef T                                               value_type;
-	typedef size_t                                          size_type;
-
-	typedef std::random_access_iterator_tag                 iterator_category;
-	typedef typename chooseConst<B, T&, const T&>::type     reference;
-	typedef typename chooseConst<B, T*, const T*>::type     pointer;
-	typedef T*                                              elemPtr;
 	public:
+		typedef long int                                        difference_type;
+		typedef T                                               value_type;
+		typedef size_t                                          size_type;
+
+		typedef std::random_access_iterator_tag                 iterator_category;
+		typedef typename chooseConst<B, T&, const T&>::type     reference;
+		typedef typename chooseConst<B, T*, const T*>::type     pointer;
+		typedef T*                                              elemPtr;
+		typedef pointer											iterator_type;
 		reverse_vect_iterator():_value(NULL){};
 		reverse_vect_iterator(T* val):_value(val){};
 		reverse_vect_iterator(const reverse_vect_iterator& other):_value(other._value){};
