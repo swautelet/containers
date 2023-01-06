@@ -1,5 +1,5 @@
-NAME		= webserv
-SRC			= src/main.cpp
+NAME		= tester
+SRC			= src/main.cpp src/map_test.cpp src/vector.hpp src/stack.hpp
 HEADER		= include/vector.hpp
 OBJS		= $(SRC:.cpp=.o)
 CPP			= c++ 
