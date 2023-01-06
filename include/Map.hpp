@@ -629,7 +629,7 @@ namespace ft{
 				if (_root->getChild_r()){
 					right++;
 					how_much_child(_root->getChild_r(), right);
-				}
+				// }
 				if (left > right + 1)
 					decal_root_left();
 				else if (right > left + 1)
