@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <typename T>
@@ -21,9 +21,4 @@ std::vector<int> rend_test(_vector<T> vector) {
     v.push_back(*(vector.rend() - 2));
     g_end2 = timer();
     return v;
-}
-
-int main() {
-
-    exit(run_vector_unit_test<int>("rend()", rend_test, rend_test));
 }

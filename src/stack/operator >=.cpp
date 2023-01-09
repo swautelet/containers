@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 bool stack_more_or_equal_test() {
@@ -27,8 +27,4 @@ bool stack_more_or_equal_test() {
 	result2.push_back(st.st9 >= st.st9);
 
 	return result == result2;
-}
-
-int main() {
-	exit(run_bool_unit_test("operator >=", stack_more_or_equal_test));
 }

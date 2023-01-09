@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -57,9 +57,4 @@ std::vector<int> swap_test(_map<T, V> mp) {
         v.push_back(it2->second);
     }
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("swap()", swap_test, swap_test));
 }

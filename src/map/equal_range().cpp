@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -57,9 +57,4 @@ std::vector<int> equal_range_test(_map<T, V> mp) {
     v.push_back(pair3.second->first);
     v.push_back(pair3.second->second);
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("equal_range()", equal_range_test, equal_range_test));
 }

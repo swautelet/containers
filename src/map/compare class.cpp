@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -99,9 +99,4 @@ std::vector<int> comparator_test(_map<T, V> mp) {
     v.push_back(mp1.size());
 
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("compare class", comparator_test, comparator_test));
 }

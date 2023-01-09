@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -71,9 +71,4 @@ std::vector<int> iterators_test(_map<T, V> mp) {
     v.push_back((++it2)->first);
     g_end2 = timer();
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("iterators", iterators_test, iterators_test));
 }

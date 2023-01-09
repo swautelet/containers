@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T>
@@ -25,9 +25,4 @@ std::vector<int> pop_test(_stack<T> stk) {
 	g_end2 = timer();
 	v.push_back(stk.size());
 	return v;
-}
-
-int main() {
-
-	exit(run_stack_unit_test<int>("pop()", pop_test, pop_test));
 }

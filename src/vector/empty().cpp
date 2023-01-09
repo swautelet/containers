@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <typename T>
@@ -19,9 +19,4 @@ std::vector<int> empty_test(_vector<T> vector) {
     v.push_back(vector.empty());
     g_end2 = timer();
     return v;
-}
-
-int main() {
-
-    exit(run_vector_unit_test<int>("empty()", empty_test, empty_test));
 }

@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include UTILITIES
 
 bool is_integral_test_() {
@@ -21,8 +21,4 @@ bool is_integral_test_() {
 	(_is_integral<long long>() == std::is_integral<long long>()) ? 0 : res = 0;
 	(_is_integral<unsigned long long>() == std::is_integral<unsigned long long>()) ? 0 : res = 0;
 	return res;
-}
-
-int main() {
-	exit(run_bool_unit_test("is_integral", is_integral_test_));
 }

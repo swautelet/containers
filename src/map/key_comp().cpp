@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -25,11 +25,4 @@ std::vector<int> key_comp_test(_map<T, V> mp) {
     v.push_back(mp2.key_comp()(1, 2));
     v.push_back(mp3.key_comp()(1, 2));
     return v;
-}
-
-int main() {
-
-    run_map_unit_test<int, int>("key_comp()", key_comp_test, key_comp_test);
-
-    return (0);
 }

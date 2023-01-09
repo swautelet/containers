@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <typename T>
@@ -39,9 +39,4 @@ std::vector<int> constructor_test(_vector<T> vector) {
     try { _vector<int> tmp5(-1, -1); }
     catch (std::exception &e) { v.push_back(1); }
     return v;
-}
-
-int main() {
-
-    exit(run_vector_unit_test<int>("constructor", constructor_test, constructor_test));
 }

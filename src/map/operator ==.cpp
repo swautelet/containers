@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 bool map_equal_test() {
@@ -27,9 +27,4 @@ bool map_equal_test() {
 	result2.push_back(mt.mp9 == mt.mp9);
 
 	return result == result2;
-}
-
-int main() {
-
-	exit(run_bool_unit_test("operator ==", map_equal_test));
 }

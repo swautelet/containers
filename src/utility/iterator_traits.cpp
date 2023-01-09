@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include UTILITIES
 #include VECTOR
 
@@ -32,9 +32,4 @@ bool iterator_traits_test() {
 	res2.push_back(typeid(_vector<int>::reverse_iterator::reference).name());
 
 	return res == res2;
-}
-
-int main() {
-
-	exit(run_bool_unit_test("iterators_traits", iterator_traits_test));
 }

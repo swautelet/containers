@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -73,9 +73,4 @@ std::vector<int> erase_test_2(_map<T, V> mp) {
         v.push_back(it3->second);
     }
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("erase(pos)", erase_test_2, erase_test_2));
 }

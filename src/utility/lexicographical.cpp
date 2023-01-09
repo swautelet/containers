@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include UTILITIES
 
 bool lexicographical_test() {
@@ -20,8 +20,4 @@ bool lexicographical_test() {
 	result2.push_back(_lexicographical(b1.begin(), b1.end(), b2.begin(), b2.end()));
 	g_end2 = timer();
 	return result == result2;
-}
-
-int main() {
-	exit(run_bool_unit_test("lexicographical", lexicographical_test));
 }

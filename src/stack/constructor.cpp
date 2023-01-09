@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T>
@@ -49,9 +49,4 @@ std::vector<int> constructor_test(_stack<T> stk) {
 		stack2.pop();
 	}
 	return v;
-}
-
-int main() {
-
-	exit(run_stack_unit_test<int>("constructor", constructor_test, constructor_test));
 }

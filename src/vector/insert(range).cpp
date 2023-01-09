@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 class B {
@@ -90,9 +90,4 @@ std::vector<int> insert_test_3(_vector<T> vector) {
     }
 
     return v;
-}
-
-int main() {
-
-    exit(run_vector_unit_test<int>("insert(range)", insert_test_3, insert_test_3));
 }

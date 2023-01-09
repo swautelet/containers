@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -77,9 +77,4 @@ std::vector<int> lower_bound_test(_map<T, V> mp) {
     mp3.lower_bound(49 *_ratio);
     g_end2 = timer();
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("lower_bound()", lower_bound_test, lower_bound_test));
 }

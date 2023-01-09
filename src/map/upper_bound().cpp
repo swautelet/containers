@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -85,9 +85,4 @@ template <class T, class V>
     mp3.upper_bound(49 * _ratio);
     g_end2 = timer();
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("upper_bound()", upper_bound_test, upper_bound_test));
 }

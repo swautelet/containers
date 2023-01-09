@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T>
@@ -27,9 +27,4 @@ std::vector<int> empty_test(_stack<T> stk) {
 	v.push_back(stk.empty());
 	g_end2 = timer();
 	return v;
-}
-
-int main() {
-
-	exit(run_stack_unit_test<int>("empty()", empty_test, empty_test));
 }

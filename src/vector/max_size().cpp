@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <typename T>
@@ -19,9 +19,4 @@ std::vector<int> maxsize_test(_vector<T> vector) {
     v.push_back(vector.max_size());
     g_end2 = timer();
     return v;
-}
-
-int main() {
-
-    exit(run_vector_unit_test<int>("max_size()", maxsize_test, maxsize_test));
 }

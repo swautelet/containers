@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <typename T>
@@ -30,9 +30,4 @@ std::vector<int> constructor_std_test(_vector<T> vecto) {
 	for (size_t i = 0; i < tmp.size(); ++i)
 		v.push_back(tmp2[i]);
 	return v;
-}
-
-int main() {
-
-	exit(run_vector_unit_test<int>("constructor(std iterators)", constructor_std_test, constructor_std_test));
 }

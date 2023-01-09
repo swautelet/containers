@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -63,9 +63,4 @@ std::vector<int> insert_test(_map<T, V> mp) {
     }
     v.push_back(mp.size());
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("insert(value)", insert_test, insert_test));
 }

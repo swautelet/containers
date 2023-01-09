@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <typename T>
@@ -23,9 +23,4 @@ std::vector<int> clear_test(_vector<T> vector) {
     v.push_back(vector.capacity());
     v.push_back(vector.size());
     return v;
-}
-
-int main() {
-
-    exit(run_vector_unit_test<int>("clear()", clear_test, clear_test));
 }

@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 bool operator_less_test() {
@@ -26,9 +26,4 @@ bool operator_less_test() {
     result_2.push_back(V_int1 < V_int3);
     result_2.push_back(V_str1 < V_str2);
     return result == result_2;
-}
-
-int main() {
-
-	exit(run_bool_unit_test("operator <", operator_less_test));
 }

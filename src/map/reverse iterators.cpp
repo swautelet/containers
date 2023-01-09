@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -58,9 +58,4 @@ std::vector<int> reverse_iterators_test(_map<T, V> mp) {
     v.push_back((rit--)->first);
     v.push_back((rit2++)->first);
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("reverse iterators", reverse_iterators_test_std, reverse_iterators_test_ft));
 }

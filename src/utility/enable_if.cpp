@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include UTILITIES
 
 template <class T> typename _enable_if< std::is_unsigned<T>::value >::type
@@ -22,8 +22,4 @@ bool enable_if_test_() {
 		res = 0;
 	g_start2 = timer(); g_end2 = timer(); g_start1 = timer(); g_end1 = timer();
 	return res;
-}
-
-int main() {
-	exit(run_bool_unit_test("enable_if", enable_if_test_));
 }

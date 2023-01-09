@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -37,9 +37,4 @@ std::vector<int> copy_constructor_test(_map<T, V> mp) {
         v.push_back(it->second);
     }
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("constructor(InputIt)", copy_constructor_test, copy_constructor_test));
 }

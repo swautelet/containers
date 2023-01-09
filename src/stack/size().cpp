@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T>
@@ -29,9 +29,4 @@ std::vector<int> size_test(_stack<T> stk) {
 	stk.push(7);
 	v.push_back(stk.size());
 	return v;
-}
-
-int main() {
-
-	exit(run_stack_unit_test<int>("size()", size_test, size_test));
 }

@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <typename T>
@@ -27,9 +27,4 @@ std::vector<int> erase_test_1(_vector<T> vector) {
     v.push_back(vector.size());
     v.push_back(vector.capacity());
     return v;
-}
-
-int main() {
-
-    exit(run_vector_unit_test<int>("erase(value)", erase_test_1, erase_test_1));
 }

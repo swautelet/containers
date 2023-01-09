@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -31,9 +31,4 @@ std::vector<int> at_test(_map<T, V> mp) {
     }
     g_end2 = timer();
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("at()", at_test, at_test));
 }

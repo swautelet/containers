@@ -1,5 +1,4 @@
-#include "../system/system_methods.ipp"
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -34,9 +33,4 @@ std::vector<int> clear_test(_map<T, V> mp) {
     if (it == mp.end())
         v.push_back(1);
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("clear()", clear_test, clear_test));
 }

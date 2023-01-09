@@ -1,4 +1,4 @@
-#include "../system/system_methods.ipp"
+#include "tester.hpp"
 #include "__service.ipp"
 
 template <class T, class V>
@@ -27,9 +27,4 @@ template <class T, class V>
         mp.erase(i);
     v.push_back(mp.size());
     return v;
-}
-
-int main() {
-
-    exit(run_map_unit_test<int, int>("size()", size_test, size_test));
 }
