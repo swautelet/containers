@@ -9,8 +9,8 @@
 
 #include "tester.hpp"
 
+using namespace std;
+
 int main (){
-	vector_test();
-	stack_test();
-	map_test();
+	run_test(std.log);
 }

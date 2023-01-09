@@ -1,6 +1,6 @@
 NAME		= tester
-SRC			= src/main.cpp src/map_test.cpp src/vector.hpp src/stack.hpp
-HEADER		= include/vector.hpp
+SRC			= src/main.cpp src/map/map_test.cpp src/vector/vector.hpp src/stack/stack.hpp src/utility/utility_test.cpp
+HEADER		= include/Vector.hpp include/Map.hpp include/Utility.hpp include/Stack.hpp
 OBJS		= $(SRC:.cpp=.o)
 CPP			= c++ 
 RM			= rm -f
