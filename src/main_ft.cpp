@@ -1,6 +1,8 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <sys/time.h>
+#include <fstream>
 
 #include "Map.hpp"
 #include "Vector.hpp"

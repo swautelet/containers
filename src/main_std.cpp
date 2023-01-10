@@ -1,6 +1,8 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <sys/time.h>
+#include <fstream>
 
 #include "Map.hpp"
 #include "Vector.hpp"
@@ -8,6 +10,8 @@
 #include "Utility.hpp"
 
 #include "tester.hpp"
+
+#define STD
 
 using namespace std;
 

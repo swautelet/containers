@@ -1,5 +1,5 @@
 #include "tester.hpp"
-#include "__service.ipp"
+#include "v__service.hpp"
 
 template <typename T>
 std::vector<int> data_test(std::vector<T> vector) {
@@ -8,7 +8,7 @@ std::vector<int> data_test(std::vector<T> vector) {
     g_start1 = timer();
     oss << &*(vector.data());
     g_end1 = timer();
-    string str = oss.str();
+    std::string str = oss.str();
     if (!oss.str().rfind("0x", 0))
         v.push_back(1);
     return v;
@@ -21,7 +21,7 @@ std::vector<int> data_test(_vector<T> vector) {
     g_start2 = timer();
     oss << &*(vector.data());
     g_end2 = timer();
-    string str = oss.str();
+    std::string str = oss.str();
     if (!oss.str().rfind("0x", 0))
         v.push_back(1);
     return v;

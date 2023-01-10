@@ -1,10 +1,10 @@
 #include "tester.hpp"
-#include UTILITIES
-#include VECTOR
+// #include UTILITIES
+// #include VECTOR
 
 bool iterator_traits_test() {
-	std::vector<string> res;
-	std::vector<string> res2;
+	std::vector<std::string> res;
+	std::vector<std::string> res2;
 	g_start1 = g_end1 = timer();
 
 	res.push_back(typeid(std::vector<int>::iterator::iterator_category).name());

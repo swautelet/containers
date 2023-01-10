@@ -1,5 +1,5 @@
 #include "tester.hpp"
-#include UTILITIES
+// #include UTILITIES
 
 bool lexicographical_test() {
 	std::vector<int> result, result2;

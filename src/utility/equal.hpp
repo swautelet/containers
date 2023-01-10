@@ -1,5 +1,5 @@
 #include "tester.hpp"
-#include UTILITIES
+// #include UTILITIES
 
 bool equal_test() {
 	std::string s = "approvjvorppa";

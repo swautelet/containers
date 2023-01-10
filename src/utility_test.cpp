@@ -1,8 +1,14 @@
 #include "tester.hpp"
 
-void    utility_test(std::ofstream& out){
+#ifndef STD
+    using namespace ft;
+#else
+    using namespace std;
+#endif
+
+void    utility_test(std::ostream& out){
     out << "--- utility test : ---" << std::endl;
-    if (enable_if_test())
+    if (enable_if_test_())
         out << "OK" << std::endl;
     else
         out << "KO" << std::endl;
@@ -10,7 +16,7 @@ void    utility_test(std::ofstream& out){
         out << "OK" << std::endl;
     else
         out << "KO" << std::endl;
-    if (is_integral_test())
+    if (is_integral_test_())
         out << "OK" << std::endl;
     else
         out << "KO" << std::endl;

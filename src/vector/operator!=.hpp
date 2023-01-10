@@ -1,12 +1,12 @@
 #include "tester.hpp"
-#include "__service.ipp"
+#include "v__service.hpp"
 
 bool operator_not_equal_test() {
     std::vector<int> result, result_2;
     std::vector<int> v_int1, v_int2, v_int3;
-    std::vector<string> v_str1, v_str2;
+    std::vector<std::string> v_str1, v_str2;
     _vector<int> V_int1, V_int2, V_int3;
-    _vector<string> V_str1, V_str2;
+    _vector<std::string> V_str1, V_str2;
     v_int1.push_back(1);
     v_int3.push_back(1);
     v_str1.push_back("aa");
