@@ -1,5 +1,5 @@
 #pragma once
-#include "../system/lib.hpp"
+#include "tester.hpp"
 #include VECTOR
 
 template <class T>

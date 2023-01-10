@@ -101,13 +101,13 @@ class reverse_map_iterator
 		node_pointer		_target;
 		node_pointer		_root;
 
-		void	move_right(){
+		void	move_left(){
 			if (!_target)
 				find_first();
 			else
 				find_next();
 		};
-		void	move_left(){
+		void	move_right(){
 			if (!_target)
 				find_last();
 			else

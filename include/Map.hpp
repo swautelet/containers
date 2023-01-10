@@ -40,14 +40,14 @@ namespace ft{
 
 		//member functions
 			Map():_root(NULL), _nb_node(0){};
-			explicit Map( const Compare& comp, const Allocator& alloc = Allocator()):_root(NULL), _nb_node(0), _alloc(alloc), _compare(comp){};
-			template< class InputIt > Map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator() ):_root(NULL), _nb_node(0), _alloc(alloc), _compare(comp){
+			explicit Map( const Compare& comp, const Allocator& alloc = Allocator()):_root(NULL), _nb_node(0), _alloc_node(alloc), _compare(comp){};
+			template< class InputIt > Map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator() ):_root(NULL), _nb_node(0), _alloc_node(alloc), _compare(comp){
 				while (first != last){
 					add_node(*first);
 					first++;
 				}
 			};
-			Map( const Map& other ):_root(NULL), _nb_node(0), _alloc(other.get_allocator()), _compare(other.key_comp()){
+			Map( const Map& other ):_root(NULL), _nb_node(0), _alloc_node(other.get_allocator()), _compare(other.key_comp()){
 				for (iterator i = other.begin(); i != other.end(); i++){
 						add_node(*i);
 				}
@@ -65,7 +65,7 @@ namespace ft{
 				}
 				return (*this);
 			};
-			allocator_type get_allocator() const{return _alloc;};
+			allocator_type get_allocator() const{return Allocator();};
 
 		//element access
 			T& at( const Key& key ){
@@ -353,6 +353,7 @@ namespace ft{
 			node*						_root;
 			size_type												_nb_node;
 			std::allocator < node >	_alloc;
+			Allocator				_alloc_node;
 			Compare													_compare;
 
 		// nodes manipulation functions

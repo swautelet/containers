@@ -1,6 +1,6 @@
 #include "tester.hpp"
 
-void    vector_test(){
+void    vector_test(std::ofstream& out){
     vector test;
     out << "--- vector test : ---" << std::endl;
     out << "assign test :" << std::endl;
