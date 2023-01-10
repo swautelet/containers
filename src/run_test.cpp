@@ -7,7 +7,7 @@
 #endif
 
 void    run_test(std::string name){
-    std::ofstream outfile;
+    std::ofstream outfile(name);
 
     outfile.open(name);
     vector_test(outfile);

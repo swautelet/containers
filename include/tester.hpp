@@ -7,6 +7,8 @@
 #include <stack>
 #include <iostream>
 #include <sstream>
+#include <fstream>
+#include <sys/time.h>
 
 #include "Vector.hpp"
 #include "Map.hpp"
@@ -130,69 +132,5 @@ void	stack_test(std::ostream& out);
 void    utility_test(std::ostream& out);
 void    print_result(std::ostream& out, std::vector<int> answer);
 void    run_test(std::string name);
-// vector test
-// template <typename T>
-// std::vector<int> assign_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> assign_test(_vector<T> vector);
-// template <typename T>
-// std::vector<int> assign_std_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> assign_std_test(_vector<T> vector);
-// template <typename T>
-// std::vector<int> at_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> at_test(_vector<T> vector);
-// template <typename T>
-// std::vector<int> back_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> back_test(_vector<T> vector);
-// template <typename T>
-// std::vector<int> begin_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> begin_test(_vector<T> vector);
-// template <typename T>
-// std::vector<int> capacity_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> capacity_test(_vector<T> vector);
-// template <typename T>
-// std::vector<int> clear_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> clear_test(_vector<T> vector);
-// template <typename T>
-// std::vector<int> constructor_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> constructor_test(_vector<T> vector);
-// template <typename T>
-// std::vector<int> constructor_std_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> constructor_std_test(_vector<T> vecto);
-// template <typename T>
-// std::vector<int> data_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> data_test(_vector<T> vector);
-// template <typename T>
-// std::vector<int> empty_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> empty_test(_vector<T> vector);
-// template <typename T>
-// std::vector<int> end_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> end_test(_vector<T> vector);
-// template <typename T>
-// std::vector<int> erase_test_2(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> erase_test_2(_vector<T> vector);
-// template <typename T>
-// std::vector<int> erase_test_1(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> erase_test_1(_vector<T> vector);
-// template <typename T>
-// std::vector<int> front_test(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> front_test(_vector<T> vector);
-// template <typename T>
-// std::vector<int> insert_test_2(std::vector<T> vector);
-// template <typename T>
-// std::vector<int> insert_test_2(_vector<T> vector);
+
 #endif

@@ -15,6 +15,7 @@
 
 using namespace std;
 
-int main (){
+int main()
+{
 	run_test("std.log");
 }
