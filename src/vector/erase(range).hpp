@@ -1,5 +1,6 @@
-#include "tester.hpp"
-#include "v__service.hpp"
+#pragma once
+// #include "tester.hpp"
+// #include "v__service.hpp"
 
 template <typename T>
 std::vector<int> erase_test_2(std::vector<T> vector) {

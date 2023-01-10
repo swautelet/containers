@@ -1,4 +1,5 @@
-#include "tester.hpp"
+#pragma once
+// #include "tester.hpp"
 // #include UTILITIES
 
 bool equal_test() {

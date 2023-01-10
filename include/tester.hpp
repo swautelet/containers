@@ -1,5 +1,6 @@
-#ifndef TESTER_HPP
-# define TESTER_HPP
+#pragma once
+#ifndef HEAD_TESTER_HPP
+#define HEAD_TESTER_HPP
 
 #include <vector>
 #include <string>

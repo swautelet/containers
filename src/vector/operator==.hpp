@@ -1,5 +1,6 @@
-#include "tester.hpp"
-#include "v__service.hpp"
+#pragma once
+// #include "tester.hpp"
+// #include "v__service.hpp"
 
 bool operator_equal_test() {
     g_start2 = timer(); g_end2 = timer(); g_start1 = timer(); g_end1 = timer();

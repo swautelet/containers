@@ -1,4 +1,5 @@
-#include "tester.hpp"
+#pragma once
+// #include "tester.hpp"
 #include "s__service.hpp"
 
 bool stack_not_equal_test() {

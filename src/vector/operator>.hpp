@@ -1,5 +1,6 @@
-#include "tester.hpp"
-#include "v__service.hpp"
+#pragma once
+// #include "tester.hpp"
+// #include "v__service.hpp"
 
 bool operator_more_test() {
     std::vector<int> result, result_2;

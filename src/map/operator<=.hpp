@@ -1,4 +1,5 @@
-#include "tester.hpp"
+#pragma once
+// #include "tester.hpp"
 #include "m__service.hpp"
 
 bool map_less_or_equal_test() {

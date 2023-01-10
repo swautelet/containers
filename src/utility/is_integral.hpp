@@ -1,4 +1,5 @@
-#include "tester.hpp"
+#pragma once
+// #include "tester.hpp"
 // #include UTILITIES
 
 bool is_integral_test_() {
