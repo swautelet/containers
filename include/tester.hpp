@@ -21,5 +21,5 @@ void	map_test();
 void	stack_test();
 void    utility_test();
 void    print_result(std::ofstream& out, std::vector<int>& answer);
-
+void    run_test(std::string name);
 #endif

@@ -12,5 +12,5 @@
 using namespace ft;
 
 int main (){
-	run_test(ft.log);
+	run_test("ft.log");
 }

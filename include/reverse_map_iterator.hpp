@@ -8,7 +8,7 @@
 
 namespace ft{
 
-template <class Key, class T, class Allocator, bool B = false >
+template <class Key, class T, class Allocator = std::allocator<ft::pair<const Key, T> >, bool B = false >
 class reverse_map_iterator
 {
 	public:
@@ -16,9 +16,9 @@ class reverse_map_iterator
 		typedef ft::pair<const Key, T>																	value_type;
 		typedef size_t																					size_type;
 
-		typedef map_node<Key, T, Allocator>*																		node_pointer;
+		typedef map_node<Key, T, Allocator>*															node_pointer;
 		typedef std::random_access_iterator_tag															iterator_category;
-		typedef iterator_category								iterator_type;
+		typedef iterator_category																		iterator_type;
 		typedef typename chooseConst<B, ft::pair<const Key, T>&, const ft::pair<const Key, T>&>::type	reference;
 		typedef typename chooseConst<B, ft::pair<const Key, T>*, const ft::pair<const Key, T>*>::type	pointer;
 		typedef ft::pair<const Key, T>*																	elemPtr;
@@ -101,14 +101,13 @@ class reverse_map_iterator
 		node_pointer		_target;
 		node_pointer		_root;
 
-		void	move_left(){
-			ssize_t stage = 0;
+		void	move_right(){
 			if (!_target)
 				find_first();
 			else
 				find_next();
 		};
-		void	move_right(){
+		void	move_left(){
 			if (!_target)
 				find_last();
 			else
@@ -197,6 +196,7 @@ class reverse_map_iterator
 				return false;
 		}
 };
+
 
 };
 

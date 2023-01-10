@@ -67,12 +67,12 @@ namespace ft{
 			Container _content;
 		protected:
 	};
-	template< class T, class Container > bool operator==( const stack<T,Container>& lhs, const stack<T,Container>& rhs );
-	template< class T, class Container > bool operator!=( const stack<T,Container>& lhs, const stack<T,Container>& rhs );
-	template< class T, class Container > bool operator<( const stack<T,Container>& lhs, const stack<T,Container>& rhs );
-	template< class T, class Container > bool operator<=( const stack<T,Container>& lhs, const stack<T,Container>& rhs );
-	template< class T, class Container > bool operator>( const stack<T,Container>& lhs, const stack<T,Container>& rhs );
-	template< class T, class Container > bool operator>=( const stack<T,Container>& lhs, const stack<T,Container>& rhs );
+	template< class T, class Container > bool operator==( const Stack<T,Container>& lhs, const Stack<T,Container>& rhs );
+	template< class T, class Container > bool operator!=( const Stack<T,Container>& lhs, const Stack<T,Container>& rhs );
+	template< class T, class Container > bool operator<( const Stack<T,Container>& lhs, const Stack<T,Container>& rhs );
+	template< class T, class Container > bool operator<=( const Stack<T,Container>& lhs, const Stack<T,Container>& rhs );
+	template< class T, class Container > bool operator>( const Stack<T,Container>& lhs, const Stack<T,Container>& rhs );
+	template< class T, class Container > bool operator>=( const Stack<T,Container>& lhs, const Stack<T,Container>& rhs );
 };
 
 #endif

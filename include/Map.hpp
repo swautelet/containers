@@ -40,15 +40,14 @@ namespace ft{
 
 		//member functions
 			Map():_root(NULL), _nb_node(0){};
-			explicit Map( const Compare& comp, const Allocator& alloc = Allocator()):_root(NULL), _nb_node(0){};
-			template< class InputIt > Map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator() ):_root(NULL), _nb_node(0){
+			explicit Map( const Compare& comp, const Allocator& alloc = Allocator()):_root(NULL), _nb_node(0), _alloc(alloc), _compare(comp){};
+			template< class InputIt > Map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator() ):_root(NULL), _nb_node(0), _alloc(alloc), _compare(comp){
 				while (first != last){
 					add_node(*first);
 					first++;
 				}
 			};
-			Map( const Map& other ):_root(NULL), _nb_node(0){
-				bool first = true;
+			Map( const Map& other ):_root(NULL), _nb_node(0), _alloc(other.get_allocator()), _compare(other.key_comp()){
 				for (iterator i = other.begin(); i != other.end(); i++){
 						add_node(*i);
 				}
@@ -183,6 +182,7 @@ namespace ft{
 				return (ft::make_pair(ret, true));
 			};
 			iterator insert( iterator pos, const value_type& value ){
+				(void)pos;
 				iterator reader = find(value.first);
 				if (reader)
 					return reader;

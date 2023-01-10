@@ -1,6 +1,6 @@
 #include "tester.hpp"
 
-void    run_test(str name){
+void    run_test(std::string name){
     std::ofstream outfile;
 
     outfile.open(name);
