@@ -1,6 +1,8 @@
 #pragma once
 // #include "tester.hpp"
 // #include UTILITIES
+#ifndef ENABLE_IF_HPP
+#define ENABLE_IF_HPP
 
 template <class T> typename _enable_if< std::is_unsigned<T>::value >::type
 		foo(T) {
@@ -24,3 +26,4 @@ bool enable_if_test_() {
 	g_start2 = timer(); g_end2 = timer(); g_start1 = timer(); g_end1 = timer();
 	return res;
 }
+#endif

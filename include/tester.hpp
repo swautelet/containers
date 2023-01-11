@@ -127,11 +127,11 @@ time_t timer();
 #include "../src/utility/iterator_traits.hpp"
 #include "../src/utility/lexicographical.hpp" 
 
-void	vector_test(std::ostream& out);
-void	map_test(std::ostream& out);
-void	stack_test(std::ostream& out);
-void    utility_test(std::ostream& out);
-void    print_result(std::ostream& out, std::vector<int> answer);
+void	vector_test(std::ofstream& out);
+void	map_test(std::ofstream& out);
+void	stack_test(std::ofstream& out);
+void    utility_test(std::ofstream& out);
+void    print_result(std::ofstream& out, std::vector<int> answer);
 void    run_test(std::string name);
 
 #endif

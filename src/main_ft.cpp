@@ -1,6 +1,8 @@
-#include "tester.hpp"
+// #include "tester.hpp"
 
-using namespace ft;
+#include <string>
+
+void    run_test(std::string name);
 
 int main()
 {

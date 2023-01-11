@@ -1,10 +1,9 @@
 
-#include "tester.hpp"
+// #include "tester.hpp"
 
 #define STD
 
-
-using namespace std;
+#include <string>
 
 void	run_test(std::string name);
 

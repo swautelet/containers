@@ -1,6 +1,8 @@
 #pragma once
 // #include "tester.hpp"
 // #include UTILITIES
+#ifndef IS_INTEGRAL_HPP
+#define IS_INTEGRAL_HPP
 
 bool is_integral_test_() {
 	std::vector<int> v;
@@ -23,3 +25,5 @@ bool is_integral_test_() {
 	(_is_integral<unsigned long long>() == std::is_integral<unsigned long long>()) ? 0 : res = 0;
 	return res;
 }
+
+#endif
