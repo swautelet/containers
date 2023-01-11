@@ -46,8 +46,8 @@ std::vector<int> comparator_test(std::map<T, V> mp) {
     fillMap(mp8);
     for (typename std::map<T, V>::iterator it = mp8.begin(); it != mp8.end(); it++) { v.push_back(it->first); }
     for (typename std::map<T, V>::iterator it = --mp8.end(); it != mp8.begin(); it--) { v.push_back(it->first); }
-    g_start1 = timer();
-    g_end1 = timer();
+    g_start = timer();
+    g_end = timer();
     v.push_back(mp1.size());
     return v;
 }
@@ -95,8 +95,8 @@ std::vector<int> comparator_test(_map<T, V> mp) {
     fillMap(mp8);
     for (typename std::map<T, V>::iterator it = mp8.begin(); it != mp8.end(); it++) { v.push_back(it->first); }
     for (typename std::map<T, V>::iterator it = --mp8.end(); it != mp8.begin(); it--) { v.push_back(it->first); }
-    g_start1 = timer();
-    g_end1 = timer();
+    g_start = timer();
+    g_end = timer();
     v.push_back(mp1.size());
 
     return v;

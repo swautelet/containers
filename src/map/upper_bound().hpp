@@ -39,9 +39,9 @@ template <class T, class V>
     mp.insert(std::make_pair(-10, 10));
     mp.insert(std::make_pair(-20, 20));
     v.push_back((--mp.upper_bound(0))->first);
-    g_start1 = timer();
+    g_start = timer();
     mp3.upper_bound(49 * _ratio);
-    g_end1 = timer();
+    g_end = timer();
     return v;
 }
 
@@ -82,8 +82,8 @@ template <class T, class V>
     mp.insert(_make_pair(-10, 10));
     mp.insert(_make_pair(-20, 20));
     v.push_back((--mp.upper_bound(0))->first);
-    g_start2 = timer();
+    g_start = timer();
     mp3.upper_bound(49 * _ratio);
-    g_end2 = timer();
+    g_end = timer();
     return v;
 }

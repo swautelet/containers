@@ -7,7 +7,7 @@ template <class T, class V>
     std::vector<int> v;
     mp.insert(std::make_pair(3, 3));
     typename std::map<T, V>::iterator it = mp.begin();
-    g_start1 = timer();
+    g_start = timer();
     v.push_back(it->first);
     v.push_back(it->second);
     mp[3] = 10;
@@ -21,7 +21,7 @@ template <class T, class V>
     v.push_back(it->first);
     v.push_back(it->second);
     v.push_back(mp.size());
-    g_end1 = timer();
+    g_end = timer();
     return v;
 }
 
@@ -30,7 +30,7 @@ template <class T, class V>
     std::vector<int> v;
     mp.insert(_make_pair(3, 3));
     typename _map<T, V>::iterator it = mp.begin();
-    g_start2 = timer();
+    g_start = timer();
     v.push_back(it->first);
     v.push_back(it->second);
     mp[3] = 10;
@@ -44,6 +44,6 @@ template <class T, class V>
     v.push_back(it->first);
     v.push_back(it->second);
     v.push_back(mp.size());
-    g_end2 = timer();
+    g_end = timer();
     return v;
 }

@@ -9,7 +9,7 @@ std::vector<int> iterator_test(std::vector<T> vector) {
     for (int i = 0; i < 10; ++i)
         vector.push_back(i);
     it = vector.begin();
-    g_start1 = timer();
+    g_start = timer();
     v.push_back(*(++it));
     v.push_back(*(--it));
     v.push_back(*(it + 1));
@@ -17,7 +17,7 @@ std::vector<int> iterator_test(std::vector<T> vector) {
     v.push_back(*(it - 1));
     it -= 1;
     v.push_back(*it);
-    g_end1 = timer();
+    g_end = timer();
     return v;
 }
 
@@ -28,7 +28,7 @@ std::vector<int> iterator_test(_vector<T> vector) {
     for (int i = 0; i < 10; ++i)
         vector.push_back(i);
     it = vector.begin();
-    g_start2 = timer();
+    g_start = timer();
     v.push_back(*(++it));
     v.push_back(*(--it));
     v.push_back(*(it + 1));
@@ -36,6 +36,6 @@ std::vector<int> iterator_test(_vector<T> vector) {
     v.push_back(*(it - 1));
     it -= 1;
     v.push_back(*it);
-    g_end2 = timer();
+    g_end = timer();
     return v;
 }

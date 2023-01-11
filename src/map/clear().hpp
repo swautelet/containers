@@ -9,9 +9,9 @@ std::vector<int> clear_test(std::map<T, V> mp) {
     for (int i = 0, j = 0; i < 25 * _ratio; ++i, ++j)
         mp.insert(std::make_pair(i, j));
     v.push_back(mp.size());
-    g_start1 = timer();
+    g_start = timer();
     mp.clear();
-    g_end1 = timer();
+    g_end = timer();
     v.push_back(mp.size());
     typename std::map<T, V>::iterator it = mp.begin();
     if (it == mp.end())
@@ -26,9 +26,9 @@ std::vector<int> clear_test(_map<T, V> mp) {
     for (int i = 0, j = 0; i < 25 * _ratio; ++i, ++j)
         mp.insert(_make_pair(i, j));
     v.push_back(mp.size());
-    g_start2 = timer();
+    g_start = timer();
     mp.clear();
-    g_end2 = timer();
+    g_end = timer();
     v.push_back(mp.size());
     typename _map<T, V>::iterator it = mp.begin();
     if (it == mp.end())

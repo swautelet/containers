@@ -8,9 +8,9 @@ std::vector<int> assign_std_test(std::vector<T> vector) {
 	std::vector<int> tmp;
 	vector.assign(3, 3);
 	tmp.assign(4000 * _ratio, 1);
-	g_start1 = timer();
+	g_start = timer();
 	vector.assign(tmp.begin(), tmp.end());
-	g_end1 = timer();
+	g_end = timer();
 	for (size_t i = 0; i < tmp.size(); ++i)
 		v.push_back(vector[i]);
 	v.push_back(vector.size());
@@ -24,9 +24,9 @@ std::vector<int> assign_std_test(_vector<T> vector) {
 	std::vector<int> tmp;
 	vector.assign(3, 3);
 	tmp.assign(4000 * _ratio, 1);
-	g_start2 = timer();
+	g_start = timer();
 	vector.assign(tmp.begin(), tmp.end());
-	g_end2 = timer();
+	g_end = timer();
 	for (size_t i = 0; i < tmp.size(); ++i)
 		v.push_back(vector[i]);
 	v.push_back(vector.size());

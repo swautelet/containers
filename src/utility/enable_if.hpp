@@ -6,12 +6,12 @@
 
 template <class T> typename _enable_if< std::is_unsigned<T>::value >::type
 		foo(T) {
-	g_start1 = -20;
+	g_start = -20;
 }
 
 template <class T> typename _enable_if< std::is_signed<T>::value >::type
 		foo(T) {
-	g_start2 = -20;
+	g_start = -20;
 }
 
 bool enable_if_test_() {
@@ -21,9 +21,9 @@ bool enable_if_test_() {
 	int x = 5;
 	foo(xx);
 	foo(x);
-	if (g_start1 != -20 && g_start2 != -20)
+	if (g_start != -20 && g_start != -20)
 		res = 0;
-	g_start2 = timer(); g_end2 = timer(); g_start1 = timer(); g_end1 = timer();
+	g_start = timer(); g_end = timer(); g_start = timer(); g_end = timer();
 	return res;
 }
 #endif

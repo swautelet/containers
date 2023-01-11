@@ -37,9 +37,9 @@ std::vector<int> insert_test_3(std::vector<T> vector) {
     std::vector<int> tmp;
     tmp.assign(2600 * _ratio, 1);
     vector.assign(4200 * _ratio, 1);
-    g_start1 = timer();
+    g_start = timer();
     vector.insert(vector.end() - 1000 * _ratio, tmp.begin(), tmp.end());
-    g_end1 = timer();
+    g_end = timer();
     v.push_back(vector[3]);
     v.push_back(vector.size());
     v.push_back(vector.capacity());
@@ -68,9 +68,9 @@ std::vector<int> insert_test_3(_vector<T> vector) {
     _vector<int> tmp;
     tmp.assign(2600 * _ratio, 1);
     vector.assign(4200 * _ratio, 1);
-    g_start2 = timer();
+    g_start = timer();
     vector.insert(vector.end() - 1000 * _ratio, tmp.begin(), tmp.end());
-    g_end2 = timer();
+    g_end = timer();
     v.push_back(vector[3]);
     v.push_back(vector.size());
     v.push_back(vector.capacity());

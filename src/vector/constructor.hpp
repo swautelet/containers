@@ -9,9 +9,9 @@ std::vector<int> constructor_test(std::vector<T> vector) {
     std::vector<int> tmp(1000 * _ratio, 4), tmp2(1000 * _ratio, 5);
     tmp = tmp2;
     std::vector<int> tmp3(tmp);
-    g_start1 = timer();
+    g_start = timer();
     std::vector<int> tmp4(tmp.begin(), tmp.end());
-    g_end1 = timer();
+    g_end = timer();
     v.push_back(tmp4.size());
     v.push_back(tmp4.capacity());
     v.push_back(tmp[2]);
@@ -29,9 +29,9 @@ std::vector<int> constructor_test(_vector<T> vector) {
     _vector<int> tmp(1000 * _ratio, 4), tmp2(1000 * _ratio, 5);
     tmp = tmp2;
     _vector<int> tmp3(tmp);
-    g_start2 = timer();
+    g_start = timer();
     _vector<int> tmp4(tmp.begin(), tmp.end());
-    g_end2 = timer();
+    g_end = timer();
     v.push_back(tmp4.size());
     v.push_back(tmp4.capacity());
     v.push_back(tmp[2]);

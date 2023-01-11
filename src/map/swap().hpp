@@ -5,7 +5,7 @@
 template <class T, class V>
 std::vector<int> swap_test(std::map<T, V> mp) {
     std::vector<int> v;
-    g_start1 = g_end1 = timer();
+    g_start = g_end = timer();
     for (int i = 0, j = 0; i < 25 * _ratio; ++i, ++j)
         mp.insert(std::make_pair(i, j));
     std::map<T, V> mp2;
@@ -34,7 +34,7 @@ std::vector<int> swap_test(std::map<T, V> mp) {
 template <class T, class V>
 std::vector<int> swap_test(_map<T, V> mp) {
     std::vector<int> v;
-    g_start2 = g_end2 = timer();
+    g_start = g_end = timer();
     for (int i = 0, j = 0; i < 25 * _ratio; ++i, ++j)
         mp.insert(_make_pair(i, j));
     _map<T, V> mp2;

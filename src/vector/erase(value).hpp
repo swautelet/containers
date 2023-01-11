@@ -7,9 +7,9 @@ std::vector<int> erase_test_1(std::vector<T> vector) {
     std::vector<int> v;
     for (int i = 0; i < 9900 * _ratio; ++i)
         vector.push_back(i);
-    g_start1 = timer();
+    g_start = timer();
     v.push_back(*(vector.erase(vector.begin() + 8 * _ratio)));
-    g_end1 = timer();
+    g_end = timer();
     v.push_back(*(vector.begin() + 82 * _ratio));
     v.push_back(vector.size());
     v.push_back(vector.capacity());
@@ -21,9 +21,9 @@ std::vector<int> erase_test_1(_vector<T> vector) {
     std::vector<int> v;
     for (int i = 0; i < 9900 * _ratio; ++i)
         vector.push_back(i);
-    g_start2 = timer();
+    g_start = timer();
     v.push_back(*(vector.erase(vector.begin() + 8 * _ratio)));
-    g_end2 = timer();
+    g_end = timer();
     v.push_back(*(vector.begin() + 82 * _ratio));
     v.push_back(vector.size());
     v.push_back(vector.capacity());

@@ -10,9 +10,9 @@ std::vector<int> assign_overload_test(std::map<T, V> mp) {
     std::map<T, V> mp2;
     for (int i = 20 * _ratio, j = 200010; i < 40 * _ratio; ++i, ++j)
         mp2.insert(std::make_pair(i, j));
-    g_start1 = timer();
+    g_start = timer();
     mp2 = mp;
-    g_end1 = timer();
+    g_end = timer();
     typename std::map<T, V>::iterator it = mp2.begin();
     for (; it != mp2.end(); it++) {
         v.push_back(it->first);
@@ -30,9 +30,9 @@ std::vector<int> assign_overload_test(_map<T, V> mp) {
     _map<T, V> mp2;
     for (int i = 20 * _ratio, j = 200010; i < 40 * _ratio; ++i, ++j)
         mp2.insert(_make_pair(i, j));
-    g_start2 = timer();
+    g_start = timer();
     mp2 = mp;
-    g_end2 = timer();
+    g_end = timer();
     typename _map<T, V>::iterator it = mp2.begin();
     for (; it != mp2.end(); it++) {
         v.push_back(it->first);

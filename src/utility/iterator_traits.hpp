@@ -6,7 +6,7 @@
 bool iterator_traits_test() {
 	std::vector<std::string> res;
 	std::vector<std::string> res2;
-	g_start1 = g_end1 = timer();
+	g_start = g_end = timer();
 
 	res.push_back(typeid(std::vector<int>::iterator::iterator_category).name());
 	res.push_back(typeid(std::vector<int>::iterator::value_type).name());

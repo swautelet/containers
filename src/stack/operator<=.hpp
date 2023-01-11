@@ -4,7 +4,7 @@
 
 bool stack_less_or_equal_test() {
 	std::vector<int> result, result2;
-	g_start2 = g_end2 = g_start1 = g_end1 = 0;
+	g_start = g_end = g_start = g_end = 0;
 	StackBoolTest st;
 
 	result.push_back(st.s1 <= st.s1); result.push_back(st.s3 <= st.s3); result.push_back(st.s5 <= st.s9);

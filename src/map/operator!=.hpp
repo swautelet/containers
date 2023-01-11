@@ -4,7 +4,7 @@
 
 bool map_not_equal_test() {
 	std::vector<int> result, result2;
-	g_start2 = g_end2 = g_start1 = g_end1 = 0;
+	g_start = g_end = g_start = g_end = 0;
 	MapBoolTest mt;
 
 	result.push_back(mt.m1 != mt.m1); result.push_back(mt.m3 != mt.m3); result.push_back(mt.m5 != mt.m9);

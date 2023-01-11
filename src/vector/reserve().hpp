@@ -5,9 +5,9 @@
 template <typename T>
 std::vector<int> reserve_test(std::vector<T> vector) {
     std::vector<int> v;
-    g_start1 = timer();
+    g_start = timer();
     vector.reserve(9900 * _ratio);
-    g_end1 = timer();
+    g_end = timer();
     v.push_back(vector.size());
     v.push_back(vector.capacity());
     return v;
@@ -16,9 +16,9 @@ std::vector<int> reserve_test(std::vector<T> vector) {
 template <typename T>
 std::vector<int> reserve_test(_vector<T> vector) {
     std::vector<int> v;
-    g_start2 = timer();
+    g_start = timer();
     vector.reserve(9900 * _ratio);
-    g_end2 = timer();
+    g_end = timer();
     v.push_back(vector.size());
     v.push_back(vector.capacity());
     return v;

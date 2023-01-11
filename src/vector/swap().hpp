@@ -7,7 +7,7 @@ std::vector<int> swap_test(std::vector<T> vector) {
     std::vector<int> v;
     vector.assign(1100 * _ratio, 11);
     std::vector<int> tmp(500 * _ratio, 5), tmp2(1000 * _ratio, 10), tmp3(1500 * _ratio, 15), tmp4(3000 * _ratio, 30);
-    g_start1 = timer();
+    g_start = timer();
     v.push_back(vector[2]);
     v.push_back(vector.size());
     v.push_back(vector.capacity());
@@ -28,7 +28,7 @@ std::vector<int> swap_test(std::vector<T> vector) {
     v.push_back(vector.size());
     v.push_back(vector.capacity());
     std::swap(vector, tmp4);
-    g_end1 = timer();
+    g_end = timer();
     v.push_back(vector[2]);
     v.push_back(vector.size());
     v.push_back(vector.capacity());
@@ -40,7 +40,7 @@ std::vector<int> swap_test(_vector<T> vector) {
     std::vector<int> v;
     vector.assign(1100 * _ratio, 11);
     _vector<int> tmp(500 * _ratio, 5), tmp2(1000 * _ratio, 10), tmp3(1500 * _ratio, 15), tmp4(3000 * _ratio, 30);
-    g_start2 = timer();
+    g_start = timer();
     v.push_back(vector[2]);
     v.push_back(vector.size());
     v.push_back(vector.capacity());
@@ -61,7 +61,7 @@ std::vector<int> swap_test(_vector<T> vector) {
     v.push_back(vector.size());
     v.push_back(vector.capacity());
     std::swap(vector, tmp4);
-    g_end2 = timer();
+    g_end = timer();
     v.push_back(vector[2]);
     v.push_back(vector.size());
     v.push_back(vector.capacity());

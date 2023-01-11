@@ -8,9 +8,9 @@ std::vector<int> insert_std_test(std::vector<T> vector) {
 	std::vector<int> tmp;
 	tmp.assign(2600 * _ratio, 1);
 	vector.assign(4200 * _ratio, 7);
-	g_start1 = timer();
+	g_start = timer();
 	vector.insert(vector.begin(), tmp.begin(), tmp.end());
-	g_end1 = timer();
+	g_end = timer();
 	for (size_t i = 0; i < tmp.size(); ++i) {
 		v.push_back(vector[i]);
 	}
@@ -25,9 +25,9 @@ std::vector<int> insert_std_test(_vector<T> vector) {
 	std::vector<int> tmp;
 	tmp.assign(2600 * _ratio, 1);
 	vector.assign(4200 * _ratio, 7);
-	g_start2 = timer();
+	g_start = timer();
 	vector.insert(vector.begin(), tmp.begin(), tmp.end());
-	g_end2 = timer();
+	g_end = timer();
 	for (size_t i = 0; i < tmp.size(); ++i) {
 		v.push_back(vector[i]);
 	}

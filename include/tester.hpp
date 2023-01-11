@@ -16,7 +16,7 @@
 #include "Stack.hpp"
 #include "Utility.hpp"
 
-#define _ratio 10
+#define _ratio 100
 
 #define	_vector 			ft::Vector
 #define	_stack	 			ft::Stack
@@ -31,10 +31,8 @@
 
 typedef long time_t;
 
-time_t g_start1;
-time_t g_start2;
-time_t g_end1;
-time_t g_end2;
+time_t g_start;
+time_t g_end;
 
 time_t timer();
 
@@ -127,11 +125,11 @@ time_t timer();
 #include "../src/utility/iterator_traits.hpp"
 #include "../src/utility/lexicographical.hpp" 
 
-void	vector_test(std::ofstream& out);
-void	map_test(std::ofstream& out);
-void	stack_test(std::ofstream& out);
-void    utility_test(std::ofstream& out);
+void	vector_test(std::ofstream& out, std::ofstream& out_time);
+void	map_test(std::ofstream& out, std::ofstream& out_time);
+void	stack_test(std::ofstream& out, std::ofstream& out_time);
+void    utility_test(std::ofstream& out, std::ofstream& out_time);
 void    print_result(std::ofstream& out, std::vector<int> answer);
-void    run_test(std::string name);
-
+void    run_test(std::string name, std::string name_time);
+void	display_time(std::string mess, std::ofstream& out_time);
 #endif

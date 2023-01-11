@@ -7,7 +7,7 @@
 bool is_integral_test_() {
 	std::vector<int> v;
 	bool res = 1;
-	g_start2 = timer(); g_end2 = timer(); g_start1 = timer(); g_end1 = timer();
+	g_start = timer(); g_end = timer(); g_start = timer(); g_end = timer();
 	(_is_integral<float>() == std::is_integral<float>()) ? 0 : res = 0;
 	(_is_integral<int>() == std::is_integral<int>()) ? 0 : res = 0;
 	(_is_integral<bool>() == std::is_integral<bool>()) ? 0 : res = 0;

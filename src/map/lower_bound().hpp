@@ -35,9 +35,9 @@ std::vector<int> lower_bound_test(std::map<T, V> mp) {
     for (int i = 0, j = 0; i < 50 * _ratio; ++i, ++j) {
         mp3.insert(std::make_pair(i, j));
     }
-    g_start1 = timer();
+    g_start = timer();
     mp3.lower_bound(49 * _ratio);
-    g_end1 = timer();
+    g_end = timer();
     return v;
 }
 
@@ -74,8 +74,8 @@ std::vector<int> lower_bound_test(_map<T, V> mp) {
     for (int i = 0, j = 0; i < 50 * _ratio; ++i, ++j) {
         mp3.insert(_make_pair(i, j));
     }
-    g_start2 = timer();
+    g_start = timer();
     mp3.lower_bound(49 *_ratio);
-    g_end2 = timer();
+    g_end = timer();
     return v;
 }

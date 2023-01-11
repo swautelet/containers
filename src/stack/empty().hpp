@@ -10,9 +10,9 @@ std::vector<int> empty_test(std::stack<T> stk) {
 	v.push_back(stk.empty());
 	while (stk.size() > 0)
 		stk.pop();
-	g_start1 = timer();
+	g_start = timer();
 	v.push_back(stk.empty());
-	g_end1 = timer();
+	g_end = timer();
 	return v;
 }
 
@@ -24,8 +24,8 @@ std::vector<int> empty_test(_stack<T> stk) {
 	v.push_back(stk.empty());
 	while (stk.size() > 0)
 		stk.pop();
-	g_start2 = timer();
+	g_start = timer();
 	v.push_back(stk.empty());
-	g_end2 = timer();
+	g_end = timer();
 	return v;
 }

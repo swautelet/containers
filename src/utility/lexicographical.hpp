@@ -14,11 +14,11 @@ bool lexicographical_test() {
 	b1.push_back('e');
 	b2.assign(5000 * _ratio, 'f');
 	b2.push_back('e');
-	g_start1 = timer();
+	g_start = timer();
 	result.push_back(std::lexicographical_compare(v1.begin(), v1.end(), v2.begin(), v2.end()));
-	g_end1 = timer();
-	g_start2 = timer();
+	g_end = timer();
+	g_start = timer();
 	result2.push_back(_lexicographical(b1.begin(), b1.end(), b2.begin(), b2.end()));
-	g_end2 = timer();
+	g_end = timer();
 	return result == result2;
 }

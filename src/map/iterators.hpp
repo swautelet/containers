@@ -17,7 +17,7 @@ std::vector<int>    iterators_test(std::map<T, V> mp) {
         mp.insert(std::make_pair(i, j));
     typename std::map<T, V>::iterator it = mp.begin();
     typename std::map<T, V>::iterator it2 = mp.end();
-    g_start1 = timer();
+    g_start = timer();
     v.push_back(it->first);
     it++;
     it++;
@@ -34,7 +34,7 @@ std::vector<int>    iterators_test(std::map<T, V> mp) {
     v.push_back((it2--)->first);
     v.push_back((it2++)->first);
     v.push_back((++it2)->first);
-    g_end1 = timer();
+    g_end = timer();
     return v;
 }
 
@@ -53,7 +53,7 @@ std::vector<int> iterators_test(_map<T, V> mp) {
         mp.insert(_make_pair(i, j));
     typename _map<T, V>::iterator it = mp.begin();
     typename _map<T, V>::iterator it2 = mp.end();
-    g_start2 = timer();
+    g_start = timer();
     v.push_back(it->first);
     it++;
     it++;
@@ -70,6 +70,6 @@ std::vector<int> iterators_test(_map<T, V> mp) {
     v.push_back((it2--)->first);
     v.push_back((it2++)->first);
     v.push_back((++it2)->first);
-    g_end2 = timer();
+    g_end = timer();
     return v;
 }

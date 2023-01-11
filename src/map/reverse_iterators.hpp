@@ -6,7 +6,7 @@ template <class T, class V>
 std::vector<int>    reverse_iterators_test(std::map<T, V> mp) {
     std::vector<int> v;
 
-    g_start1 = g_end1 = timer();
+    g_start = g_end = timer();
     mp.insert(std::make_pair(5, 5));
     mp.insert(std::make_pair(3, 3));
     mp.insert(std::make_pair(7, 7));
@@ -36,7 +36,7 @@ std::vector<int> reverse_iterators_test(_map<T, V> mp) {
 
     std::vector<int> v;
 
-    g_start2 = g_end2 = timer();
+    g_start = g_end = timer();
     mp.insert(_make_pair(5, 5));
     mp.insert(_make_pair(3, 3));
     mp.insert(_make_pair(7, 7));

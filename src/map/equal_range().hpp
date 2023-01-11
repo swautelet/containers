@@ -11,11 +11,11 @@ std::vector<int> equal_range_test(std::map<T, V> mp) {
     mp.insert(std::make_pair(40, 40));
     mp.insert(std::make_pair(50, 50));
     mp.insert(std::make_pair(60, 60));
-    g_start1 = timer();
+    g_start = timer();
     const std::pair<std::map<int, int>::const_iterator , std::map<int, int>::const_iterator>& pair = mp.equal_range(10);
     const std::pair<std::map<int, int>::const_iterator , std::map<int, int>::const_iterator>& pair2 = mp.equal_range(11);
     const std::pair<std::map<int, int>::const_iterator , std::map<int, int>::const_iterator>& pair3 = mp.equal_range(1);
-    g_end1 = timer();
+    g_end = timer();
     v.push_back(pair.first->first);
     v.push_back(pair.first->second);
     v.push_back(pair.second->first);
@@ -40,11 +40,11 @@ std::vector<int> equal_range_test(_map<T, V> mp) {
     mp.insert(_make_pair(40, 40));
     mp.insert(_make_pair(50, 50));
     mp.insert(_make_pair(60, 60));
-    g_start2 = timer();
+    g_start = timer();
     const _pair<_map<int, int>::const_iterator , _map<int, int>::const_iterator>& pair = mp.equal_range(10);
     const _pair<_map<int, int>::const_iterator , _map<int, int>::const_iterator>& pair2 = mp.equal_range(11);
     const _pair<_map<int, int>::const_iterator , _map<int, int>::const_iterator>& pair3 = mp.equal_range(1);
-    g_end2 = timer();
+    g_end = timer();
     v.push_back(pair.first->first);
     v.push_back(pair.first->second);
     v.push_back(pair.second->first);
