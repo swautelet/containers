@@ -17,8 +17,9 @@ OBJS_STD		= $(SRC_STD:.cpp=.o)
 CPP				= c++ 
 RM				= rm -f
 CPPFLAGS		= -Wall -Wextra -Werror -std=c++98 -Iinclude 
-LOG_FILE		= std.log ft.log std_time.log ft_time.log
+LOG_FILE		= std.log ft.log 
 COMPARE 		= src/compare.sh
+TIME_LOG		= std_time.log ft_time.log
 
 all: $(NAME_STD) $(NAME_FT)
 
@@ -38,7 +39,7 @@ clean:
 fclean:		clean
 			$(RM) $(NAME_FT)
 			$(RM) $(NAME_STD)
-			$(RM) $(LOG_FILE)
+			$(RM) $(LOG_FILE) $(TIME_LOG)
 
 test: $(NAME_STD) $(NAME_FT)
 	@echo "\033[32mlaunching std test\033[0m" 
@@ -46,6 +47,7 @@ test: $(NAME_STD) $(NAME_FT)
 	@echo "\033[32mlaunching ft test\033[0m" 
 	@./$(NAME_FT)
 	@bash $(COMPARE)
+	@echo "\033[32mall test are done\033[0m" 
 
 .o : .c
 	$(CPP) $(CPPFLAGS) $? -c
