@@ -86,7 +86,7 @@ void    stack_test(std::ofstream& out, std::ofstream& out_time){
     out << "--- top_test : ---" << std::endl;
     print_result(out, top_test(test));
     display_time("stack top test", out_time);
-    std::cout << out << "--- stack done ---" << std::endl;
+    std::cout << "--- stack done ---" << std::endl;
 }
 
 void    map_test(std::ofstream& out, std::ofstream& out_time){

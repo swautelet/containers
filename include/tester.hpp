@@ -15,8 +15,11 @@
 #include "Map.hpp"
 #include "Stack.hpp"
 #include "Utility.hpp"
-
+#ifndef FAST
 #define _ratio 1000
+#else
+#define _ratio 10
+#endif
 
 #define	_vector 			ft::Vector
 #define	_stack	 			ft::Stack

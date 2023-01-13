@@ -86,7 +86,7 @@ void    stack_test(std::ofstream& out, std::ofstream& out_time){
     out << "--- top_test : ---" << std::endl;
     print_result(out, top_test(test));
     display_time("stack top test", out_time);
-    out << "--- done ---" << std::endl;
+    std::cout << "--- stack done ---" << std::endl;
 }
 
 void    map_test(std::ofstream& out, std::ofstream& out_time){
@@ -202,7 +202,7 @@ void    map_test(std::ofstream& out, std::ofstream& out_time){
     out << "--- allocator test : ---" << std::endl;
     display_time("map allocator test", out_time);
     out << "allocator test ok" << std::endl;
-    out << "--- done --- " << std::endl;
+    std::cout << "--- map done --- " << std::endl;
 
 }
 
@@ -233,6 +233,7 @@ void    utility_test(std::ofstream& out, std::ofstream& out_time){
     else
         out << "KO" << std::endl;
     display_time("utility lexicographical test", out_time);
+    std::cout << "--- utility done ---" << std::endl;
 }
 
 void    vector_test(std::ofstream& out, std::ofstream& out_time){
@@ -367,7 +368,7 @@ void    vector_test(std::ofstream& out, std::ofstream& out_time){
     out << "allocator_test :" << std::endl;
     display_time("vector allocator test", out_time);
     out << "allocator test ok" << std::endl;
-    out << "--- done ---" << std::endl;
+    std::cout << "--- vector done ---" << std::endl;
 }
 
 void    display_time(std::string message, std::ofstream& out_time){
