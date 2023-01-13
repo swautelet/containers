@@ -16,7 +16,7 @@
 #include "Stack.hpp"
 #include "Utility.hpp"
 
-#define _ratio 100
+#define _ratio 1000
 
 #define	_vector 			ft::Vector
 #define	_stack	 			ft::Stack

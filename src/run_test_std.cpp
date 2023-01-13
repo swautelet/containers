@@ -3,6 +3,7 @@
 void    run_test(std::string name, std::string name_time){
     std::ofstream outfile(name);
     std::ofstream out_time(name_time);
+    out_time << "std time : " << std::endl;
     if (outfile.is_open() && out_time.is_open()){
         vector_test(outfile, out_time);
         map_test(outfile, out_time);
