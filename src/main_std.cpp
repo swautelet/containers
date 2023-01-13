@@ -1,7 +1,6 @@
 
 // #include "tester.hpp"
 
-#define STD
 
 #include <string>
 
