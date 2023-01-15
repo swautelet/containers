@@ -248,7 +248,8 @@ namespace ft
 				for (iterator i = end(); i > pos; i--){
 					i = i - 1;
 				}
-				*pos = value;
+				// *pos = value;
+				_alloc.construct(pos.getElemPtr(), value);
 				_size++;
 				return pos;
 			};
@@ -322,25 +323,46 @@ namespace ft
 				if (pos < _first || pos > _first + _size)
 					throw out_of_range_exception();
 				iterator tmp = pos;
-				while (tmp < end()){
-					*tmp = tmp[1];
-					tmp++;
-				}
 				_alloc.destroy(tmp.getElemPtr());
 				_size--;
+				std::memmove(tmp.getElemPtr(), tmp.getElemPtr() + 1, (end() - pos) * sizeof(T));
+				// while (tmp < end()){
+				// 	*tmp = tmp[1];
+				// 	tmp++;
+				// }
+				// _alloc.destroy(tmp.getElemPtr());
 				return pos;
+				// pointer p_pos = &(*pos);
+				// _alloc.destroy(&(*pos));
+				// if (&(*pos) + 1 != _first + _size); // _alloc.destroy(&(*pos));
+				// {
+				// 	for (int i = 0; i < _first + _size - &(*pos) - 1; i++)
+				// 	{
+				// 		_alloc.construct(&(*pos) + i, *(&(*pos) + i + 1));
+				// 		_alloc.destroy(&(*pos) + i + 1);
+				// 	}
+				// }
+				// _size -= 1;
+				// return (iterator(p_pos));
 			};
 			iterator erase( iterator first, iterator last ){
 				size_t count = last - first;
 				if (first < _first || first > _first + _size || last < _first || last > _first + _size)
 					throw out_of_range_exception();
-				for (iterator i = first; i < end() - count; i++){
-					*i = *(i + count);
-				}
+				// for (iterator i = first; i < end() - count; i++){
+				// 	*i = *(i + count);
+				// }
 				size_t counter = 0;
-				for (iterator i = end(); counter < count; counter++, i--){
+				// for (iterator i = end(); counter < count; counter++, i--){
+				// 	_alloc.destroy(i.getElemPtr());
+				// }
+				// std::cout << " before loop " << first.getElemPtr() << std::endl;
+				for (iterator i = first; counter < count; counter++, i++){
 					_alloc.destroy(i.getElemPtr());
 				}
+				// std::cout << "before memmove " << first.getElemPtr() << std::endl;
+				std::memmove(first.getElemPtr(), last.getElemPtr(), (end() - last) * sizeof(T));
+				// std::cout << " after memmove " << std::endl;
 				_size -= count;
 				return first;
 			};
@@ -373,10 +395,10 @@ namespace ft
 				}
 			};
 			void swap( Vector& other ){
-				swap(this->_first, other._first);
-				swap(this->_alloc, other._alloc);
-				swap(this->_size, other._size);
-				swap(this->_capacity, other._capacity);
+				ft::swap(this->_first, other._first);
+				ft::swap(this->_alloc, other._alloc);
+				ft::swap(this->_size, other._size);
+				ft::swap(this->_capacity, other._capacity);
 			};
 
 		// exceptions 
@@ -416,12 +438,12 @@ namespace ft
 				return (lhs.size() < rhs.size());
 			};
 		private:
-			template< typename F >
-			void swap( F& a, F& b ){
-				F temp = a;
-				a = b;
-				b = temp;
-			};
+			// template< typename F >
+			// void swap( F& a, F& b ){
+			// 	F temp = a;
+			// 	a = b;
+			// 	b = temp;
+			// };
 			void	reserve_at_least(size_t count){
 				size_t ratio = 1;
 				while (_capacity * ratio < count){
