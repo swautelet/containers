@@ -402,6 +402,8 @@ namespace ft{
 						// std::cout << "done adding left" << std::endl;
 				// 		std::cout << "reader is " << reader->First() << std::endl;
 				// std::cout << "value " << value.first << std::endl;
+						print_node(_root);
+						balance_node(_root);
 						return reader->getChild_l();
 					}
 					else if (_compare(reader->First(), value.first)){
@@ -409,6 +411,8 @@ namespace ft{
 						// std::cout << "done adding right" << std::endl;
 				// 		std::cout << "reader is " << reader->First() << std::endl;
 				// std::cout << "value " << value.first << std::endl;
+						print_node(_root);
+						balance_node(_root);
 						return reader->getChild_r();
 					}
 					// else 
@@ -417,7 +421,7 @@ namespace ft{
 				// std::cout << "done adding" << std::endl;
 				return _root;
 			};
-			void	extract_node(node* target){
+			void	extract_node_r(node* target){
 				// std::cout << " i try to extract node " << target->First() << " root is : " << _root->First() << std::endl;
 				if (!target->getChild_l() && target->getChild_r()){
 					// std::cout << "first case : " << target->getParent()->First() << " with : " << target->getChild_r()->First() << std::endl;
@@ -453,18 +457,76 @@ namespace ft{
 				}
 				// std::cout << " end of extract" << std::endl;
 			};
-			void	extract_root(){
+			void	extract_node_l(node* target){
+				// std::cout << " i try to extract node " << target->First() << " root is : " << _root->First() << std::endl;
+				if (!target->getChild_l() && target->getChild_r()){
+					// std::cout << "first case : " << target->getParent()->First() << " with : " << target->getChild_r()->First() << std::endl;
+					if (target->getPos() == HIGHER){
+						add_child_r(target->getParent(), target->getChild_r());}
+					else if (target->getPos() == LOWER){
+						add_child_l(target->getParent(), target->getChild_r());}
+					// std::cout << "after : " << target->getParent()->getChild_r()->First() << " and : " << target->getChild_r()->getParent()->First() << std::endl;
+				}
+				else if (!target->getChild_r() && target->getChild_l()){
+					// std::cout << "second  case : " << target->getParent()->First() << " with : " << target->getChild_r()->First() << std::endl;
+					if (target->getPos() == HIGHER)
+						add_child_r(target->getParent(), target->getChild_l());
+					else if (target->getPos() == LOWER)
+						add_child_l(target->getParent(), target->getChild_l());
+				}
+				else if (target->getChild_r() && target->getChild_l()){
+					// std::cout << "third  case : " << target->getParent()->First() << " with : " << target->getChild_r()->First() << std::endl;
+					if (target->getPos() == HIGHER){
+						add_child_r(target->getParent(), target->getChild_l());
+						reposition_node(target->getChild_l());
+					}
+					else if (target->getPos() == LOWER){
+						add_child_l(target->getParent(), target->getChild_l());
+						reposition_node(target->getChild_l());
+					}
+				}
+				else if (!target->getChild_l() && !target->getChild_r()){
+					if (target->getPos() == HIGHER)
+						target->getParent()->setChild_r(NULL);
+					else if (target->getPos() == LOWER)
+						target->getParent()->setChild_l(NULL);
+				}
+				// std::cout << " end of extract" << std::endl;
+			};
+			void	extract_root_r(){
+				node* temp = _root;
 				if (!_root->getChild_l() && _root->getChild_r()){
 					_root = _root->getChild_r();
 					_root->setParent(NULL);
+					temp->setChild_r(NULL);
 				}
 				else if (!_root->getChild_r() && _root->getChild_l()){
 					_root = _root->getChild_l();
 					_root->setParent(NULL);
+					temp->setChild_l(NULL);
 				}
 				else if (_root->getChild_r() && _root->getChild_l()){
 					_root = _root->getChild_r();
-					reposition_node(_root->getParent()->getChild_l());
+					temp->setChild_r(NULL);
+					reposition_node(temp);
+				}
+			};
+			void	extract_root_l(){
+				node* temp = _root;
+				if (!_root->getChild_l() && _root->getChild_r()){
+					_root = _root->getChild_r();
+					_root->setParent(NULL);
+					temp->setChild_r(NULL);
+				}
+				else if (!_root->getChild_r() && _root->getChild_l()){
+					_root = _root->getChild_l();
+					_root->setParent(NULL);
+					temp->setChild_l(NULL);
+				}
+				else if (_root->getChild_r() && _root->getChild_l()){
+					_root = _root->getChild_l();
+					temp->setChild_l(NULL);
+					reposition_node(temp);
 				}
 			};
 			void	delete_node(node* target){
@@ -475,7 +537,7 @@ namespace ft{
 				}
 				// while (target->getChild_r()){
 				// 	swapChild_r(target);}
-				extract_node(target);
+				extract_node_r(target);
 				// if (target->getParent() && target->getPos() == LOWER)
 				// 	target->getParent()->setChild_l(NULL);
 				// else if (target->getParent() && target->getPos() == HIGHER)
@@ -487,11 +549,12 @@ namespace ft{
 				_nb_node--;
 				if (_nb_node == 0)
 					_root = NULL;
+				balance_node(_root);
 			};
 			void	delete_root(){
 				node* temp = _root;
 				if (_nb_node > 1){
-					extract_root();}
+					extract_root_r();}
 				// if (!_root)
 				// 	return ;
 				// else if (!_root->getChild_l() && _root->getChild_r()){
@@ -514,18 +577,35 @@ namespace ft{
 				_nb_node--;
 				if (_nb_node == 0)
 					_root = NULL;
+				balance_node(_root);
 			};
 			void	reposition_node(node* x){
 				node* reader = _root;
-				while (reader->getChild_l() && reader->getChild_r()){
-					if (reader->getChild_l() && _compare(x->First(), reader->First()))
-						reader = reader->getChild_l();
-					else if (reader->getChild_r() && _compare(reader->First(), x->First()))
-						reader = reader->getChild_r();
-					else if (!reader->getChild_l() && _compare(x->First(), reader->First()))
-						add_child_l(reader, x);
-					else if (!reader->getChild_r() && _compare(reader->First(), x->First()))
-						add_child_r(reader, x);
+				while (reader->getChild_l() || reader->getChild_r()){
+					if (_compare(x->First(), reader->First())){
+						if (reader->getChild_l())
+							reader = reader->getChild_l();
+						else{
+							add_child_l(reader, x);
+							break ;
+						}
+					}
+					else{
+						if (reader->getChild_r())
+							reader = reader->getChild_r();
+						else{
+							add_child_r(reader, x);
+							break ;
+						}
+					}
+					// if (reader->getChild_l() && _compare(x->First(), reader->First()))
+					// 	reader = reader->getChild_l();
+					// else if (reader->getChild_r() && _compare(reader->First(), x->First()))
+					// 	reader = reader->getChild_r();
+					// else if (!reader->getChild_l() && _compare(x->First(), reader->First()))
+					// 	add_child_l(reader, x);
+					// else if (!reader->getChild_r() && _compare(reader->First(), x->First()))
+					// 	add_child_r(reader, x);
 				}
 			};
 			void	add_child_l(node* parent, node* child){
@@ -534,6 +614,7 @@ namespace ft{
 				parent->setChild_l(child);
 				child->setParent(parent);
 				child->setPos(LOWER);
+				std::cout << "node : " << child->First() << " added left" << std::endl;
 			};
 			void	add_child_r(node* parent, node* child){
 				if (parent == child)
@@ -541,6 +622,59 @@ namespace ft{
 				parent->setChild_r(child);
 				child->setParent(parent);
 				child->setPos(HIGHER);
+				std::cout << "node : " << child->First() << " added right" << std::endl;
+			};
+			void	balance_node(node* x){
+				if (x == _root){
+					std::cout << "starting balancing tree size is : " << _nb_node << std::endl;
+				}
+				if (!x)
+					return ;
+				size_t left = 0;
+				size_t right = 0;
+				how_much_child(x->getChild_r(), right);
+				how_much_child(x->getChild_l(), left);
+				if (x == _root){
+					if (left > right + 1){
+						std::cout << "balancing root r " << x->First() << std::endl;
+						extract_root_r();
+						reposition_node(x);
+					}
+					else if (right > left + 1){
+						std::cout << "balancing root l " << x->First() << std::endl;
+						extract_root_l();
+						reposition_node(x);
+					}
+					else
+						std::cout << "no balance to do right is " << right << " and left is " << left << std::endl;
+				}
+				else{
+					if (left > right + 1){
+						std::cout << "balancing node r" << std::endl;
+						extract_node_r(x);
+						reposition_node(x);
+					}
+					else if (right > left + 1){
+						std::cout << "balancing node l" << std::endl;
+						extract_node_l(x);
+						reposition_node(x);
+					}
+					else
+						std::cout << "no balance to do " << right << " and left is " << left << std::endl;
+				}
+				std::cout << "ending balancing node " << std::endl;
+				balance_node(x->getChild_l());
+				balance_node(x->getChild_r());
+				std::cout << "end of recursive " << std::endl;
+			};
+			void	how_much_child(node* x, size_t& count){
+				if (!x)
+					return ;
+				else{
+					count++;
+					how_much_child(x->getChild_l(), count);
+					how_much_child(x->getChild_r(), count);
+				}
 			};
 			// void	swapChild_l(node* parent){
 			// 	if (!parent->getChild_l())
@@ -576,57 +710,7 @@ namespace ft{
 			// 	child->setChild_l(pcl);
 			// 	child->setChild_r(pcr);
 			// };
-		// private template map node
-			// class map_node{
-			// 	public:
-			// 		map_node():_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){};
-			// 		map_node(U	content):_parent(NULL), _child_l(NULL), _child_r(NULL), _content(NULL){
-			// 			_content = Allocator.allocate(1);
-			// 			Allocator.construct(_content, content);
-			// 		};
-			// 		map_node(map_node other):_parent(other._parent), _child_l(other._child_l), _child_r(other._child_r), _content(NULL){
-			// 			_content = Allocator.allocate(1);
-			// 			Allocator.construct(_content, other._content);
-			// 		};
-			// 		~map_node(){
-			// 			if (_content){
-			// 				Allocator.destroy(_content);
-			// 				Allocator.deallocate(_content, 1);
-			// 			}
-			// 		};
-			// 		Key&	First(){
-			// 			return _content.first;
-			// 		};
-			// 		T&		Second(){
-			// 			return _content.second;
-			// 		};
-			// 		void	setSecond(T& value){
-			// 			_content.second = value;
-			// 		};
-			// 		void	setParent(map_node* parent){
-			// 			_parent = parent;
-			// 		};
-			// 		void	setChild_l(map_node* child){
-			// 			_child_l = child;
-			// 		};
-			// 		void	setChild_r(map_node* child){
-			// 			_child_r = child;
-			// 		};
-			// 		map_node*	getParent(){
-			// 			return _parent;
-			// 		};
-			// 		map_node*	getChild_l(){
-			// 			return _child_l;
-			// 		};
-			// 		map_node*	getChild_r(){
-			// 			return _child_r;
-			// 		};
-			// 		ft::pair<const Key, T>*	getContent(){
-			// 			return _content;
-			// 		}
-			// 		ft::pair<const Key, T>& operator *(){
-			// 			return *_content;
-			// 		};
+
 
 			// 	private:
 			// 		map_node*				_parent;
