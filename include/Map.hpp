@@ -402,7 +402,6 @@ namespace ft{
 						// std::cout << "done adding left" << std::endl;
 				// 		std::cout << "reader is " << reader->First() << std::endl;
 				// std::cout << "value " << value.first << std::endl;
-						print_node(_root);
 						balance_node(_root);
 						return reader->getChild_l();
 					}
@@ -411,7 +410,6 @@ namespace ft{
 						// std::cout << "done adding right" << std::endl;
 				// 		std::cout << "reader is " << reader->First() << std::endl;
 				// std::cout << "value " << value.first << std::endl;
-						print_node(_root);
 						balance_node(_root);
 						return reader->getChild_r();
 					}
@@ -506,8 +504,9 @@ namespace ft{
 					temp->setChild_l(NULL);
 				}
 				else if (_root->getChild_r() && _root->getChild_l()){
-					_root = _root->getChild_r();
-					temp->setChild_r(NULL);
+					_root = _root->getChild_l();
+					temp->setChild_l(NULL);
+					_root->setParent(NULL);
 					reposition_node(temp);
 				}
 			};
@@ -524,8 +523,9 @@ namespace ft{
 					temp->setChild_l(NULL);
 				}
 				else if (_root->getChild_r() && _root->getChild_l()){
-					_root = _root->getChild_l();
-					temp->setChild_l(NULL);
+					_root = _root->getChild_r();
+					temp->setChild_r(NULL);
+					_root->setParent(NULL);
 					reposition_node(temp);
 				}
 			};
@@ -581,7 +581,8 @@ namespace ft{
 			};
 			void	reposition_node(node* x){
 				node* reader = _root;
-				while (reader->getChild_l() || reader->getChild_r()){
+
+				while (reader){
 					if (_compare(x->First(), reader->First())){
 						if (reader->getChild_l())
 							reader = reader->getChild_l();
@@ -614,7 +615,6 @@ namespace ft{
 				parent->setChild_l(child);
 				child->setParent(parent);
 				child->setPos(LOWER);
-				std::cout << "node : " << child->First() << " added left" << std::endl;
 			};
 			void	add_child_r(node* parent, node* child){
 				if (parent == child)
@@ -622,26 +622,26 @@ namespace ft{
 				parent->setChild_r(child);
 				child->setParent(parent);
 				child->setPos(HIGHER);
-				std::cout << "node : " << child->First() << " added right" << std::endl;
 			};
 			void	balance_node(node* x){
 				if (x == _root){
-					std::cout << "starting balancing tree size is : " << _nb_node << std::endl;
+					std::cout << "------------------------------------------------ starting balancing tree size is : " << _nb_node << std::endl;
 				}
-				if (!x)
+				if (!x){
 					return ;
+				}
 				size_t left = 0;
 				size_t right = 0;
 				how_much_child(x->getChild_r(), right);
 				how_much_child(x->getChild_l(), left);
 				if (x == _root){
 					if (left > right + 1){
-						std::cout << "balancing root r " << x->First() << std::endl;
+						std::cout << "balancing root r : " << x->First() << std::endl;
 						extract_root_r();
 						reposition_node(x);
 					}
 					else if (right > left + 1){
-						std::cout << "balancing root l " << x->First() << std::endl;
+						std::cout << "balancing root l : " << x->First() << std::endl;
 						extract_root_l();
 						reposition_node(x);
 					}
@@ -650,22 +650,32 @@ namespace ft{
 				}
 				else{
 					if (left > right + 1){
-						std::cout << "balancing node r" << std::endl;
+						std::cout << "balancing node r : " << x->First() << std::endl;
 						extract_node_r(x);
+						clean_link(x);
 						reposition_node(x);
 					}
 					else if (right > left + 1){
-						std::cout << "balancing node l" << std::endl;
+						std::cout << "balancing node l : " << x->First() << std::endl;
 						extract_node_l(x);
+						clean_link(x);
 						reposition_node(x);
 					}
 					else
 						std::cout << "no balance to do " << right << " and left is " << left << std::endl;
 				}
-				std::cout << "ending balancing node " << std::endl;
+				print_node(_root);
+				size_t size = 0;
+				how_much_child(_root, size);
+				std::cout << "print state after balancing function  : -------------------------------------------------------- size is : " << size << std::endl;
 				balance_node(x->getChild_l());
 				balance_node(x->getChild_r());
 				std::cout << "end of recursive " << std::endl;
+			};
+			void	clean_link(node* x){
+				x->setChild_l(NULL);
+				x->setChild_r(NULL);
+				x->setParent(NULL);
 			};
 			void	how_much_child(node* x, size_t& count){
 				if (!x)
