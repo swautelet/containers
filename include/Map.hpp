@@ -401,7 +401,8 @@ namespace ft{
 						add_child_l(reader, new_node(value));
 				// 		std::cout << "reader is " << reader->First() << std::endl;
 				// std::cout << "value " << value.first << std::endl;
-						balance_node(_root);
+						while (!is_ordered(_root))
+							balance_node(_root);
 						// std::cout << "done adding left" << std::endl;
 						return reader->getChild_l();
 					}
@@ -409,7 +410,8 @@ namespace ft{
 						add_child_r(reader, new_node(value));
 				// 		std::cout << "reader is " << reader->First() << std::endl;
 				// std::cout << "value " << value.first << std::endl;
-						balance_node(_root);
+						while(!is_ordered(_root))
+							balance_node(_root);
 						// std::cout << "done adding right" << std::endl;
 						return reader->getChild_r();
 					}
@@ -419,7 +421,7 @@ namespace ft{
 				// std::cout << "done adding" << std::endl;
 				return _root;
 			};
-			void	extract_node_r(node* target){
+			void	extract_node_l(node* target){
 				// std::cout << " i try to extract node " << target->First() << " root is : " << _root->First() << std::endl;
 				if (!target->getChild_l() && target->getChild_r()){
 					// std::cout << "first case : " << target->getParent()->First() << " with : " << target->getChild_r()->First() << std::endl;
@@ -455,7 +457,7 @@ namespace ft{
 				}
 				// std::cout << " end of extract" << std::endl;
 			};
-			void	extract_node_l(node* target){
+			void	extract_node_r(node* target){
 				// std::cout << " i try to extract node " << target->First() << " root is : " << _root->First() << std::endl;
 				if (!target->getChild_l() && target->getChild_r()){
 					// std::cout << "first case : " << target->getParent()->First() << " with : " << target->getChild_r()->First() << std::endl;
@@ -476,11 +478,11 @@ namespace ft{
 					// std::cout << "third  case : " << target->getParent()->First() << " with : " << target->getChild_r()->First() << std::endl;
 					if (target->getPos() == HIGHER){
 						add_child_r(target->getParent(), target->getChild_l());
-						reposition_node(target->getChild_l());
+						reposition_node(target->getChild_r());
 					}
 					else if (target->getPos() == LOWER){
 						add_child_l(target->getParent(), target->getChild_l());
-						reposition_node(target->getChild_l());
+						reposition_node(target->getChild_r());
 					}
 				}
 				else if (!target->getChild_l() && !target->getChild_r()){
@@ -591,6 +593,10 @@ namespace ft{
 							break ;
 						}
 					}
+					else if (x->First() == reader->First()){
+						// std::cout << "ERROR : this node is still in the map " << std::endl;
+						break ;
+					}
 					else{
 						if (reader->getChild_r())
 							reader = reader->getChild_r();
@@ -624,9 +630,9 @@ namespace ft{
 				child->setPos(HIGHER);
 			};
 			void	balance_node(node* x){
-				if (x == _root){
-					std::cout << "------------------------------------------------ starting balancing tree size is : " << _nb_node << std::endl;
-				}
+				// if (x == _root){
+				// 	std::cout << "------------------------------------------------ starting balancing tree size is : " << _nb_node << std::endl;
+				// }
 				if (!x){
 					return ;
 				}
@@ -634,40 +640,41 @@ namespace ft{
 				size_t right = 0;
 				how_much_child(x->getChild_r(), right);
 				how_much_child(x->getChild_l(), left);
+				// std::cout << "balancing : " << x->First() << " left is : " << left << " and right is : " << right << std::endl;
 				if (x == _root){
 					if (left > right + 1){
-						std::cout << "balancing root r : " << x->First() << std::endl;
+						// std::cout << "balancing root r : " << x->First() << std::endl;
 						extract_root_r();
 						reposition_node(x);
 					}
 					else if (right > left + 1){
-						std::cout << "balancing root l : " << x->First() << std::endl;
+						// std::cout << "balancing root l : " << x->First() << std::endl;
 						extract_root_l();
 						reposition_node(x);
 					}
-					else
-						std::cout << "no balance to do right is " << right << " and left is " << left << std::endl;
+					// else
+					// 	std::cout << "no balance to do right is " << right << " and left is " << left << std::endl;
 				}
 				else{
 					if (left > right + 1){
-						std::cout << "balancing node r : " << x->First() << std::endl;
-						extract_node_l(x);
-						clean_link(x);
-						reposition_node(x);
-					}
-					else if (right > left + 1){
-						std::cout << "balancing node l : " << x->First() << std::endl;
+						// std::cout << "balancing node r : " << x->First() << std::endl;
 						extract_node_r(x);
 						clean_link(x);
 						reposition_node(x);
 					}
-					else
-						std::cout << "no balance to do " << right << " and left is " << left << std::endl;
+					else if (right > left + 1){
+						// std::cout << "balancing node l : " << x->First() << std::endl;
+						extract_node_l(x);
+						clean_link(x);
+						reposition_node(x);
+					}
+					// else
+					// 	std::cout << "no balance to do " << right << " and left is " << left << std::endl;
 				}
-				print_node(_root);
-				size_t size = 0;
-				how_much_child(_root, size);
-				std::cout << "print state after balancing function  : -------------------------------------------------------- size is : " << size << " and it should be : " << _nb_node << std::endl;
+				// print_node(_root);
+				// size_t size = 0;
+				// how_much_child(_root, size);
+				// std::cout << "print state after balancing function  : -------------------------------------------------------- size is : " << size << " and it should be : " << _nb_node << std::endl;
 				balance_node(x->getChild_l());
 				balance_node(x->getChild_r());
 				// std::cout << "end of recursive " << std::endl;
@@ -684,6 +691,23 @@ namespace ft{
 					count++;
 					how_much_child(x->getChild_l(), count);
 					how_much_child(x->getChild_r(), count);
+				}
+			};
+			bool	is_ordered(node* x){
+				if (!x)
+					return true;
+				size_t left = 0;
+				size_t right = 0;
+				how_much_child(x->getChild_l(), left);
+				how_much_child(x->getChild_r(), right);
+				if (left > right + 1 || right > left + 1){
+					return false ;
+				}
+				else if (is_ordered(x->getChild_l()) && is_ordered(x->getChild_r())){
+					return true ;
+				}
+				else{
+					return false ;
 				}
 			};
 			// void	swapChild_l(node* parent){
