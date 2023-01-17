@@ -399,22 +399,22 @@ namespace ft{
 					}
 					else if (_compare(value.first, reader->First())){
 						add_child_l(reader, new_node(value));
-						// std::cout << "done adding left" << std::endl;
 				// 		std::cout << "reader is " << reader->First() << std::endl;
 				// std::cout << "value " << value.first << std::endl;
 						balance_node(_root);
+						// std::cout << "done adding left" << std::endl;
 						return reader->getChild_l();
 					}
 					else if (_compare(reader->First(), value.first)){
 						add_child_r(reader, new_node(value));
-						// std::cout << "done adding right" << std::endl;
 				// 		std::cout << "reader is " << reader->First() << std::endl;
 				// std::cout << "value " << value.first << std::endl;
 						balance_node(_root);
+						// std::cout << "done adding right" << std::endl;
 						return reader->getChild_r();
 					}
 					// else 
-					// 	std::cout << "hello from loop " << reader << " " << reader->getChild_l() << " " << reader->getChild_r() << std::endl;
+					// 	std::cout << "hello from loop " << reader << std::endl;
 				}
 				// std::cout << "done adding" << std::endl;
 				return _root;
@@ -549,7 +549,7 @@ namespace ft{
 				_nb_node--;
 				if (_nb_node == 0)
 					_root = NULL;
-				balance_node(_root);
+				// balance_node(_root);
 			};
 			void	delete_root(){
 				node* temp = _root;
@@ -577,7 +577,7 @@ namespace ft{
 				_nb_node--;
 				if (_nb_node == 0)
 					_root = NULL;
-				balance_node(_root);
+				// balance_node(_root);
 			};
 			void	reposition_node(node* x){
 				node* reader = _root;
@@ -651,13 +651,13 @@ namespace ft{
 				else{
 					if (left > right + 1){
 						std::cout << "balancing node r : " << x->First() << std::endl;
-						extract_node_r(x);
+						extract_node_l(x);
 						clean_link(x);
 						reposition_node(x);
 					}
 					else if (right > left + 1){
 						std::cout << "balancing node l : " << x->First() << std::endl;
-						extract_node_l(x);
+						extract_node_r(x);
 						clean_link(x);
 						reposition_node(x);
 					}
@@ -667,10 +667,10 @@ namespace ft{
 				print_node(_root);
 				size_t size = 0;
 				how_much_child(_root, size);
-				std::cout << "print state after balancing function  : -------------------------------------------------------- size is : " << size << std::endl;
+				std::cout << "print state after balancing function  : -------------------------------------------------------- size is : " << size << " and it should be : " << _nb_node << std::endl;
 				balance_node(x->getChild_l());
 				balance_node(x->getChild_r());
-				std::cout << "end of recursive " << std::endl;
+				// std::cout << "end of recursive " << std::endl;
 			};
 			void	clean_link(node* x){
 				x->setChild_l(NULL);
