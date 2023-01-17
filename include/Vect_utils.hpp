@@ -96,20 +96,12 @@ template<class T, bool B = false> class vect_iterator
 			return (res);
 		};
 		reference	operator[](size_t decal){return *(_value + decal);};
-		//old 
-		// bool	operator==(const vect_iterator& it) const    { return (it._value == _value); };
-		// bool	operator!=(const vect_iterator& it) const    { return (it._value != _value); };
-		// bool	operator<(const vect_iterator& it) const     { return (it._value > _value); };
-		// bool	operator>(const vect_iterator& it) const     { return (it._value < _value); };
-		// bool	operator<=(const vect_iterator& it) const    { return (it._value >= _value); };
-		// bool	operator>=(const vect_iterator& it) const    { return (it._value <= _value); };
-		//new
-		friend bool	operator==(const vect_iterator& lhs, const vect_iterator& rhs)    { return (lhs._value == rhs._value); };
-		friend bool	operator!=(const vect_iterator& lhs, const vect_iterator& rhs)    { return (lhs._value != rhs._value); };
-		friend bool	operator<(const vect_iterator& lhs, const vect_iterator& rhs)     { return (lhs._value > rhs._value); };
-		friend bool	operator>(const vect_iterator& lhs, const vect_iterator& rhs)     { return (lhs._value < rhs._value); };
-		friend bool	operator<=(const vect_iterator& lhs, const vect_iterator& rhs)    { return (lhs._value >= rhs._value); };
-		friend bool	operator>=(const vect_iterator& lhs, const vect_iterator& rhs)    { return (lhs._value <= rhs._value); };
+		bool	operator==(const vect_iterator& it) const    { return (it._value == _value); };
+		bool	operator!=(const vect_iterator& it) const    { return (it._value != _value); };
+		bool	operator<(const vect_iterator& it) const     { return (it._value > _value); };
+		bool	operator>(const vect_iterator& it) const     { return (it._value < _value); };
+		bool	operator<=(const vect_iterator& it) const    { return (it._value >= _value); };
+		bool	operator>=(const vect_iterator& it) const    { return (it._value <= _value); };
 	private:
 		T*	_value;
 	protected:
