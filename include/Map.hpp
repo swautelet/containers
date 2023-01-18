@@ -4,7 +4,8 @@
 
 #include <memory>
 
-#include <map>
+// #include <map>
+#include <type_traits>
 
 #include "Pair.hpp"
 #include "map_iterator.hpp"
@@ -339,6 +340,43 @@ namespace ft{
 					return ("Error : out of range exception");
 				};
 			};
+		//operators 
+			friend bool operator==( const Map<Key,T,Compare,Allocator>& lhs, const Map<Key,T,Compare,Allocator>& rhs ){
+			if (lhs.size() != rhs.size())
+				return false;
+			ft::map_iterator<Key, T, Allocator, false> i = lhs.begin(), j = rhs.begin();
+			while (i && j){
+				if (*i != *j)
+					return false;
+				i++;
+				j++;
+			}
+			return (i == j);
+			};
+			friend bool operator!=( const Map<Key,T,Compare,Allocator>& lhs, const Map<Key,T,Compare,Allocator>& rhs ){
+				return !(rhs == lhs);
+			};
+			friend bool operator<( const Map<Key,T,Compare,Allocator>& lhs,  const Map<Key,T,Compare,Allocator>& rhs ){
+				if (lhs.size() < rhs.size())
+					return true;
+				ft::map_iterator<Key, T, Allocator, false> i = lhs.begin(), j = rhs.begin();
+				while (i && j){
+					if (*i < *j)
+						return true;
+					i++;
+					j++;
+				}
+				return (i < j);
+			};
+			friend bool operator<=( const Map<Key,T,Compare,Allocator>& lhs, const Map<Key,T,Compare,Allocator>& rhs ){
+				return !(lhs > rhs);
+			};
+			friend bool operator>( const Map<Key,T,Compare,Allocator>& lhs, const Map<Key,T,Compare,Allocator>& rhs ){
+				return (rhs < lhs);
+			};
+			friend bool operator>=( const Map<Key,T,Compare,Allocator>& lhs, const Map<Key,T,Compare,Allocator>& rhs ){
+				return !(lhs < rhs);
+			};
 		private:
 			bool	comp_node(ft::pair<const Key, T> one, ft::pair<const Key, T> two){
 				return Compare(one.first, two.first);
@@ -395,9 +433,8 @@ namespace ft{
 						add_child_l(reader, new_node(value));
 				// 		std::cout << "reader is " << reader->First() << std::endl;
 				// std::cout << "value " << value.first << std::endl;
-						while (!is_ordered(_root) && _nb_node >= 3){
-							if (_root->getChild_l() && compar_is_valid())
-								balance_node(_root);
+						while (!is_ordered(_root) && compar_is_valid()){
+							balance_node(_root);
 						}
 						// std::cout << "done adding left" << std::endl;
 						return reader->getChild_l();
@@ -627,7 +664,7 @@ namespace ft{
 			};
 			void	balance_node(node* x){
 				// if (x == _root){
-				// 	std::cout << "------------------------------------------------ starting balancing tree size is : " << _nb_node << std::endl;
+				// 	std::cout << "------------------------------------------------ starting balancing tree size is : " << _nb_node << " and compar is : " << compar_is_valid() << std::endl;
 				// }
 				if (!x){
 					return ;
@@ -707,17 +744,29 @@ namespace ft{
 				}
 			};
 			bool	compar_is_valid(){
-				if (_nb_node > 1){
+				if (_nb_node > 1 && std::is_same<Compare, std::logical_and<Key> >::value){
 					if (_root->getChild_l()){
-						if ((_compare(_root->First(), _root->getChild_l()->First()) && !_compare(_root->getChild_l()->First(), _root->First())) || (!_compare(_root->First(), _root->getChild_l()->First()) && _compare(_root->getChild_l()->First(), _root->First())))
-						return true;
+						if (_compare(_root->First(), _root->getChild_l()->First()) && !_compare(_root->getChild_l()->First(), _root->First()))
+							return true;
+						else if (!_compare(_root->First(), _root->getChild_l()->First()) && _compare(_root->getChild_l()->First(), _root->First()))
+							return true;
 					}
 					if (_root->getChild_r()){
-						if ((_compare(_root->First(), _root->getChild_r()->First()) && !_compare(_root->getChild_r()->First(), _root->First())) || (!_compare(_root->First(), _root->getChild_r()->First()) && _compare(_root->getChild_r()->First(), _root->First())))
-						return true;
+						if (_compare(_root->First(), _root->getChild_r()->First()) && !_compare(_root->getChild_r()->First(), _root->First()))
+							return true;
+						else if (!_compare(_root->First(), _root->getChild_r()->First()) && _compare(_root->getChild_r()->First(), _root->First()))
+							return true;
 					}
 				}
 				return false;
+				// if (std::is_invocable<Compare, const Compare&, const Compare&>::value)
+    			// {
+    			//     return true;
+    			// }
+    			// else
+    			// {
+    			//     return false;
+    			// }
 			};
 			// void	swapChild_l(node* parent){
 			// 	if (!parent->getChild_l())
@@ -764,42 +813,42 @@ namespace ft{
 
 		protected:
 	};
-	template< class Key, class T, class Compare, class Alloc > bool operator==( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
-		if (lhs.size() != rhs.size())
-			return false;
-		ft::map_iterator<Key, T, Alloc, false> i = lhs.begin(), j = rhs.begin();
-		while (i && j){
-			if (*i != *j)
-				return false;
-			i++;
-			j++;
-		}
-		return (i == j);
-	};
-	template< class Key, class T, class Compare, class Alloc > bool operator!=( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
-		return !(rhs == lhs);
-	};
-	template< class Key, class T, class Compare, class Alloc > bool operator<( const Map<Key,T,Compare,Alloc>& lhs,  const Map<Key,T,Compare,Alloc>& rhs ){
-		if (lhs.size() < rhs.size())
-			return true;
-		ft::map_iterator<Key, T, Alloc, false> i = lhs.begin(), j = rhs.begin();
-		while (i && j){
-			if (*i < *j)
-				return true;
-			i++;
-			j++;
-		}
-		return (i < j);
-	};
-	template< class Key, class T, class Compare, class Alloc > bool operator<=( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
-		return !(lhs > rhs);
-	};
-	template< class Key, class T, class Compare, class Alloc > bool operator>( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
-		return (rhs < lhs);
-	};
-	template< class Key, class T, class Compare, class Alloc > bool operator>=( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
-		return !(lhs < rhs);
-	};
+	// template< class Key, class T, class Compare, class Alloc > bool operator==( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
+	// 	if (lhs.size() != rhs.size())
+	// 		return false;
+	// 	ft::map_iterator<Key, T, Alloc, false> i = lhs.begin(), j = rhs.begin();
+	// 	while (i && j){
+	// 		if (*i != *j)
+	// 			return false;
+	// 		i++;
+	// 		j++;
+	// 	}
+	// 	return (i == j);
+	// };
+	// template< class Key, class T, class Compare, class Alloc > bool operator!=( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
+	// 	return !(rhs == lhs);
+	// };
+	// template< class Key, class T, class Compare, class Alloc > bool operator<( const Map<Key,T,Compare,Alloc>& lhs,  const Map<Key,T,Compare,Alloc>& rhs ){
+	// 	if (lhs.size() < rhs.size())
+	// 		return true;
+	// 	ft::map_iterator<Key, T, Alloc, false> i = lhs.begin(), j = rhs.begin();
+	// 	while (i && j){
+	// 		if (*i < *j)
+	// 			return true;
+	// 		i++;
+	// 		j++;
+	// 	}
+	// 	return (i < j);
+	// };
+	// template< class Key, class T, class Compare, class Alloc > bool operator<=( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
+	// 	return !(lhs > rhs);
+	// };
+	// template< class Key, class T, class Compare, class Alloc > bool operator>( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
+	// 	return (rhs < lhs);
+	// };
+	// template< class Key, class T, class Compare, class Alloc > bool operator>=( const Map<Key,T,Compare,Alloc>& lhs, const Map<Key,T,Compare,Alloc>& rhs ){
+	// 	return !(lhs < rhs);
+	// };
 };
 
 //check add_node and make a tidying function
