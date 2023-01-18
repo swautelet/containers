@@ -289,49 +289,43 @@ namespace ft{
 			};
 			iterator lower_bound( const Key& key ){
 				node* reader = _root;
-				while (reader && _compare(reader->First(), key))
-					reader = reader->getChild_r();
-				while (reader && reader->getChild_l() && _compare(key, reader->getChild_l()->First()))
+				while (reader && reader->getChild_l() && _compare(key, reader->First()))
 					reader = reader->getChild_l();
-				return iterator(reader, _root);
+				iterator i (reader, _root);
+				while(i.getNode_pointer() && _compare(i->first, key))
+					i++;
+				return i;
 			};
 			const_iterator lower_bound( const Key& key ) const{
 				node* reader = _root;
-				while (reader && _compare(reader->First(), key))
-					reader = reader->getChild_r();
-				while (reader && reader->getChild_l() && _compare(key, reader->getChild_l()->First()))
+				while (reader && reader->getChild_l() && _compare(key, reader->First()))
 					reader = reader->getChild_l();
-				return const_iterator(reader, _root);
+				const_iterator i (reader, _root);
+				while(i.getNode_pointer() && _compare(i->first, key))
+					i++;
+				return i;
 			};
 			iterator upper_bound( const Key& key ){
 				node* reader = _root;
-				// std::cout << "begin upper bound with key : " << key << " and reader : " << reader << " and root : " << _root << std::endl;
-				while (reader && _compare(reader->First(), key)){
-					// std::cout << "first loop " << std::endl;
-					reader = reader->getChild_r();
-				}
-				// std::cout << "between loop" <<  std::endl;
-				while (reader && reader->getChild_l() && _compare(key, reader->getChild_l()->First())){
-					// std::cout << " second loop" << std::endl;
+				while (reader && reader->getChild_l() && _compare(key, reader->First()))
 					reader = reader->getChild_l();
-				}
-				// std::cout << " end of upper bound" << std::endl;
-				return iterator(reader, _root);
+				iterator i (reader, _root);
+				while(i.getNode_pointer() && _compare(i->first, key))
+					i++;
+				if (i.getNode_pointer() && i->first == key)
+					i++;
+				return i;
 			};
 			const_iterator upper_bound( const Key& key ) const{
 				node* reader = _root;
-				// std::cout << "begin upper bound with key : " << key << " and reader : " << reader << " and root : " << _root << std::endl;
-				while (reader && _compare(reader->First(), key)){
-					// std::cout << "first loop " << std::endl;
-					reader = reader->getChild_r();
-				}
-				// std::cout << "between loop" <<  std::endl;
-				while (reader && reader->getChild_l() && _compare(key, reader->getChild_l()->First())){
-					// std::cout << " second loop" << std::endl;
+				while (reader && reader->getChild_l() && _compare(key, reader->First()))
 					reader = reader->getChild_l();
-				}
-				// std::cout << " end of upper bound" << std::endl;
-				return const_iterator(reader, _root);
+				iterator i (reader, _root);
+				while(i.getNode_pointer() && _compare(i->first, key))
+					i++;
+				if (i.getNode_pointer() && i->first == key)
+					i++;
+				return i;
 			};
 
 		//observer
@@ -401,8 +395,10 @@ namespace ft{
 						add_child_l(reader, new_node(value));
 				// 		std::cout << "reader is " << reader->First() << std::endl;
 				// std::cout << "value " << value.first << std::endl;
-						while (!is_ordered(_root))
-							balance_node(_root);
+						while (!is_ordered(_root) && _nb_node >= 3){
+							if (_root->getChild_l() && compar_is_valid())
+								balance_node(_root);
+						}
 						// std::cout << "done adding left" << std::endl;
 						return reader->getChild_l();
 					}
@@ -410,7 +406,7 @@ namespace ft{
 						add_child_r(reader, new_node(value));
 				// 		std::cout << "reader is " << reader->First() << std::endl;
 				// std::cout << "value " << value.first << std::endl;
-						while(!is_ordered(_root))
+						while(!is_ordered(_root) && compar_is_valid())
 							balance_node(_root);
 						// std::cout << "done adding right" << std::endl;
 						return reader->getChild_r();
@@ -709,6 +705,19 @@ namespace ft{
 				else{
 					return false ;
 				}
+			};
+			bool	compar_is_valid(){
+				if (_nb_node > 1){
+					if (_root->getChild_l()){
+						if ((_compare(_root->First(), _root->getChild_l()->First()) && !_compare(_root->getChild_l()->First(), _root->First())) || (!_compare(_root->First(), _root->getChild_l()->First()) && _compare(_root->getChild_l()->First(), _root->First())))
+						return true;
+					}
+					if (_root->getChild_r()){
+						if ((_compare(_root->First(), _root->getChild_r()->First()) && !_compare(_root->getChild_r()->First(), _root->First())) || (!_compare(_root->First(), _root->getChild_r()->First()) && _compare(_root->getChild_r()->First(), _root->First())))
+						return true;
+					}
+				}
+				return false;
 			};
 			// void	swapChild_l(node* parent){
 			// 	if (!parent->getChild_l())

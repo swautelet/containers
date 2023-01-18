@@ -12,7 +12,7 @@ void    print_node(map_node<A, B>* x){
 	if (x->getParent())
 		std::cout << "i have a parent : " << x->getParent()->First() << "    ";
 	if (x->getChild_l() && x->getChild_r())
-		std::cout << x << " : " << x->First() << "	this node has two child : " << x->getChild_l()->First() << " and " << x->getChild_r()->First() << std::endl;
+		std::cout << x << " : " << x->First() << "	this node has two child left is : " << x->getChild_l()->First() << " and right is : " << x->getChild_r()->First() << std::endl;
 	else if (x->getChild_r())
 		std::cout << x << " : " << x->First() << "	this node has only a right child : " << x->getChild_r()->First() << std::endl;
 	else if (x->getChild_l())
