@@ -16,9 +16,9 @@
 #include "Stack.hpp"
 #include "Utility.hpp"
 #ifndef FAST
-#define _ratio 1000
+#define _ratio 50
 #else
-#define _ratio 10
+#define _ratio 1
 #endif
 
 #define	_vector 			ft::Vector

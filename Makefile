@@ -41,7 +41,7 @@ fclean:		clean
 			$(RM) $(NAME_STD)
 			$(RM) $(LOG_FILE) $(TIME_LOG)
 
-test: $(NAME_STD) $(NAME_FT)
+test: re
 	@echo "\033[32mlaunching std test\033[0m" 
 	@./$(NAME_STD)
 	@echo "\033[32mlaunching ft test\033[0m" 
