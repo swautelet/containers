@@ -371,6 +371,8 @@ namespace ft{
 			};
 			node*	add_node(value_type value){
 				node* reader = _root;
+				if (_nb_node == 2)
+					compar_is_valid();
 				if (!_root){
 					_root = new_node(value);
 				}
@@ -380,24 +382,38 @@ namespace ft{
 						reader->setSecond(value.second);
 						return reader;
 					}
-					else if (reader->getChild_l() != NULL && _compare(value.first, reader->First())){
-						reader = reader->getChild_l();
-					}
-					else if (reader->getChild_r() != NULL && _compare(reader->First(), value.first)){
-						reader = reader->getChild_r();
-					}
 					else if (_compare(value.first, reader->First())){
-						add_child_l(reader, new_node(value));
-						// while (!is_ordered(_root) && _compare_valid)
-						// 	balance_node(_root);
-						return reader->getChild_l();
+						if (reader->getChild_l() != NULL)
+							reader = reader->getChild_l();
+						else{
+							add_child_l(reader, new_node(value));
+							if (_compare_valid)
+								while (balance_node(_root));
+							return reader->getChild_l();
+						}
 					}
 					else if (_compare(reader->First(), value.first)){
-						add_child_r(reader, new_node(value));
-						// while (!is_ordered(_root) && _compare_valid)
-						// 	balance_node(_root);
-						return reader->getChild_r();
+						if (reader->getChild_r() != NULL)
+							reader = reader->getChild_r();
+						else{
+							add_child_r(reader, new_node(value));
+							if (_compare_valid)
+								while (balance_node(_root));
+							return reader->getChild_r();
+						}
 					}
+					// else if (_compare(value.first, reader->First())){
+					// 	add_child_l(reader, new_node(value));
+					// 	// while (!is_ordered(_root) && _compare_valid)
+					// 	// 	balance_node(_root);
+					// 	return reader->getChild_l();
+					// }
+					// else if (_compare(reader->First(), value.first)){
+					// 	add_child_r(reader, new_node(value));
+					// 	// while (!is_ordered(_root) && _compare_valid)
+					// 	// 	balance_node(_root);
+					// 	return reader->getChild_r();
+					// }
 				}
 				return _root;
 			};
@@ -560,9 +576,9 @@ namespace ft{
 				child->setParent(parent);
 				child->setPos(HIGHER);
 			};
-			void	balance_node(node* x){
-				if (!x){
-					return ;
+			bool	balance_node(node* x){
+				if (!x || _nb_node < 3){
+					return false;
 				}
 				size_t left = 0;
 				size_t right = 0;
@@ -572,14 +588,15 @@ namespace ft{
 					if (left > right + 1){
 						extract_root_r();
 						reposition_node(x);
+						return true;
 					}
 					else if (right > left + 1){
 						extract_root_l();
 						reposition_node(x);
+						return true;
 					}
-					else{
-						balance_node(x->getChild_l());
-						balance_node(x->getChild_r());
+					else if(balance_node(x->getChild_l()) || balance_node(x->getChild_r())){
+						return true;
 					}
 				}
 				else{
@@ -587,18 +604,19 @@ namespace ft{
 						extract_node_r(x);
 						clean_link(x);
 						reposition_node(x);
+						return true;
 					}
 					else if (right > left + 1){
 						extract_node_l(x);
 						clean_link(x);
 						reposition_node(x);
+						return true;
 					}
-					else{
-						balance_node(x->getChild_l());
-						balance_node(x->getChild_r());
+					else if(balance_node(x->getChild_l()) || balance_node(x->getChild_r())){
+						return true;
 					}
 				}
-				
+				return false;
 			};
 			void	clean_link(node* x){
 				x->setChild_l(NULL);
@@ -632,14 +650,14 @@ namespace ft{
 				}
 			};
 			bool	compar_is_valid(){
-				if (_nb_node > 1 && std::is_same<Compare, std::logical_and<Key> >::value){
+				if (_nb_node > 1 && (!std::is_same<Compare, std::logical_and<Key> >::value && !std::is_same<Compare, std::plus<Key> >::value)){
 					if (_root->getChild_l()){
 						if (_compare(_root->First(), _root->getChild_l()->First()) && !_compare(_root->getChild_l()->First(), _root->First()))
 							return true;
 						else if (!_compare(_root->First(), _root->getChild_l()->First()) && _compare(_root->getChild_l()->First(), _root->First()))
 							return true;
 					}
-					if (_root->getChild_r()){
+					else if (_root->getChild_r()){
 						if (_compare(_root->First(), _root->getChild_r()->First()) && !_compare(_root->getChild_r()->First(), _root->First()))
 							return true;
 						else if (!_compare(_root->First(), _root->getChild_r()->First()) && _compare(_root->getChild_r()->First(), _root->First()))
