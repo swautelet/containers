@@ -16,7 +16,7 @@
 #include "Stack.hpp"
 #include "Utility.hpp"
 #ifndef FAST
-#define _ratio 50
+#define _ratio 10
 #else
 #define _ratio 1
 #endif

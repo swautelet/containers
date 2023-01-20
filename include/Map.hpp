@@ -371,8 +371,11 @@ namespace ft{
 			};
 			node*	add_node(value_type value){
 				node* reader = _root;
-				if (_nb_node == 2)
-					compar_is_valid();
+				if (_nb_node == 2){
+					// std::cout << "compar was " << _compare_valid << std::endl;
+					_compare_valid = compar_is_valid();
+					// std::cout << "compare is now " << _compare_valid << std::endl;
+				}
 				if (!_root){
 					_root = new_node(value);
 				}
@@ -650,7 +653,7 @@ namespace ft{
 				}
 			};
 			bool	compar_is_valid(){
-				if (_nb_node > 1 && (!std::is_same<Compare, std::logical_and<Key> >::value && !std::is_same<Compare, std::plus<Key> >::value)){
+				if (_nb_node > 1 && (std::is_same<Compare, std::logical_and<Key> >::value && std::is_same<Compare, std::plus<Key> >::value)){
 					if (_root->getChild_l()){
 						if (_compare(_root->First(), _root->getChild_l()->First()) && !_compare(_root->getChild_l()->First(), _root->First()))
 							return true;
