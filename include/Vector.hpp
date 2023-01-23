@@ -2,7 +2,7 @@
 # define VECTOR_HPP
 
 #include <memory>
-// #include <vector>
+#include <vector>
 #include <algorithm>
 #include "Utility.hpp"
 #include "Vect_utils.hpp"
