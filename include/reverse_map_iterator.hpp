@@ -54,46 +54,46 @@ class reverse_map_iterator
 			move_left();
 			return (res);
 		};
-		reverse_map_iterator& operator+=(int decal){
-			for (int i = 0; i < decal; i++){
-				move_right();
-			}
-			return (*this);
-		};
-		reverse_map_iterator& operator-=(int decal){
-			for (int i = 0; i < decal; i++){
-				move_left();
-			}
-			return (*this);
-		};
-		reverse_map_iterator operator+(int nb) const{
-			reverse_map_iterator it(*this);
-			for (int i = 0; i < nb; i++){
-				it.move_right();
-			}
-			return (it);
-		}
-		reverse_map_iterator operator-(int nb) const{
-			reverse_map_iterator it(*this);
-			for (int i = 0; i < nb; i++){
-				it.move_left();
-			}
-			return (it);
-		};
-		reverse_map_iterator operator+(size_t nb) const{
-			reverse_map_iterator it(*this);
-			for (size_t i = 0; i < nb; i++){
-				it.move_right();
-			}
-			return (it);
-		};
-		reverse_map_iterator operator-(size_t nb) const{
-			reverse_map_iterator it(*this);
-			for (size_t i = 0; i < nb; i++){
-				it.move_left();
-			}
-			return (it);
-		};
+		// reverse_map_iterator& operator+=(int decal){
+		// 	for (int i = 0; i < decal; i++){
+		// 		move_right();
+		// 	}
+		// 	return (*this);
+		// };
+		// reverse_map_iterator& operator-=(int decal){
+		// 	for (int i = 0; i < decal; i++){
+		// 		move_left();
+		// 	}
+		// 	return (*this);
+		// };
+		// reverse_map_iterator operator+(int nb) const{
+		// 	reverse_map_iterator it(*this);
+		// 	for (int i = 0; i < nb; i++){
+		// 		it.move_right();
+		// 	}
+		// 	return (it);
+		// }
+		// reverse_map_iterator operator-(int nb) const{
+		// 	reverse_map_iterator it(*this);
+		// 	for (int i = 0; i < nb; i++){
+		// 		it.move_left();
+		// 	}
+		// 	return (it);
+		// };
+		// reverse_map_iterator operator+(size_t nb) const{
+		// 	reverse_map_iterator it(*this);
+		// 	for (size_t i = 0; i < nb; i++){
+		// 		it.move_right();
+		// 	}
+		// 	return (it);
+		// };
+		// reverse_map_iterator operator-(size_t nb) const{
+		// 	reverse_map_iterator it(*this);
+		// 	for (size_t i = 0; i < nb; i++){
+		// 		it.move_left();
+		// 	}
+		// 	return (it);
+		// };
 		bool	operator==(const reverse_map_iterator& it) const    { return (it._target == _target); };
 		bool	operator!=(const reverse_map_iterator& it) const    { return (it._target != _target); };
 

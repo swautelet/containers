@@ -58,46 +58,46 @@ class map_iterator
 			move_left();
 			return (res);
 		};
-		map_iterator& operator+=(int decal){
-			for (int i = 0; i < decal; i++){
-				move_right();
-			}
-			return (*this);
-		};
-		map_iterator& operator-=(int decal){
-			for (int i = 0; i < decal; i++){
-				move_left();
-			}
-			return (*this);
-		};
-		map_iterator operator+(int nb) const{
-			map_iterator it(*this);
-			for (int i = 0; i < nb; i++){
-				it.move_right();
-			}
-			return (it);
-		}
-		map_iterator operator-(int nb) const{
-			map_iterator it(*this);
-			for (int i = 0; i < nb; i++){
-				it.move_left();
-			}
-			return (it);
-		};
-		map_iterator operator+(size_t nb) const{
-			map_iterator it(*this);
-			for (size_t i = 0; i < nb; i++){
-				it.move_right();
-			}
-			return (it);
-		};
-		map_iterator operator-(size_t nb) const{
-			map_iterator it(*this);
-			for (size_t i = 0; i < nb; i++){
-				it.move_left();
-			}
-			return (it);
-		};
+		// map_iterator& operator+=(int decal){
+		// 	for (int i = 0; i < decal; i++){
+		// 		move_right();
+		// 	}
+		// 	return (*this);
+		// };
+		// map_iterator& operator-=(int decal){
+		// 	for (int i = 0; i < decal; i++){
+		// 		move_left();
+		// 	}
+		// 	return (*this);
+		// };
+		// map_iterator operator+(int nb) const{
+		// 	map_iterator it(*this);
+		// 	for (int i = 0; i < nb; i++){
+		// 		it.move_right();
+		// 	}
+		// 	return (it);
+		// }
+		// map_iterator operator-(int nb) const{
+		// 	map_iterator it(*this);
+		// 	for (int i = 0; i < nb; i++){
+		// 		it.move_left();
+		// 	}
+		// 	return (it);
+		// };
+		// map_iterator operator+(size_t nb) const{
+		// 	map_iterator it(*this);
+		// 	for (size_t i = 0; i < nb; i++){
+		// 		it.move_right();
+		// 	}
+		// 	return (it);
+		// };
+		// map_iterator operator-(size_t nb) const{
+		// 	map_iterator it(*this);
+		// 	for (size_t i = 0; i < nb; i++){
+		// 		it.move_left();
+		// 	}
+		// 	return (it);
+		// };
 		bool	operator==(const map_iterator& it) const    { return (it._target == _target); };
 		bool	operator!=(const map_iterator& it) const    { return (it._target != _target); };
 
