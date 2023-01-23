@@ -20,7 +20,8 @@ template<class T, bool B = false> class vect_iterator
 	
 		vect_iterator():_value(NULL){};
 		vect_iterator(T* val):_value(val){};
-		vect_iterator(const vect_iterator& other):_value(other._value){};
+		vect_iterator(const vect_iterator<T, true>& other):_value(other.getElemPtr()){};
+		vect_iterator(const vect_iterator<T>& other):_value(other.getElemPtr()){};
 		~vect_iterator(){};
 
 		elemPtr getElemPtr() const      { return _value; };
@@ -106,7 +107,7 @@ template<class T, bool B = false> class vect_iterator
 		T*	_value;
 	protected:
 };
-template<class T, bool B> class reverse_vect_iterator
+template<class T, bool B = false> class reverse_vect_iterator
 {
 	public:
 		typedef long int                                        difference_type;
@@ -120,7 +121,8 @@ template<class T, bool B> class reverse_vect_iterator
 		typedef pointer											iterator_type;
 		reverse_vect_iterator():_value(NULL){};
 		reverse_vect_iterator(T* val):_value(val){};
-		reverse_vect_iterator(const reverse_vect_iterator& other):_value(other._value){};
+		reverse_vect_iterator(const reverse_vect_iterator<T, true>& other):_value(other.getElemPtr()){};
+		reverse_vect_iterator(const reverse_vect_iterator<T>& other):_value(other.getElemPtr()){};
 		~reverse_vect_iterator(){};
 
 		elemPtr getElemPtr() const      { return _value; };

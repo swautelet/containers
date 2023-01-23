@@ -18,7 +18,7 @@ namespace ft
 		typedef typename allocator_type::reference			reference;
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef ft::vect_iterator<T, false>					iterator;
-		typedef const ft::vect_iterator<T, true>			const_iterator;
+		typedef ft::vect_iterator<T, true>					const_iterator;
 		typedef typename allocator_type::size_type			size_type;
 		typedef typename allocator_type::difference_type	difference_type;
 		typedef typename allocator_type::pointer			pointer;
