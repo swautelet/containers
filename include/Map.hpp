@@ -4,8 +4,8 @@
 
 #include <memory>
 
-#include <map>
-#include <type_traits>
+// #include <map>
+// #include <type_traits>
 
 #include "Pair.hpp"
 #include "map_iterator.hpp"
@@ -82,9 +82,9 @@ namespace ft{
 				reader = find(key);
 				return reader->second;
 			};
-			node*	getRoot(){
-				return _root;
-			}
+			// node*	getRoot(){
+			// 	return _root;
+			// }
 
 		//iterators
 			iterator begin(){
