@@ -7,7 +7,7 @@ std::vector<int> insert_test_3(std::map<T, V> mp) {
     std::vector<int> v;
     typename std::map<T, V>::iterator it = mp.end();
     g_start = timer();
-    for (int i = 0, j = 0; i < 50 * _ratio; ++i, ++j) {
+    for (int i = 0, j = 0; i < 500; ++i, ++j) {
         mp.insert(it, std::make_pair(i, j));
     }
     g_end = timer();
@@ -24,7 +24,7 @@ std::vector<int> insert_test_3(_map<T, V> mp) {
     std::vector<int> v;
     typename _map<T, V>::iterator it = mp.end();
     g_start = timer();
-    for (int i = 0, j = 0; i < 50 * _ratio; ++i, ++j) {
+    for (int i = 0, j = 0; i < 500; ++i, ++j) {
         mp.insert(it, _make_pair(i, j));
     }
     g_end = timer();

@@ -5,10 +5,10 @@
 template <class T, class V>
 std::vector<int> assign_overload_test(std::map<T, V> mp) {
     std::vector<int> v;
-    for (int i = 0, j = 10; i < 20 * _ratio; ++i, ++j)
+    for (int i = 0, j = 10; i < 200; ++i, ++j)
         mp.insert(std::make_pair(i, j));
     std::map<T, V> mp2;
-    for (int i = 20 * _ratio, j = 200010; i < 40 * _ratio; ++i, ++j)
+    for (int i = 200, j = 200010; i < 400; ++i, ++j)
         mp2.insert(std::make_pair(i, j));
     g_start = timer();
     mp2 = mp;
@@ -25,10 +25,10 @@ std::vector<int> assign_overload_test(std::map<T, V> mp) {
 template <class T, class V>
 std::vector<int> assign_overload_test(_map<T, V> mp) {
     std::vector<int> v;
-    for (int i = 0, j = 10; i < 20 * _ratio; ++i, ++j)
+    for (int i = 0, j = 10; i < 200; ++i, ++j)
         mp.insert(_make_pair(i, j));
     _map<T, V> mp2;
-    for (int i = 20 * _ratio, j = 200010; i < 40 * _ratio; ++i, ++j)
+    for (int i = 200, j = 200010; i < 400; ++i, ++j)
         mp2.insert(_make_pair(i, j));
     g_start = timer();
     mp2 = mp;

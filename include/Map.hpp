@@ -588,17 +588,17 @@ namespace ft{
 				how_much_child(x->getChild_r(), right);
 				how_much_child(x->getChild_l(), left);
 				if (x == _root){
-					if (left > right + 1){
+					if (left > right + 3){
 						extract_root_r();
 						reposition_node(x);
 						return true;
 					}
-					else if (right > left + 1){
+					else if (right > left + 3){
 						extract_root_l();
 						reposition_node(x);
 						return true;
 					}
-					else if(balance_node(x->getChild_l()) || balance_node(x->getChild_r())){
+					else if(balance_node(x->getChild_r()) || balance_node(x->getChild_l())){
 						return true;
 					}
 				}
@@ -615,7 +615,7 @@ namespace ft{
 						reposition_node(x);
 						return true;
 					}
-					else if(balance_node(x->getChild_l()) || balance_node(x->getChild_r())){
+					else if(balance_node(x->getChild_r()) || balance_node(x->getChild_l())){
 						return true;
 					}
 				}
