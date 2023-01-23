@@ -18,7 +18,7 @@
 namespace ft{
 
 	template<class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >
-	class Map{
+	class map{
 		public:
 		// typedef 
 			typedef map_node<Key, T, Allocator>							node;
@@ -40,18 +40,18 @@ namespace ft{
 			typedef ft::reverse_map_iterator<Key, T, Allocator, true>				const_reverse_iterator;
 
 		//member functions
-			Map():_root(NULL), _nb_node(0){};
-			explicit Map( const Compare& comp, const Allocator& alloc = Allocator()):_root(NULL), _nb_node(0), _alloc_node(alloc), _compare(comp), _compare_valid(compar_is_valid()){};
-			template< class InputIt > Map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator() ):_root(NULL), _nb_node(0), _alloc_node(alloc), _compare(comp), _compare_valid(compar_is_valid()){
+			map():_root(NULL), _nb_node(0){};
+			explicit map( const Compare& comp, const Allocator& alloc = Allocator()):_root(NULL), _nb_node(0), _alloc_node(alloc), _compare(comp), _compare_valid(compar_is_valid()){};
+			template< class InputIt > map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator() ):_root(NULL), _nb_node(0), _alloc_node(alloc), _compare(comp), _compare_valid(compar_is_valid()){
 				ordered_copy(first, last);
 			};
-			Map( const Map& other ):_root(NULL), _nb_node(0), _alloc_node(other.get_allocator()), _compare(other.key_comp()), _compare_valid(compar_is_valid()){
+			map( const map& other ):_root(NULL), _nb_node(0), _alloc_node(other.get_allocator()), _compare(other.key_comp()), _compare_valid(compar_is_valid()){
 				ordered_copy(other.begin(), other.end());
 			};
-			~Map(){
+			~map(){
 				clear();
 			};
-			Map& operator=( const Map& other ){
+			map& operator=( const map& other ){
 				clear();
 				ordered_copy(other.begin(), other.end());
 				return (*this);
@@ -198,7 +198,7 @@ namespace ft{
 				}
 				return 0;
 			};
-			void swap( Map& other ){
+			void swap( map& other ){
 				ft::swap(this->_root, other._root);
 				ft::swap(this->_nb_node, other._nb_node);
 			};
@@ -314,7 +314,7 @@ namespace ft{
 				};
 			};
 		//operators 
-			friend bool operator==( const Map<Key,T,Compare,Allocator>& lhs, const Map<Key,T,Compare,Allocator>& rhs ){
+			friend bool operator==( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
 			if (lhs.size() != rhs.size())
 				return false;
 			ft::map_iterator<Key, T, Allocator, false> i = lhs.begin(), j = rhs.begin();
@@ -326,10 +326,10 @@ namespace ft{
 			}
 			return (i == j);
 			};
-			friend bool operator!=( const Map<Key,T,Compare,Allocator>& lhs, const Map<Key,T,Compare,Allocator>& rhs ){
+			friend bool operator!=( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
 				return !(rhs == lhs);
 			};
-			friend bool operator<( const Map<Key,T,Compare,Allocator>& lhs,  const Map<Key,T,Compare,Allocator>& rhs ){
+			friend bool operator<( const map<Key,T,Compare,Allocator>& lhs,  const map<Key,T,Compare,Allocator>& rhs ){
 				if (lhs.size() < rhs.size())
 					return true;
 				ft::map_iterator<Key, T, Allocator, false> i = lhs.begin(), j = rhs.begin();
@@ -341,13 +341,13 @@ namespace ft{
 				}
 				return (i < j);
 			};
-			friend bool operator<=( const Map<Key,T,Compare,Allocator>& lhs, const Map<Key,T,Compare,Allocator>& rhs ){
+			friend bool operator<=( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
 				return !(lhs > rhs);
 			};
-			friend bool operator>( const Map<Key,T,Compare,Allocator>& lhs, const Map<Key,T,Compare,Allocator>& rhs ){
+			friend bool operator>( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
 				return (rhs < lhs);
 			};
-			friend bool operator>=( const Map<Key,T,Compare,Allocator>& lhs, const Map<Key,T,Compare,Allocator>& rhs ){
+			friend bool operator>=( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
 				return !(lhs < rhs);
 			};
 		private:

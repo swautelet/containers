@@ -9,7 +9,7 @@
 
 namespace ft
 {
-	template<class T, class Allocator = std::allocator<T> > class Vector
+	template<class T, class Allocator = std::allocator<T> > class vector
 	{
 		
 		public:
@@ -27,18 +27,18 @@ namespace ft
 		typedef const ft::reverse_vect_iterator<T, true>	const_reverse_iterator;
 
 		//member functions
-			Vector():_alloc(Allocator()), _first(NULL), _size(0), _capacity(0){
+			vector():_alloc(Allocator()), _first(NULL), _size(0), _capacity(0){
 				};
-			explicit Vector( const Allocator& alloc ):_alloc(alloc), _first(NULL), _size(0), _capacity(0){
+			explicit vector( const Allocator& alloc ):_alloc(alloc), _first(NULL), _size(0), _capacity(0){
 				};
-			explicit Vector( size_type count, const T& value = T(), const Allocator& alloc = Allocator()):_alloc(alloc), _first(_alloc.allocate(count)), _size(count), _capacity(count){
+			explicit vector( size_type count, const T& value = T(), const Allocator& alloc = Allocator()):_alloc(alloc), _first(_alloc.allocate(count)), _size(count), _capacity(count){
 				if (count >= _alloc.max_size())
 					throw(too_big_exception());
 				for (size_t i = 0; i < _size; i++){
 					_alloc.construct(_first + i, value);
 				}
 			};
-			// template< class InputIt > Vector( InputIt* first, InputIt* last, const Allocator& alloc = Allocator())
+			// template< class InputIt > vector( InputIt* first, InputIt* last, const Allocator& alloc = Allocator())
 			// // :_alloc(alloc), _first(_alloc.allocate(last - first)), _size(last - first), _capacity(last - first)
 			// {
 			// 	_alloc = alloc;
@@ -50,7 +50,7 @@ namespace ft
 			// 	}
 			// };
 			template <class InputIterator>
-            Vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
+            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
                     typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0) :
                     _alloc(alloc), _size(0)
             {
@@ -64,16 +64,16 @@ namespace ft
                 for (int i = 0; first != last; ++first, ++i)
                     _alloc.construct(_first + i, *first);
             };
-			Vector( const Vector& other ):_alloc(other._alloc), _first(_alloc.allocate(other._size)), _size(other._size), _capacity(other._size){
+			vector( const vector& other ):_alloc(other._alloc), _first(_alloc.allocate(other._size)), _size(other._size), _capacity(other._size){
 				for (size_t i = 0; i < other.size(); i++){
 					_alloc.construct(_first + i, other[i]);
 				}
 			};
-			~Vector(){
+			~vector(){
 				if (_first)
 					_alloc.deallocate(_first, _capacity);
 			};
-			Vector&  operator=(const Vector& other){
+			vector&  operator=(const vector& other){
 				// if (_capacity >= other.size()){
 				// 	for(size_t i = 0; i < other.size(); i++){
 				// 		if (i < _size)
@@ -394,7 +394,7 @@ namespace ft
 					_size = count;
 				}
 			};
-			void swap( Vector& other ){
+			void swap( vector& other ){
 				ft::swap(this->_first, other._first);
 				ft::swap(this->_alloc, other._alloc);
 				ft::swap(this->_size, other._size);
@@ -416,8 +416,8 @@ namespace ft
 			};
 
 		//friends
-			friend void swap (Vector& a, Vector& b){ a.swap(b);};
-			friend bool operator==( Vector& lhs, Vector& rhs ){
+			friend void swap (vector& a, vector& b){ a.swap(b);};
+			friend bool operator==( vector& lhs, vector& rhs ){
 				if (lhs.size() != rhs.size())
 					return false;
 				for (iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
@@ -426,11 +426,11 @@ namespace ft
 				}
 				return true;
 			};
-			friend bool operator!=( Vector& lhs, Vector& rhs ){return !(lhs == rhs);};
-			friend bool operator>=( Vector& lhs, Vector& rhs ){return !(lhs < rhs);};
-			friend bool operator<=( Vector& lhs, Vector& rhs ){return (rhs >= lhs);};
-			friend bool operator>( Vector& lhs, Vector& rhs ){return (rhs < lhs);};
-			friend bool operator<( Vector& lhs, Vector& rhs ){
+			friend bool operator!=( vector& lhs, vector& rhs ){return !(lhs == rhs);};
+			friend bool operator>=( vector& lhs, vector& rhs ){return !(lhs < rhs);};
+			friend bool operator<=( vector& lhs, vector& rhs ){return (rhs >= lhs);};
+			friend bool operator>( vector& lhs, vector& rhs ){return (rhs < lhs);};
+			friend bool operator<( vector& lhs, vector& rhs ){
 				for (iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
 					if (*i < *j)
 						return true;

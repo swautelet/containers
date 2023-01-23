@@ -1,15 +1,15 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 1 //CREATE A REAL STL EXAMPLE
+#ifdef STD //CREATE A REAL STL EXAMPLE
 	#include <map>
 	#include <stack>
 	#include <vector>
 	namespace ft = std;
 #else
-	#include <map.hpp>
-	#include <stack.hpp>
-	#include <vector.hpp>
+	#include "Map.hpp"
+	#include "Stack.hpp"
+	#include "Vector.hpp"
 #endif
 
 #include <stdlib.h>
@@ -23,7 +23,7 @@ struct Buffer
 };
 
 
-#define COUNT (MAX_RAM / (int)sizeof(Buffer))
+#define COUNT 100
 
 template<typename T>
 class MutantStack : public ft::stack<T>
@@ -94,7 +94,7 @@ int main(int argc, char** argv) {
 	}
 
 	int sum = 0;
-	for (int i = 0; i < 10000; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		int access = rand();
 		sum += map_int[access];

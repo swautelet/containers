@@ -31,7 +31,7 @@ time_t timer() {
 
 
 void    stack_test(std::ofstream& out, std::ofstream& out_time){
-    ft::Stack<int> test;
+    ft::stack<int> test;
     out << "--- constructor test : ---" << std::endl;
     print_result(out, constructor_test(test));
     display_time("stack constructor test", out_time);
@@ -90,9 +90,9 @@ void    stack_test(std::ofstream& out, std::ofstream& out_time){
 }
 
 void    map_test(std::ofstream& out, std::ofstream& out_time){
-    ft::Map<int, int> test;
-    ft::Map<int, int>::iterator b = test.begin();
-    ft::Map<int, int>::const_iterator c = test.begin();
+    ft::map<int, int> test;
+    ft::map<int, int>::iterator b = test.begin();
+    ft::map<int, int>::const_iterator c = test.begin();
     if (b == c)
         std::cout << " i can compare map iterator and map const_iterator and they're the same " << std::endl;
     out << "--- assign overload test : ---" << std::endl;
@@ -241,9 +241,9 @@ void    utility_test(std::ofstream& out, std::ofstream& out_time){
 }
 
 void    vector_test(std::ofstream& out, std::ofstream& out_time){
-    ft::Vector<int> test;
-    ft::Vector<int>::iterator b = test.begin();
-    ft::Vector<int>::const_iterator c = test.begin();
+    ft::vector<int> test;
+    ft::vector<int>::iterator b = test.begin();
+    ft::vector<int>::const_iterator c = test.begin();
     if (b == c)
         std::cout << " i can compare Vector iterator and Vector const_iterator and they're the same " << std::endl;
     out << "--- vector test : ---" << std::endl;

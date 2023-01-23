@@ -40,9 +40,13 @@ $(NAME_FT): $(OBJS_FT)
 			@echo "\033[32mcompiling std test\033[0m" 
 			@$(CPP) $(CPPFLAGS) -o $(NAME_FT) $(OBJS_FT)
 
-$(NAME_SCHOOL): $(OBJS_SCHOOL)
+$(NAME_SCHOOL):
 			@echo "\033[32mcompiling school test\033[0m" 
-			@$(CPP) $(CPPFLAGS) -o $(NAME_SCHOOL) $(OBJS_SCHOOL)
+			@$(CPP) $(CPPFLAGS) -o $(NAME_SCHOOL) $(SRC_SCHOOL)
+			@./$(NAME_SCHOOL) 12
+			@echo "\033[32mcompiling school with std test\033[0m" 
+			@$(CPP) $(CPPFLAGS) -DSTD -o $(NAME_SCHOOL) $(SRC_SCHOOL)
+			@./$(NAME_SCHOOL) 12
 
 clean:
 			$(RM) $(OBJS_STD) $(OBJS_FT) $(OBJS_SCHOOL)
@@ -58,8 +62,6 @@ test: re
 	@./$(NAME_STD)
 	@echo "\033[32mlaunching ft test\033[0m" 
 	@./$(NAME_FT)
-	@echo "\033[32mlaunching school test\033[0m" 
-	@./$(NAME_SCHOOL)
 	@bash $(COMPARE)
 	@echo "\033[32mall test are done\033[0m" 
 
@@ -76,7 +78,7 @@ fast:
 	@echo "\033[32mall test are done\033[0m" 
 
 .o : .c
-	$(CPP) $(CPPFLAGS) $? -c
+	@$(CPP) $(CPPFLAGS) $? -c
 
 re:			fclean all
 
