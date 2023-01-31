@@ -20,7 +20,8 @@ template<class T, bool B = false> class vect_iterator
 	
 		vect_iterator():_value(NULL){};
 		vect_iterator(T* val):_value(val){};
-		vect_iterator(const vect_iterator<T, true>& other):_value(other.getElemPtr()){};
+		vect_iterator(size_type val):_value((T*)val){};
+		// vect_iterator(const vect_iterator<T, true>& other):_value(other.getElemPtr()){};
 		vect_iterator(const vect_iterator<T>& other):_value(other.getElemPtr()){};
 		~vect_iterator(){};
 
@@ -75,34 +76,39 @@ template<class T, bool B = false> class vect_iterator
 			return (it);
 		};
 		size_t operator-(vect_iterator& nb) const{
-			size_t res = 0;
-			vect_iterator temp(nb);
-			if (temp == *this)
-				return res;
-			else if (temp < *this){
-				while (temp < *this){
-					temp++;
-					res++;
-				}
-					// std::cout << " i did res ++ 2 " << res << std::endl;
-			}
-			else {
-				while (temp > *this){
-					temp --;
-					res ++;
-				}
-					// std::cout << " i did res ++" << res << std::endl;
-			}
-			// std::cout << " i found dist : " << res << std::endl;
-			return (res);
+			// std::cout << " i sustract " << _value << " to " << nb.getElemPtr() << std::endl;
+			if (_value > nb.getElemPtr())
+				return (_value - nb.getElemPtr());
+			else
+				return (nb.getElemPtr() - _value);
+			// size_t res = 0;
+			// vect_iterator temp(nb);
+			// if (temp == *this)
+			// 	return res;
+			// else if (temp < *this){
+			// 	while (temp < *this){
+			// 		temp++;
+			// 		res++;
+			// 	}
+			// 		// std::cout << " i did res ++ 2 " << res << std::endl;
+			// }
+			// else {
+			// 	while (temp > *this){
+			// 		temp --;
+			// 		res ++;
+			// 	}
+			// 		// std::cout << " i did res ++" << res << std::endl;
+			// }
+			// // std::cout << " i found dist : " << res << std::endl;
+			// return (res);
 		};
 		reference	operator[](size_t decal){return *(_value + decal);};
-		bool	operator==(const vect_iterator& it) const    { return (it._value == _value); };
-		bool	operator!=(const vect_iterator& it) const    { return (it._value != _value); };
-		bool	operator<(const vect_iterator& it) const     { return (it._value > _value); };
-		bool	operator>(const vect_iterator& it) const     { return (it._value < _value); };
-		bool	operator<=(const vect_iterator& it) const    { return (it._value >= _value); };
-		bool	operator>=(const vect_iterator& it) const    { return (it._value <= _value); };
+		friend bool	operator==(const vect_iterator& it, const vect_iterator& ite)    { return (it._value == ite._value); };
+		friend bool	operator!=(const vect_iterator& it, const vect_iterator& ite)    { return (it._value != ite._value); };
+		friend bool	operator<(const vect_iterator& it, const vect_iterator& ite)     { return (it._value < ite._value); };
+		friend bool	operator>(const vect_iterator& it, const vect_iterator& ite)     { return (it._value > ite._value); };
+		friend bool	operator<=(const vect_iterator& it, const vect_iterator& ite)    { return (it._value <= ite._value); };
+		friend bool	operator>=(const vect_iterator& it, const vect_iterator& ite)    { return (it._value >= ite._value); };
 	private:
 		T*	_value;
 	protected:
@@ -121,7 +127,8 @@ template<class T, bool B = false> class reverse_vect_iterator
 		typedef pointer											iterator_type;
 		reverse_vect_iterator():_value(NULL){};
 		reverse_vect_iterator(T* val):_value(val){};
-		reverse_vect_iterator(const reverse_vect_iterator<T, true>& other):_value(other.getElemPtr()){};
+		reverse_vect_iterator(size_type val):_value((T*)val){};
+		// reverse_vect_iterator(const reverse_vect_iterator<T, true>& other):_value(other.getElemPtr()){};
 		reverse_vect_iterator(const reverse_vect_iterator<T>& other):_value(other.getElemPtr()){};
 		~reverse_vect_iterator(){};
 
@@ -162,29 +169,33 @@ template<class T, bool B = false> class reverse_vect_iterator
 			return (it);
 		};
 		size_t operator-(reverse_vect_iterator& nb) const{
-			size_t res = 0;
-			reverse_vect_iterator temp(nb);
-			if (temp < *this){
-				while (temp != *this){
-					temp++;
-					res++;
-				}
-			}
-			else {
-				while (temp != *this){
-					temp --;
-					res --;
-				}
-			}
-			return (res);
+			if (_value > nb.getElemPtr())
+				return (_value - nb.getElemPtr());
+			else
+				return (nb.getElemPtr() - _value);
+			// size_t res = 0;
+			// reverse_vect_iterator temp(nb);
+			// if (temp < *this){
+			// 	while (temp != *this){
+			// 		temp++;
+			// 		res++;
+			// 	}
+			// }
+			// else {
+			// 	while (temp != *this){
+			// 		temp --;
+			// 		res --;
+			// 	}
+			// }
+			// return (res);
 		};
 		reference	operator[](size_t decal){return *(_value + decal);};
-		bool	operator==(const reverse_vect_iterator& it) const    { return (it._value == _value); };
-		bool	operator!=(const reverse_vect_iterator& it) const    { return (it._value != _value); };
-		bool	operator<(const reverse_vect_iterator& it) const     { return (it._value > _value); };
-		bool	operator>(const reverse_vect_iterator& it) const     { return (it._value < _value); };
-		bool	operator<=(const reverse_vect_iterator& it) const    { return (it._value >= _value); };
-		bool	operator>=(const reverse_vect_iterator& it) const    { return (it._value <= _value); };
+		friend bool	operator==(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value == ite._value); };
+		friend bool	operator!=(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value != ite._value); };
+		friend bool	operator<(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)     { return (it._value < ite._value); };
+		friend bool	operator>(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)     { return (it._value > ite._value); };
+		friend bool	operator<=(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value <= ite._value); };
+		friend bool	operator>=(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value >= ite._value); };
 	private:
 		T*	_value;
 	protected:

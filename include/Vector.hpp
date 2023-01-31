@@ -4,8 +4,9 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
-#include "Utility.hpp"
-#include "Vect_utils.hpp"
+#include <stdexcept>
+#include "utility.hpp"
+#include "vect_utils.hpp"
 
 namespace ft
 {
@@ -33,7 +34,7 @@ namespace ft
 				};
 			explicit vector( size_type count, const T& value = T(), const Allocator& alloc = Allocator()):_alloc(alloc), _first(_alloc.allocate(count)), _size(count), _capacity(count){
 				if (count >= _alloc.max_size())
-					throw(too_big_exception());
+					throw(std::length_error("vector"));
 				for (size_t i = 0; i < _size; i++){
 					_alloc.construct(_first + i, value);
 				}
@@ -99,29 +100,19 @@ namespace ft
 			};
 			template <class InputIterator>  void assign (InputIterator first, InputIterator last
 			, typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0){
-				size_type count = last - first;
-				if (_capacity >= count){
-					for(size_t i = 0; i < count; i++){
-						if (i < _size)
-							_first[i] = *(first + (int)i);
-						else
-							_alloc.construct(_first + i, *(first + (int)i));
-					}
-					if (_size > count){
-						for (size_t i = count; i < _size; i++){
-							_alloc.destroy(_first + i);
-						}
-					}
-					this->_size = count;
-				}
-				else{
-					reallocate(count);
-					for (size_t i = 0; i < _size; i++){
-						_alloc.construct(_first + i, *(first + (int)i));
-					}
+				clear();
+				size_type count = 0;
+				for (InputIterator i = first; i != last; i++)
+					count++;
+				std::cout << "count is " << count << " capacity is " << _capacity << std::endl;
+				if (count > _capacity)
+					reallocate(_size);
+				for (; first != last; first++){
+					push_back(*first);
 				}
 			};
 			void assign( size_type count, const T& value ){
+				clear();
 				if (_capacity >= count){
 					for(size_t i = 0; i < count; i++){
 						if (i < _size)
@@ -137,6 +128,7 @@ namespace ft
 					this->_size = count;
 				}
 				else{
+					std::cout << " allocating " << count << std::endl;
 					reallocate(count);
 					for (size_t i = 0; i < _size; i++){
 						_alloc.construct(_first + i, value);
@@ -150,7 +142,12 @@ namespace ft
 		//element access
 			reference at( size_type pos ){
 				if (pos >= _size)
-					throw out_of_range_exception();
+					throw std::out_of_range("vector");
+				return (*(_first + pos));
+			};
+			const reference at( size_type pos )const{
+				if (pos >= _size)
+					throw std::out_of_range("vector");
 				return (*(_first + pos));
 			};
 			reference operator[]( size_type pos ){
@@ -166,7 +163,13 @@ namespace ft
 			reference front(){
 				return (*_first);
 			};
+			const reference front()const{
+				return (*_first);
+			};
 			reference back(){
+				return (*(_first + _size - 1));
+			};
+			const reference back()const{
 				return (*(_first + _size - 1));
 			};
 			T* data(){
@@ -241,11 +244,17 @@ namespace ft
 				_size = 0;
 			};
 			iterator insert( iterator pos, const T& value ){
-				if (pos < _first || pos > _first + _size)
-					throw out_of_range_exception();
-				if (_capacity == _size)
+				if (pos < begin() || pos > end())
+					throw std::out_of_range("vector");
+				size_t index = begin() - pos;
+				// std::cout << "pos is : " << pos.getElemPtr() << " index is " << index << std::endl;
+				if (_capacity == _size && _capacity != 0)
 					reserve(_size * 2);
+				else if (_capacity == 0)
+					reserve(8);
+				pos = _first + index;
 				for (iterator i = end(); i > pos; i--){
+					// std::cout << "in while " << std::endl;
 					i = i - 1;
 				}
 				// *pos = value;
@@ -254,8 +263,8 @@ namespace ft
 				return pos;
 			};
 			iterator insert( iterator pos, size_type count, const T& value ){
-				if (pos < _first || pos > _first + _size)
-					throw out_of_range_exception();
+				if (pos < begin() || pos > end())
+					throw std::out_of_range("vector");
 				size_t index = pos.getElemPtr() - begin().getElemPtr();
 				if (_capacity <= _size + count && count < _size)
 					reserve(_size * 2);
@@ -298,7 +307,7 @@ namespace ft
 				// 	throw out_of_range_exception();
 				size_t count = last - first;
 				if (!_first || pos < _first || pos > _first + _size || first > last)
-					throw out_of_range_exception();
+					throw std::out_of_range("vector");
 				size_t index = pos.getElemPtr() - begin().getElemPtr();
 
 				// std::cout << "capacity is : " << _capacity << " size is : " << _size << " index is : " << index << " pos is : " << pos.getElemPtr() << " begin is : " << begin().getElemPtr() << " end is : " << end().getElemPtr() << " counts is : " << count << std::endl;
@@ -321,7 +330,7 @@ namespace ft
 			};
 			iterator erase( iterator pos ){
 				if (pos < _first || pos > _first + _size)
-					throw out_of_range_exception();
+					throw std::out_of_range("vector");
 				iterator tmp = pos;
 				_alloc.destroy(tmp.getElemPtr());
 				_size--;
@@ -348,7 +357,7 @@ namespace ft
 			iterator erase( iterator first, iterator last ){
 				size_t count = last - first;
 				if (first < _first || first > _first + _size || last < _first || last > _first + _size)
-					throw out_of_range_exception();
+					throw std::out_of_range("vector");
 				// for (iterator i = first; i < end() - count; i++){
 				// 	*i = *(i + count);
 				// }
@@ -405,7 +414,7 @@ namespace ft
 			class out_of_range_exception: public std::exception{
 			public:
 				const char* what() const throw(){
-					return ("Error : out of range exception");
+					return ("vector");
 				};
 			};
 			class too_big_exception: public std::exception{
@@ -452,6 +461,7 @@ namespace ft
 				reserve(_capacity * ratio);
 			};
 			void	reallocate(size_t n){
+				std::cout << " i realloc " << n << std::endl;
 				if (_first)
 				{
 					for(size_t i = 0; i < _size; i++){

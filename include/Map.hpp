@@ -7,10 +7,10 @@
 // #include <map>
 // #include <type_traits>
 
-#include "Pair.hpp"
+#include "pair.hpp"
 #include "map_iterator.hpp"
 #include "print_map.hpp"
-#include "Utility.hpp"
+#include "utility.hpp"
 
 #define HIGHER true
 #define LOWER false
