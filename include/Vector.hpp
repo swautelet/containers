@@ -498,7 +498,7 @@ namespace ft
 };
 namespace std{
 	template <class T>
-	void swap (vector<T>& a, vector<T>& b){ a.swap(b);};
+	void swap (ft::vector<T>& a, ft::vector<T>& b){ a.swap(b);};
 }
 // 	template< class T, class Allocator > bool operator==( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
 // 		if (lhs.size() != rhs.size())
