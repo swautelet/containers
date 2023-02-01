@@ -315,16 +315,16 @@ namespace ft{
 			};
 		//operators 
 			friend bool operator==( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
-			if (lhs.size() != rhs.size())
-				return false;
-			ft::map_iterator<Key, T, Allocator, false> i = lhs.begin(), j = rhs.begin();
-			while (i && j){
-				if (*i != *j)
+				if (lhs.size() != rhs.size())
 					return false;
-				i++;
-				j++;
-			}
-			return (i == j);
+				ft::map_iterator<Key, T, Allocator, false> i = lhs.begin(), j = rhs.begin();
+				while (i && j){
+					if (*i != *j)
+						return false;
+					i++;
+					j++;
+				}
+				return (i == j);
 			};
 			friend bool operator!=( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
 				return !(rhs == lhs);

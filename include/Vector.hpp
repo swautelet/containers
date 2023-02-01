@@ -2,7 +2,7 @@
 # define VECTOR_HPP
 
 #include <memory>
-#include <vector>
+// #include <vector>
 #include <algorithm>
 #include <stdexcept>
 #include "utility.hpp"
@@ -25,7 +25,7 @@ namespace ft
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef ft::reverse_vect_iterator<T, false>			reverse_iterator;
-		typedef const ft::reverse_vect_iterator<T, true>	const_reverse_iterator;
+		typedef ft::reverse_vect_iterator<T, true>			const_reverse_iterator;
 
 		//member functions
 			vector():_alloc(Allocator()), _first(NULL), _size(0), _capacity(0){
@@ -101,36 +101,44 @@ namespace ft
 			template <class InputIterator>  void assign (InputIterator first, InputIterator last
 			, typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0){
 				clear();
-				size_type count = 0;
-				for (InputIterator i = first; i != last; i++)
-					count++;
-				std::cout << "count is " << count << " capacity is " << _capacity << std::endl;
+				difference_type count = std::distance(first, last);
+				if (count < 0){
+					// std::cout << " std distance reverse " << std::endl;
+					count = std::distance(last, first);}
+				// count = count / sizeof(T);
+				// for (InputIterator i = first; i != last; i++)
+				// 	count++;
+				// std::cout << "count is " << count << " capacity is " << _capacity << std::endl;
 				if (count > _capacity)
-					reallocate(_size);
-				for (; first != last; first++){
-					push_back(*first);
+					reallocate(count);
+				for (size_t i = 0; i < count; i++, first++){
+					_alloc.construct(_first + i, *first);
 				}
+				_size = count;
 			};
 			void assign( size_type count, const T& value ){
 				clear();
 				if (_capacity >= count){
-					for(size_t i = 0; i < count; i++){
-						if (i < _size)
-							_first[i] = value;
-						else
-							_alloc.construct(_first + i, value);
+					// for(size_t i = 0; i < count; i++){
+					// 	if (i < _size)
+					// 		_first[i] = value;
+					// 	else
+					// 		_alloc.construct(_first + i, value);
+					// }
+					// if (_size > count){
+					// 	for (size_t i = count; i < _size; i++){
+					// 		_alloc.destroy(_first + i);
+					// 	}
+					// }
+					// this->_size = count;
+					for (size_t i = 0; i < count; i++){
+						_alloc.construct(_first + i, value);
 					}
-					if (_size > count){
-						for (size_t i = count; i < _size; i++){
-							_alloc.destroy(_first + i);
-						}
-					}
-					this->_size = count;
 				}
 				else{
-					std::cout << " allocating " << count << std::endl;
+					// std::cout << " allocating " << count << std::endl;
 					reallocate(count);
-					for (size_t i = 0; i < _size; i++){
+					for (size_t i = 0; i < count; i++){
 						_alloc.construct(_first + i, value);
 					}
 				}
@@ -305,8 +313,9 @@ namespace ft
 			typename ft::enable_if<!ft::is_integral<InputIt>::value >::type* = 0 ){
 				// if (!_first)
 				// 	throw out_of_range_exception();
-				size_t count = last - first;
-				if (!_first || pos < _first || pos > _first + _size || first > last)
+				// size_t count = last - first;
+				size_t count = std::distance(first, last);
+				if (!_first || pos < _first || pos > _first + _size)
 					throw std::out_of_range("vector");
 				size_t index = pos.getElemPtr() - begin().getElemPtr();
 
@@ -323,8 +332,8 @@ namespace ft
 					end--;
 				}
 				_size += count;
-				for (size_type i = 0; i < count; i++){
-					_first[i + index] = first[i];
+				for (size_type i = 0; i < count; i++, first++){
+					_first[i + index] = *first;
 				}
 				return (pos);
 			};
@@ -404,7 +413,7 @@ namespace ft
 				}
 			};
 			void swap( vector& other ){
-				ft::swap(this->_first, other._first);
+				ft::swap(&this->_first, &other._first);
 				ft::swap(this->_alloc, other._alloc);
 				ft::swap(this->_size, other._size);
 				ft::swap(this->_capacity, other._capacity);
@@ -425,22 +434,22 @@ namespace ft
 			};
 
 		//friends
-			friend void swap (vector& a, vector& b){ a.swap(b);};
-			friend bool operator==( vector& lhs, vector& rhs ){
+			// void swap (vector& a, vector& b){ a.swap(b);};
+			friend bool operator==(const vector& lhs, const vector& rhs ){
 				if (lhs.size() != rhs.size())
 					return false;
-				for (iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
+				for (const_iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
 					if (*i != *j)
 						return false;
 				}
 				return true;
 			};
-			friend bool operator!=( vector& lhs, vector& rhs ){return !(lhs == rhs);};
-			friend bool operator>=( vector& lhs, vector& rhs ){return !(lhs < rhs);};
-			friend bool operator<=( vector& lhs, vector& rhs ){return (rhs >= lhs);};
-			friend bool operator>( vector& lhs, vector& rhs ){return (rhs < lhs);};
-			friend bool operator<( vector& lhs, vector& rhs ){
-				for (iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
+			friend bool operator!=( const vector& lhs, const vector& rhs ){return !(lhs == rhs);};
+			friend bool operator>=( const vector& lhs, const vector& rhs ){return !(lhs < rhs);};
+			friend bool operator<=( const vector& lhs, const vector& rhs ){return (rhs >= lhs);};
+			friend bool operator>( const vector& lhs, const vector& rhs ){return (rhs < lhs);};
+			friend bool operator<( const vector& lhs, const vector& rhs ){
+				for (const_iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
 					if (*i < *j)
 						return true;
 				}
@@ -461,7 +470,9 @@ namespace ft
 				reserve(_capacity * ratio);
 			};
 			void	reallocate(size_t n){
-				std::cout << " i realloc " << n << std::endl;
+				if (n < _capacity)
+					return ;
+				// std::cout << " i realloc " << n << std::endl;
 				if (_first)
 				{
 					for(size_t i = 0; i < _size; i++){
@@ -482,7 +493,13 @@ namespace ft
 
 		protected:
 	};
+	template <class T>
+	void swap (vector<T>& a, vector<T>& b){ a.swap(b);};
 };
+namespace std{
+	template <class T>
+	void swap (vector<T>& a, vector<T>& b){ a.swap(b);};
+}
 // 	template< class T, class Allocator > bool operator==( const ft::Vector<T,Allocator>& lhs, const ft::Vector<T,Allocator>& rhs ){
 // 		if (lhs.size() != rhs.size())
 // 			return false;

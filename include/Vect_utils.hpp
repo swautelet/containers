@@ -25,6 +25,8 @@ template<class T, bool B = false> class vect_iterator
 		vect_iterator(const vect_iterator<T>& other):_value(other.getElemPtr()){};
 		~vect_iterator(){};
 
+		iterator_type base()	{return _value;};
+
 		elemPtr getElemPtr() const      { return _value; };
 
 		reference operator*() const         { return (*_value); };
@@ -33,7 +35,7 @@ template<class T, bool B = false> class vect_iterator
 			this->_value = other.getElemPtr();
 			return (*this);
 		};
-		operator unsigned long(){return ((unsigned long)_value);};
+		// operator size_t(){return ((size_t)_value);};
 
 		vect_iterator& operator++()       { ++_value; return (*this); };
 		vect_iterator& operator--()       { --_value; return (*this); };
@@ -132,11 +134,13 @@ template<class T, bool B = false> class reverse_vect_iterator
 		reverse_vect_iterator(const reverse_vect_iterator<T>& other):_value(other.getElemPtr()){};
 		~reverse_vect_iterator(){};
 
+		iterator_type base()	{return _value;};
+
 		elemPtr getElemPtr() const      { return _value; };
 
 		reference operator*() const         { return (*_value); };
 		pointer operator->() const          { return (_value); };
-		operator unsigned long(){return ((unsigned long)_value);};
+		// operator size_t(){return ((size_t)_value);};
 
 		reverse_vect_iterator& operator++()       { ++_value; return (*this); };
 		reverse_vect_iterator& operator--()       { --_value; return (*this); };
@@ -158,12 +162,12 @@ template<class T, bool B = false> class reverse_vect_iterator
 			_value -= decal;
 			return (*this);
 		};
-		reverse_vect_iterator operator+(int nb) const{
+		reverse_vect_iterator operator+(size_t nb) const{
 			reverse_vect_iterator it(*this);
 			it._value += nb;
 			return (it);
 		}
-		reverse_vect_iterator operator-(int nb) const{
+		reverse_vect_iterator operator-(size_t nb) const{
 			reverse_vect_iterator it(*this);
 			it._value -= nb;
 			return (it);

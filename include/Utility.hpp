@@ -14,7 +14,13 @@ void swap( T& a, T& b ){
 	a = b;
 	b = temp;
 };
-
+template< class T >
+void swap( T** a, T** b ){
+	// std::cout << "swap pointer " << std::endl;
+	T* temp = *a;
+	*a = *b;
+	*b = temp;
+};
 template<bool B, class T = void>
 struct enable_if {};
  
