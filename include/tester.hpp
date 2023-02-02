@@ -11,10 +11,10 @@
 #include <fstream>
 #include <sys/time.h>
 
-#include "Vector.hpp"
-#include "Map.hpp"
-#include "Stack.hpp"
-#include "Utility.hpp"
+#include "vector.hpp"
+#include "map.hpp"
+#include "stack.hpp"
+#include "utility.hpp"
 #ifndef FAST
 #define _ratio 100
 #else

@@ -1,7 +1,7 @@
 #ifndef MAP_NODE_HPP
 # define MAP_NODE_HPP
 
-#include "Map.hpp"
+#include "map.hpp"
 
 template<class Key, class T, class Allocator = std::allocator<ft::pair<const Key, T> > >
 class map_node{

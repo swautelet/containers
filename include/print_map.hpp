@@ -1,7 +1,7 @@
 #ifndef PRINT_MAP_HPP
 # define PRINT_MAP_HPP
 
-#include "Map.hpp"
+#include "map.hpp"
 
 template <class A, class B>
 void    print_node(map_node<A, B>* x){

@@ -5,6 +5,7 @@
 
 namespace ft
 {
+template<class T, bool B> class reverse_vect_iterator;
 template<class T, bool B = false> class vect_iterator
 {
 	public:
@@ -22,7 +23,12 @@ template<class T, bool B = false> class vect_iterator
 		vect_iterator(T* val):_value(val){};
 		vect_iterator(size_type val):_value((T*)val){};
 		// vect_iterator(const vect_iterator<T, true>& other):_value(other.getElemPtr()){};
-		vect_iterator(const vect_iterator<T>& other):_value(other.getElemPtr()){};
+		vect_iterator(const vect_iterator<T, B>& other):_value(other.getElemPtr()){};
+		vect_iterator(const reverse_vect_iterator<T, B>& other):_value(other.getElemPtr()){};
+		template <bool C>
+		vect_iterator(const vect_iterator<T, C>& other, typename ft::enable_if<(!C)>::type* = 0):_value(other.getElemPtr()){};
+		template <bool C>
+		vect_iterator(const reverse_vect_iterator<T, C>& other, typename ft::enable_if<(!C)>::type* = 0):_value(other.getElemPtr()){};
 		~vect_iterator(){};
 
 		iterator_type base()	{return _value;};
@@ -77,12 +83,12 @@ template<class T, bool B = false> class vect_iterator
 			it._value -= nb;
 			return (it);
 		};
-		size_t operator-(vect_iterator& nb) const{
+		size_t operator-(const vect_iterator& nb) const{
 			// std::cout << " i sustract " << _value << " to " << nb.getElemPtr() << std::endl;
-			if (_value > nb.getElemPtr())
-				return (_value - nb.getElemPtr());
-			else
-				return (nb.getElemPtr() - _value);
+			// if (_value > nb.getElemPtr())
+			return (_value - nb.getElemPtr());
+			// else
+			// 	return (nb.getElemPtr() - _value);
 			// size_t res = 0;
 			// vect_iterator temp(nb);
 			// if (temp == *this)
@@ -131,7 +137,12 @@ template<class T, bool B = false> class reverse_vect_iterator
 		reverse_vect_iterator(T* val):_value(val){};
 		reverse_vect_iterator(size_type val):_value((T*)val){};
 		// reverse_vect_iterator(const reverse_vect_iterator<T, true>& other):_value(other.getElemPtr()){};
-		reverse_vect_iterator(const reverse_vect_iterator<T>& other):_value(other.getElemPtr()){};
+		reverse_vect_iterator(const reverse_vect_iterator<T, B>& other):_value(other.getElemPtr()){};
+		reverse_vect_iterator(const vect_iterator<T, B>& other):_value(other.getElemPtr()){};
+		template <bool C>
+		reverse_vect_iterator(const vect_iterator<T, C>& other, typename ft::enable_if<(!C)>::type* = 0):_value(other.getElemPtr()){};
+		template <bool C>
+		reverse_vect_iterator(const reverse_vect_iterator<T, C>& other, typename ft::enable_if<(!C)>::type* = 0):_value(other.getElemPtr()){};
 		~reverse_vect_iterator(){};
 
 		iterator_type base()	{return _value;};
@@ -173,25 +184,25 @@ template<class T, bool B = false> class reverse_vect_iterator
 			return (it);
 		};
 		size_t operator-(reverse_vect_iterator& nb) const{
-			if (_value > nb.getElemPtr())
-				return (_value - nb.getElemPtr());
-			else
-				return (nb.getElemPtr() - _value);
-			// size_t res = 0;
-			// reverse_vect_iterator temp(nb);
-			// if (temp < *this){
-			// 	while (temp != *this){
-			// 		temp++;
-			// 		res++;
-			// 	}
-			// }
-			// else {
-			// 	while (temp != *this){
-			// 		temp --;
-			// 		res --;
-			// 	}
-			// }
-			// return (res);
+		// 	if (_value > nb.getElemPtr())
+			return (_value - nb.getElemPtr());
+		// 	else
+		// 		return (nb.getElemPtr() - _value);
+		// 	// size_t res = 0;
+		// 	// reverse_vect_iterator temp(nb);
+		// 	// if (temp < *this){
+		// 	// 	while (temp != *this){
+		// 	// 		temp++;
+		// 	// 		res++;
+		// 	// 	}
+		// 	// }
+		// 	// else {
+		// 	// 	while (temp != *this){
+		// 	// 		temp --;
+		// 	// 		res --;
+		// 	// 	}
+		// 	// }
+		// 	// return (res);
 		};
 		reference	operator[](size_t decal){return *(_value + decal);};
 		friend bool	operator==(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value == ite._value); };
@@ -204,6 +215,22 @@ template<class T, bool B = false> class reverse_vect_iterator
 		T*	_value;
 	protected:
 };
+template <class T>
+vect_iterator<T> operator+(int a, vect_iterator<T> b){
+	return b + a;
+};
+template <class T>
+reverse_vect_iterator<T> operator+(int a, reverse_vect_iterator<T> b){
+	return b + a;
+};
+template <class T>
+size_t operator-(vect_iterator<T, true> a, vect_iterator<T, false> b){
+	return a - b;
+}
+template <class T>
+size_t operator-(reverse_vect_iterator<T, true> a, reverse_vect_iterator<T, false> b){
+	return a - b;
+}
 };
 
 #endif

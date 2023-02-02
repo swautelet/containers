@@ -2,7 +2,7 @@
 # define VECTOR_HPP
 
 #include <memory>
-// #include <vector>
+#include <vector>
 #include <algorithm>
 #include <stdexcept>
 #include "utility.hpp"
@@ -101,7 +101,7 @@ namespace ft
 			template <class InputIterator>  void assign (InputIterator first, InputIterator last
 			, typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0){
 				clear();
-				difference_type count = std::distance(first, last);
+				size_type count = std::distance(first, last);
 				if (count < 0){
 					// std::cout << " std distance reverse " << std::endl;
 					count = std::distance(last, first);}
@@ -111,7 +111,7 @@ namespace ft
 				// std::cout << "count is " << count << " capacity is " << _capacity << std::endl;
 				if (count > _capacity)
 					reallocate(count);
-				for (size_t i = 0; i < count; i++, first++){
+				for (size_type i = 0; i < count; i++, first++){
 					_alloc.construct(_first + i, *first);
 				}
 				_size = count;
@@ -400,6 +400,8 @@ namespace ft
 				if (count < _size){
 					for (size_t i = _size - 1; i >= count; i--){
 						_alloc.destroy(_first + i);
+						if (i == 0)
+							break ;
 					}
 					_size = count;
 				}
@@ -493,8 +495,8 @@ namespace ft
 
 		protected:
 	};
-	template <class T>
-	void swap (vector<T>& a, vector<T>& b){ a.swap(b);};
+	// template <class T>
+	// void swap (vector<T>& a, vector<T>& b){ a.swap(b);};
 };
 namespace std{
 	template <class T>

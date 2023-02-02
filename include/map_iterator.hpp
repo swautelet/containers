@@ -1,11 +1,11 @@
 #ifndef MAP_ITERATOR_HPP
 # define MAP_ITERATOR_HPP
 
-#include "Map.hpp"
+#include "map.hpp"
 #include "is_const.hpp"
 #include "map_node.hpp"
 #include "reverse_map_iterator.hpp"
-#include "Utility.hpp"
+#include "utility.hpp"
 
 #define HIGHER true
 #define LOWER false
