@@ -201,28 +201,28 @@ namespace ft
 
 		//iterators
 			iterator begin(){
-				return _first;
+				return (iterator(_first));
 			};
 			const_iterator begin() const{
-				return _first;
+				return (const_iterator(_first));
 			};
 			iterator end(){
-				return (_first + _size);
+				return (iterator(_first + _size));
 			};
 			const_iterator end() const{
-				return (_first + _size);
+				return (const_iterator(_first + _size));
 			};
 			reverse_iterator rbegin(){
 				return (reverse_iterator(_first));
 			};
 			const_reverse_iterator rbegin() const{
-				return (reverse_iterator(_first));
+				return (const_reverse_iterator(_first));
 			};
 			reverse_iterator rend(){
 				return (reverse_iterator(_first + _size));
 			};
 			const_reverse_iterator rend() const{
-				return (reverse_iterator(_first + _size));
+				return (const_reverse_iterator(_first + _size));
 			};
 
 		//Capacity
@@ -349,7 +349,7 @@ namespace ft
 				// 	throw out_of_range_exception();
 				// size_t count = last - first;
 				size_t count = std::distance(first, last);
-				if (!_first || pos < _first || pos > _first + _size)
+				if (pos < _first || pos > _first + _size)
 					throw std::out_of_range("vector");
 				size_t index = pos.getElemPtr() - begin().getElemPtr();
 
@@ -360,14 +360,18 @@ namespace ft
 					reserve(_size + count);
 				iterator end = this->end();
 				end += count;
+				pos = begin() + index;
+				size_t nb_to_decal = this->end().getElemPtr() - pos.getElemPtr();
 				// std::cout << "capacity : " << _capacity << " size : " << _size << std::endl;
-				for (size_t i = 0; i < count; i++){
+				for (size_t i = 0; i <= nb_to_decal; i++){
 					_alloc.construct(end.getElemPtr(), *(end - count));
+					_alloc.destroy((end - count).getElemPtr());
 					end--;
 				}
 				_size += count;
-				for (size_type i = 0; i < count; i++, first++){
-					_first[i + index] = *first;
+				for (size_type i = 0; i < count; i++, first++, pos++){
+					_alloc.construct(pos.getElemPtr(), *first);
+					// _first[i + index] = *first;
 				}
 				return (pos);
 			};

@@ -84,31 +84,10 @@ template<class T, bool B = false> class vect_iterator
 			return (it);
 		};
 		size_t operator-(const vect_iterator& nb) const{
-			// std::cout << " i sustract " << _value << " to " << nb.getElemPtr() << std::endl;
-			// if (_value > nb.getElemPtr())
-			return (_value - nb.getElemPtr());
-			// else
-			// 	return (nb.getElemPtr() - _value);
-			// size_t res = 0;
-			// vect_iterator temp(nb);
-			// if (temp == *this)
-			// 	return res;
-			// else if (temp < *this){
-			// 	while (temp < *this){
-			// 		temp++;
-			// 		res++;
-			// 	}
-			// 		// std::cout << " i did res ++ 2 " << res << std::endl;
-			// }
-			// else {
-			// 	while (temp > *this){
-			// 		temp --;
-			// 		res ++;
-			// 	}
-			// 		// std::cout << " i did res ++" << res << std::endl;
-			// }
-			// // std::cout << " i found dist : " << res << std::endl;
-			// return (res);
+			if (_value > nb.getElemPtr())
+				return (_value - nb.getElemPtr());
+			else
+				return (nb.getElemPtr() - _value);
 		};
 		reference	operator[](size_t decal){return *(_value + decal);};
 		friend bool	operator==(const vect_iterator& it, const vect_iterator& ite)    { return (it._value == ite._value); };
@@ -184,25 +163,10 @@ template<class T, bool B = false> class reverse_vect_iterator
 			return (it);
 		};
 		size_t operator-(reverse_vect_iterator& nb) const{
-		// 	if (_value > nb.getElemPtr())
-			return (_value - nb.getElemPtr());
-		// 	else
-		// 		return (nb.getElemPtr() - _value);
-		// 	// size_t res = 0;
-		// 	// reverse_vect_iterator temp(nb);
-		// 	// if (temp < *this){
-		// 	// 	while (temp != *this){
-		// 	// 		temp++;
-		// 	// 		res++;
-		// 	// 	}
-		// 	// }
-		// 	// else {
-		// 	// 	while (temp != *this){
-		// 	// 		temp --;
-		// 	// 		res --;
-		// 	// 	}
-		// 	// }
-		// 	// return (res);
+			if (_value > nb.getElemPtr())
+				return (_value - nb.getElemPtr());
+			else
+				return (nb.getElemPtr() - _value);
 		};
 		reference	operator[](size_t decal){return *(_value + decal);};
 		friend bool	operator==(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value == ite._value); };
