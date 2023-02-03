@@ -266,17 +266,29 @@ namespace ft
 			iterator insert( iterator pos, const T& value ){
 				if (pos < begin() || pos > end())
 					throw std::out_of_range("vector");
-				size_t index = begin() - pos;
+				if (!_size){
+					push_back(value);
+					return begin();
+				}
+				size_t index = pos - begin();
 				// std::cout << "pos is : " << pos.getElemPtr() << " index is " << index << std::endl;
 				if (_capacity == _size && _capacity != 0)
 					reserve(_size * 2);
 				else if (_capacity == 0)
 					reserve(8);
 				pos = _first + index;
-				for (iterator i = end(); i > pos; i--){
-					// std::cout << "in while " << std::endl;
-					i = i - 1;
+				// std::cout << pos.getElemPtr() << " | " << end().getElemPtr() << " value is " << value << " index is " << index << std::endl;
+				if (pos != end()){
+					// std::cout << " hello " << std::endl;
+					for (iterator i = end(); i > pos; i--){
+						// std::cout << "in while " << std::endl;
+						*i = *(i - 1);
+						_alloc.construct(i.getElemPtr(), *(i - 1));
+						_alloc.destroy((i - 1).getElemPtr());
+					}
 				}
+				// std::cout << " here " << value << " | " << index << std::endl;
+
 				// *pos = value;
 				_alloc.construct(pos.getElemPtr(), value);
 				_size++;
@@ -290,20 +302,30 @@ namespace ft
 					reserve(_size * 2);
 				else if (_capacity <= _size + count)
 					reserve(_size + count);
-				for (iterator i = end() + count; i >= begin() + index; i--){
-					if (i >= end() && i - count >= begin())
+				_size += count;
+				// std::cout << " count is " << count  << std::endl;
+				for (iterator i = end() - 1; i >= begin() + index; i--){
+					// if (i >= end() && i - count >= begin())
+					// 	_alloc.construct(i.getElemPtr(), *(i - count));
+					// else if (i >= end())
+					// 	_alloc.construct(i.getElemPtr(), value);
+					// else if (i >= begin() && i < end() && i - count >= begin())
+					// 	*i = *(i - count);
+					// else
+					// 	*i = value;
+					if (i >= begin() + index + count){
+						// std::cout << " decal " << std::endl;
+						// *i = *(i - count);
 						_alloc.construct(i.getElemPtr(), *(i - count));
-					else if (i >= end())
-						_alloc.construct(i.getElemPtr(), value);
-					else if (i >= begin() && i < end() && i - count >= begin())
-						*i = *(i - count);
-					else
-						*i = value;
+						_alloc.destroy((i - count).getElemPtr());
+						}
+					else{
+						// std::cout << "insert new " << std::endl;
+						_alloc.construct(i.getElemPtr(), value);}
 				}
 				// for (size_type i = 0; i < count; i++){
 				// 		_first[i + index] = value;
 				// }
-				_size += count;
 				return (pos);
 			};
 			// constexpr iterator insert( const_iterator pos, size_type count, const T& value ){
