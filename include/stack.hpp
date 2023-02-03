@@ -1,6 +1,7 @@
 #ifndef STACK_HPP
 # define STACK_HPP
 
+#include <stack>
 #include <deque>
 #include <memory>
 #include "vector.hpp"
@@ -12,7 +13,8 @@ namespace ft{
 		typedef T&											reference;
 		typedef size_t										size_type;
 		typedef typename Container::iterator				iterator;
-		typedef stack<T, Container>							container_type;
+		typedef typename Container::const_iterator			const_iterator;
+		typedef Container									container_type;
 		//member functions
 			explicit stack( const Container& cont = Container() ):c(cont){};
 			// stack( const stack& other );
@@ -44,21 +46,21 @@ namespace ft{
 				c.pop_back();
 			};
 	
-		friend bool operator==( stack& lhs, stack& rhs ){
+		friend bool operator==( const stack& lhs, const stack& rhs ){
 				if (lhs.c.size() != rhs.c.size())
 					return false;
-				for (iterator i = lhs.c.begin(), j = rhs.c.begin(); i != lhs.c.end() && j != rhs.c.end(); i++, j++){
+				for (const_iterator i = lhs.c.begin(), j = rhs.c.begin(); i != lhs.c.end() && j != rhs.c.end(); i++, j++){
 					if (*i != *j)
 						return false;
 				}
 				return true;
 			};
-			friend bool operator!=( stack& lhs, stack& rhs ){return !(lhs == rhs);};
-			friend bool operator>=( stack& lhs, stack& rhs ){return !(lhs < rhs);};
-			friend bool operator<=( stack& lhs, stack& rhs ){return (rhs >= lhs);};
-			friend bool operator>( stack& lhs, stack& rhs ){return (rhs < lhs);};
-			friend bool operator<( stack& lhs, stack& rhs ){
-				for (iterator i = lhs.c.begin(), j = rhs.c.begin(); i != lhs.c.end() && j != rhs.c.end(); i++, j++){
+			friend bool operator!=( const stack& lhs, const stack& rhs ){return !(lhs == rhs);};
+			friend bool operator>=( const stack& lhs, const stack& rhs ){return !(lhs < rhs);};
+			friend bool operator<=( const stack& lhs, const stack& rhs ){return (rhs >= lhs);};
+			friend bool operator>( const stack& lhs, const stack& rhs ){return (rhs < lhs);};
+			friend bool operator<( const stack& lhs, const stack& rhs ){
+				for (const_iterator i = lhs.c.begin(), j = rhs.c.begin(); i != lhs.c.end() && j != rhs.c.end(); i++, j++){
 					if (*i < *j)
 						return true;
 				}

@@ -60,7 +60,7 @@ class map_node{
 			return _content;
 		}
 		mapped_type*	operator->() const{
-			return _content;
+			return *_content;
 		}
 		mapped_type& operator *(){
 			return *_content;

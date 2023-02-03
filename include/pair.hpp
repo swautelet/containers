@@ -19,6 +19,7 @@ template< class T1, class T2>
 			pair& operator=( const pair& other ){
 				first = other.first;
 				second = other.second;
+				return (*this);
 			};
 			~pair(){};
 		

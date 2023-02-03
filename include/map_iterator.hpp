@@ -4,13 +4,15 @@
 #include "map.hpp"
 #include "is_const.hpp"
 #include "map_node.hpp"
-#include "reverse_map_iterator.hpp"
+// #include "reverse_map_iterator.hpp"
 #include "utility.hpp"
 
 #define HIGHER true
 #define LOWER false
 
 namespace ft{
+
+template <class Key, class T, class Allocator = std::allocator<ft::pair<const Key, T> >, bool B = false > class reverse_map_iterator;
 
 template <class Key, class T, class Allocator = std::allocator<ft::pair<const Key, T> >, bool B = false >
 class map_iterator
@@ -22,28 +24,34 @@ class map_iterator
 
 		typedef map_node<Key, T, Allocator>*															node_pointer;
 		typedef std::random_access_iterator_tag															iterator_category;
-		typedef iterator_category																		iterator_type;
 		typedef typename chooseConst<B, ft::pair<const Key, T>&, const ft::pair<const Key, T>&>::type	reference;
 		typedef typename chooseConst<B, ft::pair<const Key, T>*, const ft::pair<const Key, T>*>::type	pointer;
 		typedef ft::pair<const Key, T>*																	elemPtr;
+		typedef map_iterator																					iterator_type;
 
-		map_iterator():_target(NULL){};
+		map_iterator():_target(NULL), _root(NULL){};
 		map_iterator(node_pointer target, node_pointer root):_target(target), _root(root){};
-		map_iterator(map_iterator<Key, T, Allocator> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
-		map_iterator(map_iterator<Key, T, Allocator, true> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		map_iterator(const map_iterator<Key, T, Allocator>& other):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		map_iterator(const reverse_map_iterator<Key, T, Allocator>& other):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		template <bool C>
+		map_iterator(const map_iterator<Key, T, Allocator, C>& other, typename ft::enable_if<(!C)>::type* = 0):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		template <bool C>
+		map_iterator(const reverse_map_iterator<Key, T, Allocator, C>& other, typename ft::enable_if<(!C)>::type* = 0):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		// map_iterator(map_iterator<Key, T, Allocator, true> other):_target(other.getNode_pointer()), _root(other.getRoot()){};
 		~map_iterator(){};
 
 		elemPtr getElemPtr() const      { return _target->getContent(); };
 		node_pointer	getNode_pointer() const {return _target;};
 		node_pointer	getRoot() const {return _root;};
 
+		iterator_type base()	{return *this;};
 		reference operator*() const         { return (*_target->getContent()); };
 		pointer operator->() const          { return (_target->getContent()); };
 		map_iterator& operator=(const map_iterator& other){
 			this->_target = other.getNode_pointer();
 			return (*this);
 		};
-		operator unsigned long(){return ((unsigned long)_target);};
+		// operator bool(){return (_target);};
 
 		map_iterator& operator++()       { move_right(); return (*this); };
 		map_iterator& operator--()       { move_left(); return (*this); };
@@ -98,8 +106,8 @@ class map_iterator
 		// 	}
 		// 	return (it);
 		// };
-		bool	operator==(const map_iterator& it) const    { return (it._target == _target); };
-		bool	operator!=(const map_iterator& it) const    { return (it._target != _target); };
+		bool	operator==(const map_iterator& ite)    { return (_target == ite._target); };
+		bool	operator!=(const map_iterator& ite)    { return (_target != ite._target); };
 
 	private:
 		node_pointer		_target;

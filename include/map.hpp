@@ -4,11 +4,12 @@
 
 #include <memory>
 
-// #include <map>
+#include <map>
 // #include <type_traits>
 
 #include "pair.hpp"
 #include "map_iterator.hpp"
+#include "reverse_map_iterator.hpp"
 #include "print_map.hpp"
 #include "utility.hpp"
 
@@ -38,7 +39,26 @@ namespace ft{
 			typedef ft::map_iterator<Key, T, Allocator, true>						const_iterator;
 			typedef ft::reverse_map_iterator<Key, T, Allocator, false>				reverse_iterator;
 			typedef ft::reverse_map_iterator<Key, T, Allocator, true>				const_reverse_iterator;
-
+		private:
+			class value_compare: public std::binary_function<value_type, value_type, bool>
+        	{
+        	    friend class ft::map<key_type, mapped_type, Compare, Allocator>;
+	
+        	    public:
+        	        // typedef bool        result_type;
+        	        // typedef value_type  first_argument_type;
+        	        // typedef value_type  second_argument_type;
+	
+        	    protected:
+        	        Compare comp;
+	
+        	    public:
+        	        value_compare(Compare c): comp(c) {};
+					~value_compare(){};
+        	    bool operator()(const value_type &x, const value_type &y) const
+        	    { return (comp(x.first, y.first)); }
+        	};
+		public:
 		//member functions
 			map():_root(NULL), _nb_node(0){};
 			explicit map( const Compare& comp, const Allocator& alloc = Allocator()):_root(NULL), _nb_node(0), _alloc_node(alloc), _compare(comp), _compare_valid(compar_is_valid()){};
@@ -75,7 +95,7 @@ namespace ft{
 			};
 			T& operator[]( const Key& key ){
 				iterator reader = find(key);
-				if (reader)
+				if (reader.getNode_pointer())
 					return reader->second;
 				else
 					add_node(ft::pair< Key, T >(key, T()) );
@@ -158,7 +178,7 @@ namespace ft{
 			};
 			ft::pair<iterator, bool> insert(const value_type& value ){
 				iterator reader = find(value.first);
-				if (reader){
+				if (reader.getNode_pointer()){
 					iterator ret (reader.getNode_pointer(), _root);
 					return ft::make_pair(ret, false);
 				};
@@ -168,7 +188,7 @@ namespace ft{
 			iterator insert( iterator pos, const value_type& value ){
 				(void)pos;
 				iterator reader = find(value.first);
-				if (reader)
+				if (reader.getNode_pointer())
 					return reader;
 				return iterator(add_node(value), _root);
 			};
@@ -192,20 +212,20 @@ namespace ft{
 			};
 			size_type erase( const Key& key ){
 				iterator reader = find(key);
-				if (reader && reader.getNode_pointer()){
+				if (reader.getNode_pointer()){
 					delete_node(reader.getNode_pointer());
 					return 1;
 				}
 				return 0;
 			};
 			void swap( map& other ){
-				ft::swap(this->_root, other._root);
+				ft::swap(&this->_root, &other._root);
 				ft::swap(this->_nb_node, other._nb_node);
 			};
 
 		//lookup
 			size_type count( const Key& key ) const{
-				if (find(key))
+				if (find(key).getNode_pointer())
 					return 1;
 				return 0;
 			};
@@ -221,7 +241,7 @@ namespace ft{
 				return (ret);
 			};
 			const_iterator find( const Key& key ) const{
-				for (iterator i = begin(); i != end(); i++){
+				for (const_iterator i = begin(); i != end(); i++){
 					if (i->first == key)
 						return (i);
 				}
@@ -245,15 +265,15 @@ namespace ft{
 				return ret;
 			};
 			ft::pair<const_iterator,const_iterator> equal_range( const Key& key ) const{
-				ft::pair<iterator, iterator> ret;
-				for (iterator i = begin(); i != end(); i++){
-					if (!_compare(i->first(), key) && i->first() == key){
+				ft::pair<const_iterator, const_iterator> ret;
+				for (const_iterator i = begin(); i != end(); i++){
+					if (!_compare(i->first, key) && i->first == key){
 						ret.first = i;
 						i++;
 						ret.second = i;
 						break ;
 					}
-					else if (!_compare(i->first(), key)){
+					else if (!_compare(i->first, key)){
 						ret.first = i;
 						ret.second = i;
 						break ;
@@ -304,7 +324,7 @@ namespace ft{
 
 		//observer
 			key_compare key_comp() const{return _compare;};
-			Compare value_comp() const{return comp_node;};
+			value_compare value_comp() const{return value_compare(_compare);};
 	
 		// exception
 			class out_of_range_exception: public std::exception{
@@ -317,14 +337,14 @@ namespace ft{
 			friend bool operator==( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
 				if (lhs.size() != rhs.size())
 					return false;
-				ft::map_iterator<Key, T, Allocator, false> i = lhs.begin(), j = rhs.begin();
-				while (i && j){
+				ft::map_iterator<Key, T, Allocator, true> i = lhs.begin(), j = rhs.begin();
+				while (i.getNode_pointer() && j.getNode_pointer()){
 					if (*i != *j)
 						return false;
 					i++;
 					j++;
 				}
-				return (i == j);
+				return (*i == *j);
 			};
 			friend bool operator!=( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
 				return !(rhs == lhs);
@@ -332,14 +352,14 @@ namespace ft{
 			friend bool operator<( const map<Key,T,Compare,Allocator>& lhs,  const map<Key,T,Compare,Allocator>& rhs ){
 				if (lhs.size() < rhs.size())
 					return true;
-				ft::map_iterator<Key, T, Allocator, false> i = lhs.begin(), j = rhs.begin();
-				while (i && j){
+				ft::map_iterator<Key, T, Allocator, true> i = lhs.begin(), j = rhs.begin();
+				while (i.getNode_pointer() && j.getNode_pointer()){
 					if (*i < *j)
 						return true;
 					i++;
 					j++;
 				}
-				return (i < j);
+				return (*i < *j);
 			};
 			friend bool operator<=( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
 				return !(lhs > rhs);
@@ -351,8 +371,9 @@ namespace ft{
 				return !(lhs < rhs);
 			};
 		private:
+			
 			bool	comp_node(ft::pair<const Key, T> one, ft::pair<const Key, T> two){
-				return Compare(one.first, two.first);
+				return _compare(one.first, two.first);
 			}
 		//private attribute
 			node*						_root;
@@ -669,7 +690,8 @@ namespace ft{
 				}
 				return false;
 			};
-			void	ordered_copy(iterator first, iterator last){
+			template <class InputIt>
+			void	ordered_copy(InputIt first, InputIt last, typename ft::enable_if<!ft::is_integral<InputIt>::value >::type* = 0){
 				while (first != last){
 					add_node(*first);
 					first++;
@@ -682,5 +704,8 @@ namespace ft{
 		protected:
 	};
 };
-
+namespace std{
+	template <class Key, class T>
+	void swap (ft::map<Key, T>& a, ft::map<Key, T>& b){ a.swap(b);};
+}
 #endif
