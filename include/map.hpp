@@ -81,7 +81,7 @@ namespace ft{
 		//element access
 			T& at( const Key& key ){
 				iterator reader = find(key);
-				if (!reader)
+				if (!reader.getNode_pointer())
 					throw (out_of_range_exception());
 				else
 					return reader->second;
@@ -344,7 +344,7 @@ namespace ft{
 					i++;
 					j++;
 				}
-				return (*i == *j);
+				return true;
 			};
 			friend bool operator!=( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
 				return !(rhs == lhs);
@@ -359,7 +359,7 @@ namespace ft{
 					i++;
 					j++;
 				}
-				return (*i < *j);
+				return false;
 			};
 			friend bool operator<=( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
 				return !(lhs > rhs);

@@ -91,10 +91,21 @@ namespace ft
 				// 	this->_size = other.size();
 				// }
 				// else{
+					// if (other.size() > _capacity)
+					// 	reallocate(other.size());
+					// else
+					// 	for (size_t i = 0; i < _size; i++)
+					// 		_alloc.destroy(_first + i);
+					// for (size_t i = 0; i < _size; i++){
+					// 	_alloc.construct(_first + i, other[i]);
+					// }
+				clear();
+				if (other.size() > _capacity)
 					reallocate(other.size());
-					for (size_t i = 0; i < _size; i++){
-						_alloc.construct(_first + i, other[i]);
-					}
+				for (size_t i = 0; i < other.size(); i++){
+					_alloc.construct(_first + i, other[i]);
+				}
+				_size = other.size();
 				// }
 				return *this;
 			};
@@ -142,6 +153,7 @@ namespace ft
 						_alloc.construct(_first + i, value);
 					}
 				}
+				_size = count;
 			};
 			allocator_type get_allocator() const{
 				return _alloc;
@@ -451,6 +463,8 @@ namespace ft
 			friend bool operator<=( const vector& lhs, const vector& rhs ){return (rhs >= lhs);};
 			friend bool operator>( const vector& lhs, const vector& rhs ){return (rhs < lhs);};
 			friend bool operator<( const vector& lhs, const vector& rhs ){
+				if (lhs.size() != rhs.size())
+					return lhs.size() < rhs.size();
 				for (const_iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
 					if (*i < *j)
 						return true;

@@ -46,7 +46,7 @@ namespace ft{
 				c.pop_back();
 			};
 	
-		friend bool operator==( const stack& lhs, const stack& rhs ){
+			friend bool operator==( const stack& lhs, const stack& rhs ){
 				if (lhs.c.size() != rhs.c.size())
 					return false;
 				for (const_iterator i = lhs.c.begin(), j = rhs.c.begin(); i != lhs.c.end() && j != rhs.c.end(); i++, j++){
@@ -60,6 +60,8 @@ namespace ft{
 			friend bool operator<=( const stack& lhs, const stack& rhs ){return (rhs >= lhs);};
 			friend bool operator>( const stack& lhs, const stack& rhs ){return (rhs < lhs);};
 			friend bool operator<( const stack& lhs, const stack& rhs ){
+				if (lhs.size() != rhs.size())
+					return lhs.size() < rhs.size();
 				for (const_iterator i = lhs.c.begin(), j = rhs.c.begin(); i != lhs.c.end() && j != rhs.c.end(); i++, j++){
 					if (*i < *j)
 						return true;
