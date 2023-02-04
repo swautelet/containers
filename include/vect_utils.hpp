@@ -20,7 +20,7 @@ template<class T, bool B = false> class vect_iterator
 		typedef pointer											iterator_type;
 	
 		vect_iterator():_value(NULL){};
-		vect_iterator(T* val):_value(val){};
+		vect_iterator(pointer val):_value(val){};
 		vect_iterator(size_type val):_value((T*)val){};
 		// vect_iterator(const vect_iterator<T, true>& other):_value(other.getElemPtr()){};
 		vect_iterator(const vect_iterator<T, B>& other):_value(other.getElemPtr()){};
@@ -33,7 +33,7 @@ template<class T, bool B = false> class vect_iterator
 
 		iterator_type base()	{return _value;};
 
-		elemPtr getElemPtr() const      { return _value; };
+		pointer getElemPtr() const      { return _value; };
 
 		reference operator*() const         { return (*_value); };
 		pointer operator->() const          { return (_value); };
@@ -97,7 +97,7 @@ template<class T, bool B = false> class vect_iterator
 		friend bool	operator<=(const vect_iterator& it, const vect_iterator& ite)    { return (it._value <= ite._value); };
 		friend bool	operator>=(const vect_iterator& it, const vect_iterator& ite)    { return (it._value >= ite._value); };
 	private:
-		T*	_value;
+		pointer	_value;
 	protected:
 };
 template<class T, bool B = false> class reverse_vect_iterator
@@ -113,7 +113,7 @@ template<class T, bool B = false> class reverse_vect_iterator
 		typedef T*                                              elemPtr;
 		typedef pointer											iterator_type;
 		reverse_vect_iterator():_value(NULL){};
-		reverse_vect_iterator(T* val):_value(val){};
+		reverse_vect_iterator(pointer val):_value(val){};
 		reverse_vect_iterator(size_type val):_value((T*)val){};
 		// reverse_vect_iterator(const reverse_vect_iterator<T, true>& other):_value(other.getElemPtr()){};
 		reverse_vect_iterator(const reverse_vect_iterator<T, B>& other):_value(other.getElemPtr()){};
@@ -126,7 +126,7 @@ template<class T, bool B = false> class reverse_vect_iterator
 
 		iterator_type base()	{return _value;};
 
-		elemPtr getElemPtr() const      { return _value; };
+		pointer getElemPtr() const      { return _value; };
 
 		reference operator*() const         { return (*_value); };
 		pointer operator->() const          { return (_value); };
@@ -158,15 +158,16 @@ template<class T, bool B = false> class reverse_vect_iterator
 			return (it);
 		}
 		reverse_vect_iterator operator-(size_t nb) const{
+			std::cout << "awdaw" << std::endl;
 			reverse_vect_iterator it(*this);
 			it._value -= nb;
 			return (it);
 		};
-		size_t operator-(reverse_vect_iterator& nb) const{
-			if (_value > nb.getElemPtr())
-				return (_value - nb.getElemPtr());
+		size_t operator-(const reverse_vect_iterator& nb) const{
+			if (base() > nb.base()())
+				return (base() - nb.base()());
 			else
-				return (nb.getElemPtr() - _value);
+				return (nb.base() - base());
 		};
 		reference	operator[](size_t decal){return *(_value + decal);};
 		friend bool	operator==(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value == ite._value); };
@@ -176,7 +177,7 @@ template<class T, bool B = false> class reverse_vect_iterator
 		friend bool	operator<=(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value <= ite._value); };
 		friend bool	operator>=(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value >= ite._value); };
 	private:
-		T*	_value;
+		pointer	_value;
 	protected:
 };
 template <class T>
@@ -188,13 +189,20 @@ reverse_vect_iterator<T> operator+(int a, reverse_vect_iterator<T> b){
 	return b + a;
 };
 template <class T>
-size_t operator-(vect_iterator<T, true> a, vect_iterator<T, false> b){
-	return a - b;
+ssize_t operator-(vect_iterator<T, true> a, vect_iterator<T, false> b){
+	return a.base() - b.base();
 }
 template <class T>
-size_t operator-(reverse_vect_iterator<T, true> a, reverse_vect_iterator<T, false> b){
-	return a - b;
+ssize_t operator-(reverse_vect_iterator<T, true> a, reverse_vect_iterator<T, false> b){
+	return a.base() - b.base();
 }
 };
-
+// template <class T>
+// size_t operator-(const ft::vect_iterator<T, true>& lhs, const ft::vect_iterator<T, true>& rhs){
+// 	std::cout << "test " << std::endl;
+// 	if (lhs.base() > rhs.base()())
+// 		return (lhs.base() - rhs.base()());
+// 	else
+// 		return (rhs.base() - lhs.base());
+// };
 #endif

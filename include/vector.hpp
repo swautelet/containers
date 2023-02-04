@@ -489,13 +489,13 @@ namespace ft
 			friend bool operator<=( const vector& lhs, const vector& rhs ){return (rhs >= lhs);};
 			friend bool operator>( const vector& lhs, const vector& rhs ){return (rhs < lhs);};
 			friend bool operator<( const vector& lhs, const vector& rhs ){
+				for (const_iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
+					if (*i != *j){
+						return *i < *j;}
+				}
 				if (lhs.size() != rhs.size())
 					return lhs.size() < rhs.size();
-				for (const_iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
-					if (*i < *j)
-						return true;
-				}
-				return (lhs.size() < rhs.size());
+				return false;
 			};
 		private:
 			// template< typename F >
