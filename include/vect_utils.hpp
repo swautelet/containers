@@ -132,35 +132,34 @@ template<class T, bool B = false> class reverse_vect_iterator
 		pointer operator->() const          { return (_value); };
 		// operator size_t(){return ((size_t)_value);};
 
-		reverse_vect_iterator& operator++()       { ++_value; return (*this); };
-		reverse_vect_iterator& operator--()       { --_value; return (*this); };
+		reverse_vect_iterator& operator++()       { --_value; return (*this); };
+		reverse_vect_iterator& operator--()       { ++_value; return (*this); };
 		reverse_vect_iterator operator++(int){
-			reverse_vect_iterator res(*this);
-			++(*this);
-			return (res);
-		};
-		reverse_vect_iterator operator--(int){
 			reverse_vect_iterator res(*this);
 			--(*this);
 			return (res);
 		};
+		reverse_vect_iterator operator--(int){
+			reverse_vect_iterator res(*this);
+			++(*this);
+			return (res);
+		};
 		reverse_vect_iterator& operator+=(int decal){
-			_value += decal;
+			_value -= decal;
 			return (*this);
 		};
 		reverse_vect_iterator& operator-=(int decal){
-			_value -= decal;
+			_value += decal;
 			return (*this);
 		};
 		reverse_vect_iterator operator+(size_t nb) const{
 			reverse_vect_iterator it(*this);
-			it._value += nb;
+			it._value -= nb;
 			return (it);
 		}
 		reverse_vect_iterator operator-(size_t nb) const{
-			std::cout << "awdaw" << std::endl;
 			reverse_vect_iterator it(*this);
-			it._value -= nb;
+			it._value += nb;
 			return (it);
 		};
 		size_t operator-(const reverse_vect_iterator& nb) const{
@@ -169,7 +168,7 @@ template<class T, bool B = false> class reverse_vect_iterator
 			else
 				return (nb.base() - base());
 		};
-		reference	operator[](size_t decal){return *(_value + decal);};
+		reference	operator[](size_t decal){return *(_value - decal);};
 		friend bool	operator==(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value == ite._value); };
 		friend bool	operator!=(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value != ite._value); };
 		friend bool	operator<(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)     { return (it._value < ite._value); };
