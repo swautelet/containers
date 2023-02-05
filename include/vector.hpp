@@ -55,6 +55,8 @@ namespace ft
                     typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0) :
                     _alloc(alloc), _size(0)
             {
+				if (!std::is_same<T, typename InputIterator::value_type>::value)
+					throw "n";
                 InputIterator tmp(first);
                 while (tmp++ != last)
                     _size++;
@@ -111,6 +113,8 @@ namespace ft
 			};
 			template <class InputIterator>  void assign (InputIterator first, InputIterator last
 			, typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0){
+				if (!std::is_same<T, typename InputIterator::value_type>::value)
+					throw "n";
 				clear();
 				size_type count = std::distance(first, last);
 				if (count < 0){
@@ -213,16 +217,16 @@ namespace ft
 				return (const_iterator(_first + _size));
 			};
 			reverse_iterator rbegin(){
-				return (reverse_iterator(_first));
-			};
-			const_reverse_iterator rbegin() const{
-				return (const_reverse_iterator(_first));
-			};
-			reverse_iterator rend(){
 				return (reverse_iterator(_first + _size));
 			};
-			const_reverse_iterator rend() const{
+			const_reverse_iterator rbegin() const{
 				return (const_reverse_iterator(_first + _size));
+			};
+			reverse_iterator rend(){
+				return (reverse_iterator(_first));
+			};
+			const_reverse_iterator rend() const{
+				return (const_reverse_iterator(_first));
 			};
 
 		//Capacity
@@ -349,6 +353,8 @@ namespace ft
 				// 	throw out_of_range_exception();
 				// size_t count = last - first;
 				size_t count = std::distance(first, last);
+				if (!std::is_same<T, typename InputIt::value_type>::value)
+					throw "n";
 				if (pos < _first || pos > _first + _size)
 					throw std::out_of_range("vector");
 				size_t index = pos.getElemPtr() - begin().getElemPtr();

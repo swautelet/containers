@@ -3,6 +3,8 @@
 
 #include "is_const.hpp"
 
+#include <thread>
+
 namespace ft
 {
 template<class T, bool B> class reverse_vect_iterator;
@@ -83,11 +85,11 @@ template<class T, bool B = false> class vect_iterator
 			it._value -= nb;
 			return (it);
 		};
-		size_t operator-(const vect_iterator& nb) const{
-			if (_value > nb.getElemPtr())
+		difference_type operator-(const vect_iterator& nb) const{
+			// if (_value > nb.getElemPtr())
 				return (_value - nb.getElemPtr());
-			else
-				return (nb.getElemPtr() - _value);
+			// else
+			// 	return (nb.getElemPtr() - _value);
 		};
 		reference	operator[](size_t decal){return *(_value + decal);};
 		friend bool	operator==(const vect_iterator& it, const vect_iterator& ite)    { return (it._value == ite._value); };
@@ -128,20 +130,20 @@ template<class T, bool B = false> class reverse_vect_iterator
 
 		pointer getElemPtr() const      { return _value; };
 
-		reference operator*() const         { return (*_value); };
-		pointer operator->() const          { return (_value); };
+		reference operator*() const         { return (*(_value - 1)); };
+		pointer operator->() const          { return (_value - 1); };
 		// operator size_t(){return ((size_t)_value);};
 
 		reverse_vect_iterator& operator++()       { --_value; return (*this); };
 		reverse_vect_iterator& operator--()       { ++_value; return (*this); };
 		reverse_vect_iterator operator++(int){
 			reverse_vect_iterator res(*this);
-			--(*this);
+			++(*this);
 			return (res);
 		};
 		reverse_vect_iterator operator--(int){
 			reverse_vect_iterator res(*this);
-			++(*this);
+			--(*this);
 			return (res);
 		};
 		reverse_vect_iterator& operator+=(int decal){
@@ -162,19 +164,19 @@ template<class T, bool B = false> class reverse_vect_iterator
 			it._value += nb;
 			return (it);
 		};
-		size_t operator-(const reverse_vect_iterator& nb) const{
-			if (base() > nb.base()())
-				return (base() - nb.base()());
-			else
-				return (nb.base() - base());
+		difference_type operator-(const reverse_vect_iterator& nb) const{
+			// if (base() < nb.base()())
+				return (nb.base() - base()());
+			// else
+			// 	return (nb.base() - base());
 		};
-		reference	operator[](size_t decal){return *(_value - decal);};
+		reference	operator[](size_t decal){return *(_value - decal - 1);};
 		friend bool	operator==(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value == ite._value); };
 		friend bool	operator!=(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value != ite._value); };
-		friend bool	operator<(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)     { return (it._value < ite._value); };
-		friend bool	operator>(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)     { return (it._value > ite._value); };
-		friend bool	operator<=(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value <= ite._value); };
-		friend bool	operator>=(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value >= ite._value); };
+		friend bool	operator<(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)     { return (it._value > ite._value); };
+		friend bool	operator>(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)     { return (it._value < ite._value); };
+		friend bool	operator<=(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value >= ite._value); };
+		friend bool	operator>=(const reverse_vect_iterator& it, const reverse_vect_iterator& ite)    { return (it._value <= ite._value); };
 	private:
 		pointer	_value;
 	protected:
@@ -193,7 +195,7 @@ ssize_t operator-(vect_iterator<T, true> a, vect_iterator<T, false> b){
 }
 template <class T>
 ssize_t operator-(reverse_vect_iterator<T, true> a, reverse_vect_iterator<T, false> b){
-	return a.base() - b.base();
+	return b.base() - a.base();
 }
 };
 // template <class T>
