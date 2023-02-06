@@ -159,7 +159,9 @@ namespace ft{
 				return _nb_node;
 			};
 			size_type max_size() const{
-				return _alloc.max_size();
+				// return _alloc.max_size();
+				return 461168601842738790;
+				// return std::numeric_limits<size_t>::max();
 			};
 
 		//modifiers
@@ -201,14 +203,14 @@ namespace ft{
 				return iterator(NULL, _root);
 			};
 			iterator erase( iterator first, iterator last ){
-				// iterator previous(NULL, _root);
+				iterator previous(NULL, _root);
 				for (iterator i = first; i != last; i++){
-					if (i.getNode_pointer())
-						delete_node(i.getNode_pointer());
-					// previous = i;
+					if (previous.getNode_pointer())
+						delete_node(previous.getNode_pointer());
+					previous = i;
 				}
-				// if (previous.getNode_pointer())
-				// 	delete_node(previous.getNode_pointer());
+				if (previous.getNode_pointer() && previous != last)
+					delete_node(previous.getNode_pointer());
 				return iterator(NULL, _root);
 			};
 			size_type erase( const Key& key ){
