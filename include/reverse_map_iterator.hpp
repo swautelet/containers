@@ -20,7 +20,7 @@ class reverse_map_iterator
 		typedef typename chooseConst<B, ft::pair<const Key, T>&, const ft::pair<const Key, T>&>::type	reference;
 		typedef typename chooseConst<B, ft::pair<const Key, T>*, const ft::pair<const Key, T>*>::type	pointer;
 		typedef ft::pair<const Key, T>*																	elemPtr;
-		typedef reverse_map_iterator																					iterator_type;
+		typedef reverse_map_iterator																	iterator_type;
 
 		reverse_map_iterator():_target(NULL), _root(NULL){};
 		reverse_map_iterator(node_pointer target, node_pointer root):_target(target), _root(root){};
@@ -36,7 +36,11 @@ class reverse_map_iterator
 		elemPtr getElemPtr() const      { return _target->getContent(); };
 		node_pointer	getNode_pointer() const {return _target;};
 		node_pointer	getRoot() const {return _root;};
-		iterator_type base()	{return *this;};
+		iterator_type base()	{
+			iterator_type ret(*this);
+			ret.move_left();
+			return ret;
+			};
 
 		reference operator*() const         { return (*_target->getContent()); };
 		pointer operator->() const          { return (_target->getContent()); };
