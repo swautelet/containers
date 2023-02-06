@@ -102,9 +102,9 @@ namespace ft{
 				reader = find(key);
 				return reader->second;
 			};
-			// node*	getRoot(){
-			// 	return _root;
-			// }
+			node*	getRoot(){
+				return _root;
+			}
 
 		//iterators
 			iterator begin(){
@@ -136,7 +136,7 @@ namespace ft{
 				node* reader = _root;
 				while (reader && reader->getChild_r())
 					reader = reader->getChild_r();
-				reverse_iterator ret (reader, _root);
+				const_reverse_iterator ret (reader, _root);
 				return ret;
 			};
 			reverse_iterator rend(){
@@ -144,7 +144,7 @@ namespace ft{
 				return ret;
 			};
 			const_reverse_iterator rend() const{
-				reverse_iterator ret (NULL, _root);
+				const_reverse_iterator ret (NULL, _root);
 				return ret;
 			};
 
@@ -166,7 +166,7 @@ namespace ft{
 			void clear(){
 				while (_nb_node){
 					node* reader(_root);
-					while (reader->getChild_l() || reader->getChild_r()){
+					while (reader && (reader->getChild_l() || reader->getChild_r())){
 						if (reader->getChild_l())
 							reader = reader->getChild_l();
 						else if (reader->getChild_r())
@@ -175,6 +175,7 @@ namespace ft{
 					delete_node(reader);
 				}
 				_root = NULL;
+				// erase(begin(), end());
 			};
 			ft::pair<iterator, bool> insert(const value_type& value ){
 				iterator reader = find(value.first);
@@ -200,14 +201,14 @@ namespace ft{
 				return iterator(NULL, _root);
 			};
 			iterator erase( iterator first, iterator last ){
-				iterator previous(NULL, _root);
+				// iterator previous(NULL, _root);
 				for (iterator i = first; i != last; i++){
-					if (previous.getNode_pointer())
-						delete_node(previous.getNode_pointer());
-					previous = i;
+					if (i.getNode_pointer())
+						delete_node(i.getNode_pointer());
+					// previous = i;
 				}
-				if (previous.getNode_pointer())
-					delete_node(previous.getNode_pointer());
+				// if (previous.getNode_pointer())
+				// 	delete_node(previous.getNode_pointer());
 				return iterator(NULL, _root);
 			};
 			size_type erase( const Key& key ){
@@ -517,7 +518,7 @@ namespace ft{
 					_root = _root->getChild_l();
 					temp->setChild_l(NULL);
 					_root->setParent(NULL);
-					reposition_node(temp);
+					reposition_node(temp->getChild_r());
 				}
 			};
 			void	extract_root_l(){
@@ -536,7 +537,7 @@ namespace ft{
 					_root = _root->getChild_r();
 					temp->setChild_r(NULL);
 					_root->setParent(NULL);
-					reposition_node(temp);
+					reposition_node(temp->getChild_l());
 				}
 			};
 			void	delete_node(node* target){
