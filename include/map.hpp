@@ -4,7 +4,7 @@
 
 #include <memory>
 
-#include <map>
+// #include <map>
 // #include <type_traits>
 
 #include "pair.hpp"
@@ -102,9 +102,9 @@ namespace ft{
 				reader = find(key);
 				return reader->second;
 			};
-			node*	getRoot(){
-				return _root;
-			}
+			// node*	getRoot(){
+			// 	return _root;
+			// };
 
 		//iterators
 			iterator begin(){
@@ -291,7 +291,7 @@ namespace ft{
 				while (reader && reader->getChild_l() && _compare(key, reader->First()))
 					reader = reader->getChild_l();
 				iterator i (reader, _root);
-				while(i.getNode_pointer() && _compare(i->first, key))
+				while(i != end() && _compare(i->first, key))
 					i++;
 				return i;
 			};
@@ -309,9 +309,9 @@ namespace ft{
 				while (reader && reader->getChild_l() && _compare(key, reader->First()))
 					reader = reader->getChild_l();
 				iterator i (reader, _root);
-				while(i.getNode_pointer() && _compare(i->first, key))
+				while(i != end() && _compare(i->first, key))
 					i++;
-				if (i.getNode_pointer() && i->first == key)
+				if (i != end() && i->first == key)
 					i++;
 				return i;
 			};
@@ -319,10 +319,10 @@ namespace ft{
 				node* reader = _root;
 				while (reader && reader->getChild_l() && _compare(key, reader->First()))
 					reader = reader->getChild_l();
-				iterator i (reader, _root);
-				while(i.getNode_pointer() && _compare(i->first, key))
+				const_iterator i (reader, _root);
+				while(i != end() && _compare(i->first, key))
 					i++;
-				if (i.getNode_pointer() && i->first == key)
+				if (i != end() && i->first == key)
 					i++;
 				return i;
 			};

@@ -41,14 +41,13 @@ class map_iterator
 		~map_iterator(){};
 
 		elemPtr getElemPtr() const      { return _target->getContent(); };
-		node_pointer	getNode_pointer() const {return _target;};
-		node_pointer	getRoot() const {return _root;};
 
 		iterator_type base()	{return *this;};
 		reference operator*() const         { return (*_target->getContent()); };
 		pointer operator->() const          { return (_target->getContent()); };
 		map_iterator& operator=(const map_iterator& other){
 			this->_target = other.getNode_pointer();
+			this->_root = other.getRoot();
 			return (*this);
 		};
 		// operator bool(){return (_target);};
@@ -108,6 +107,8 @@ class map_iterator
 		// };
 		bool	operator==(const map_iterator& ite)    { return (_target == ite._target); };
 		bool	operator!=(const map_iterator& ite)    { return (_target != ite._target); };
+		node_pointer	getNode_pointer() const {return _target;};
+		node_pointer	getRoot() const {return _root;};
 
 	private:
 		node_pointer		_target;
@@ -207,6 +208,7 @@ class map_iterator
 			else
 				return false;
 		}
+	protected:
 };
 
 

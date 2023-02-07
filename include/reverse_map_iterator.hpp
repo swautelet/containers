@@ -35,8 +35,6 @@ class reverse_map_iterator
 		~reverse_map_iterator(){};
 
 		elemPtr getElemPtr() const      { return _target->getContent(); };
-		node_pointer	getNode_pointer() const {return _target;};
-		node_pointer	getRoot() const {return _root;};
 		iterator_type base()	{
 			// iterator_type ret(*this);
 			// ret++;
@@ -45,17 +43,18 @@ class reverse_map_iterator
 		};
 
 		reference operator*() const         {
-			temp_iterator ret(*this);
-			ret++;
-			return (*(ret.getNode_pointer()->getContent())); 
+			iterator_type ret(*this);
+			ret--;
+			return (*(ret)); 
 		};
 		pointer operator->() const          { 
-			temp_iterator ret(*this);
-			ret++;
-			return (ret.getNode_pointer()->getContent()); 
+			iterator_type ret(*this);
+			ret--;
+			return (&(*ret)); 
 		};
 		reverse_map_iterator& operator=(const reverse_map_iterator& other){
 			this->_target = other.getNode_pointer();
+			this->_root = other.getRoot();
 			return (*this);
 		};
 		// operator bool(){return (_target);};
@@ -115,6 +114,8 @@ class reverse_map_iterator
 		// };
 		bool	operator==( const reverse_map_iterator& ite)    { return (_target == ite._target); };
 		bool	operator!=( const reverse_map_iterator& ite)    { return (_target != ite._target); };
+		node_pointer	getNode_pointer() const {return _target;};
+		node_pointer	getRoot() const {return _root;};
 
 	private:
 		node_pointer		_target;
@@ -214,6 +215,7 @@ class reverse_map_iterator
 			else
 				return false;
 		}
+	protected:
 };
 
 
