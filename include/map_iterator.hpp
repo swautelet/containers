@@ -27,7 +27,7 @@ class map_iterator
 		typedef typename chooseConst<B, ft::pair<const Key, T>&, const ft::pair<const Key, T>&>::type	reference;
 		typedef typename chooseConst<B, ft::pair<const Key, T>*, const ft::pair<const Key, T>*>::type	pointer;
 		typedef ft::pair<const Key, T>*																	elemPtr;
-		typedef map_iterator																					iterator_type;
+		typedef map_iterator																			iterator_type;
 
 		map_iterator():_target(NULL), _root(NULL){};
 		map_iterator(node_pointer target, node_pointer root):_target(target), _root(root){};
@@ -105,8 +105,8 @@ class map_iterator
 		// 	}
 		// 	return (it);
 		// };
-		bool	operator==(const map_iterator& ite)    { return (_target == ite._target); };
-		bool	operator!=(const map_iterator& ite)    { return (_target != ite._target); };
+		bool	operator==(const map_iterator<Key, T, Allocator, true>& ite)    { return (_target == ite.getNode_pointer()); };
+		bool	operator!=(const map_iterator<Key, T, Allocator, true>& ite)    { return (_target != ite.getNode_pointer()); };
 		node_pointer	getNode_pointer() const {return _target;};
 		node_pointer	getRoot() const {return _root;};
 
