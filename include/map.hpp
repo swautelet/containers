@@ -159,8 +159,9 @@ namespace ft{
 				return _nb_node;
 			};
 			size_type max_size() const{
-				std::map<Key, T> temp;
-				return temp.max_size();
+				// std::map<Key, T> temp;
+				// return temp.max_size();
+				return std::min<size_type>(_alloc_node.max_size(), _alloc.max_size());
 				// return 461168601842738790;
 				// return std::numeric_limits<size_t>::max();
 			};
