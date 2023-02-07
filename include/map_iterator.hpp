@@ -31,8 +31,8 @@ class map_iterator
 
 		map_iterator():_target(NULL), _root(NULL){};
 		map_iterator(node_pointer target, node_pointer root):_target(target), _root(root){};
-		map_iterator(const map_iterator<Key, T, Allocator>& other):_target(other.getNode_pointer()), _root(other.getRoot()){};
-		map_iterator(const reverse_map_iterator<Key, T, Allocator>& other):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		map_iterator(const map_iterator<Key, T, Allocator, B>& other):_target(other.getNode_pointer()), _root(other.getRoot()){};
+		map_iterator(const reverse_map_iterator<Key, T, Allocator, B>& other):_target(other.getNode_pointer()), _root(other.getRoot()){};
 		template <bool C>
 		map_iterator(const map_iterator<Key, T, Allocator, C>& other, typename ft::enable_if<(!C)>::type* = 0):_target(other.getNode_pointer()), _root(other.getRoot()){};
 		template <bool C>

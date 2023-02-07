@@ -125,25 +125,25 @@ namespace ft{
 			const_iterator end() const{
 				return const_iterator(NULL, _root);
 			};
-			reverse_iterator rbegin(){
+			reverse_iterator rend(){
 				node* reader = _root;
-				while (reader && reader->getChild_r())
-					reader = reader->getChild_r();
+				while (reader && reader->getChild_l())
+					reader = reader->getChild_l();
 				reverse_iterator ret (reader, _root);
 				return ret;
 			};
-			const_reverse_iterator rbegin() const{
+			const_reverse_iterator rend() const{
 				node* reader = _root;
-				while (reader && reader->getChild_r())
-					reader = reader->getChild_r();
+				while (reader && reader->getChild_l())
+					reader = reader->getChild_l();
 				const_reverse_iterator ret (reader, _root);
 				return ret;
 			};
-			reverse_iterator rend(){
+			reverse_iterator rbegin(){
 				reverse_iterator ret (NULL, _root);
 				return ret;
 			};
-			const_reverse_iterator rend() const{
+			const_reverse_iterator rbegin() const{
 				const_reverse_iterator ret (NULL, _root);
 				return ret;
 			};
@@ -342,12 +342,16 @@ namespace ft{
 			friend bool operator==( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
 				if (lhs.size() != rhs.size())
 					return false;
-				ft::map_iterator<Key, T, Allocator, true> i = lhs.begin(), j = rhs.begin();
-				while (i.getNode_pointer() && j.getNode_pointer()){
-					if (*i != *j)
-						return false;
-					i++;
-					j++;
+				// const_iterator i = lhs.begin(), j = rhs.begin();
+				// while (i.getNode_pointer() && j.getNode_pointer()){
+				// 	if (*i != *j)
+				// 		return false;
+				// 	i++;
+				// 	j++;
+				// }
+				for (const_iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
+					if (*i != *j){
+						return false;}
 				}
 				return true;
 			};
@@ -355,15 +359,19 @@ namespace ft{
 				return !(rhs == lhs);
 			};
 			friend bool operator<( const map<Key,T,Compare,Allocator>& lhs,  const map<Key,T,Compare,Allocator>& rhs ){
-				if (lhs.size() < rhs.size())
-					return true;
-				ft::map_iterator<Key, T, Allocator, true> i = lhs.begin(), j = rhs.begin();
-				while (i.getNode_pointer() && j.getNode_pointer()){
-					if (*i < *j)
-						return true;
-					i++;
-					j++;
+				// const_iterator i = lhs.begin(), j = rhs.begin();
+				// while (i.getNode_pointer() && j.getNode_pointer()){
+				// 	if (*i < *j)
+				// 		return *i < *j;
+				// 	i++;
+				// 	j++;
+				// }
+				for (const_iterator i = lhs.begin(), j = rhs.begin(); i != lhs.end() && j != rhs.end(); i++, j++){
+					if (*i != *j){
+						return *i < *j;}
 				}
+				if (lhs.size() != rhs.size())
+					return lhs.size() <rhs.size();
 				return false;
 			};
 			friend bool operator<=( const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs ){
@@ -409,6 +417,57 @@ namespace ft{
 					
 					if (value.first == reader->First()){
 						reader->setSecond(value.second);
+						return reader;
+					}
+					else if (_compare(value.first, reader->First())){
+						if (reader->getChild_l() != NULL)
+							reader = reader->getChild_l();
+						else{
+							add_child_l(reader, new_node(value));
+							if (_compare_valid)
+								while (balance_node(_root));
+							return reader->getChild_l();
+						}
+					}
+					else if (_compare(reader->First(), value.first)){
+						if (reader->getChild_r() != NULL)
+							reader = reader->getChild_r();
+						else{
+							add_child_r(reader, new_node(value));
+							if (_compare_valid)
+								while (balance_node(_root));
+							return reader->getChild_r();
+						}
+					}
+					// else if (_compare(value.first, reader->First())){
+					// 	add_child_l(reader, new_node(value));
+					// 	// while (!is_ordered(_root) && _compare_valid)
+					// 	// 	balance_node(_root);
+					// 	return reader->getChild_l();
+					// }
+					// else if (_compare(reader->First(), value.first)){
+					// 	add_child_r(reader, new_node(value));
+					// 	// while (!is_ordered(_root) && _compare_valid)
+					// 	// 	balance_node(_root);
+					// 	return reader->getChild_r();
+					// }
+				}
+				return _root;
+			};
+			node*	add_node_without_replace(value_type value){
+				node* reader = _root;
+				if (_nb_node == 2){
+					// std::cout << "compar was " << _compare_valid << std::endl;
+					_compare_valid = compar_is_valid();
+					// std::cout << "compare is now " << _compare_valid << std::endl;
+				}
+				if (!_root){
+					_root = new_node(value);
+				}
+				while (reader){
+					
+					if (value.first == reader->First()){
+						// reader->setSecond(value.second);
 						return reader;
 					}
 					else if (_compare(value.first, reader->First())){
@@ -697,13 +756,14 @@ namespace ft{
 			};
 			template <class InputIt>
 			void	ordered_copy(InputIt first, InputIt last, typename ft::enable_if<!ft::is_integral<InputIt>::value >::type* = 0){
+				// --last;
 				while (first != last){
-					add_node(*first);
+					add_node_without_replace(*first);
 					first++;
-					if (first != last){
-						last--;
-						add_node(*last);
-					}
+					// if (first != last){
+					// 	last--;
+					// 	add_node_without_replace(*last);
+					// }
 				}
 			};
 		protected:
